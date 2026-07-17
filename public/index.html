@@ -470,14 +470,14 @@ body.spa .hero.view-on{display:flex}
 .consult-fab span{font-size:10.5px;font-weight:800;letter-spacing:.04em}
 .consult-fab:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 14px 36px rgba(220,189,118,.45),0 6px 16px rgba(0,0,0,.45)}
 /* 톡상담 플로팅 버튼 (카카오 스타일 · AI상담 버튼 위) */
-.kakao-fab{position:fixed;right:22px;bottom:100px;z-index:60;display:inline-flex;align-items:center;gap:8px;
+.kakao-fab{position:fixed;right:22px;bottom:22px;z-index:60;display:inline-flex;align-items:center;gap:8px;
   padding:12px 20px 12px 16px;border-radius:30px;background:#FEE500;color:#191600;text-decoration:none;
   font-weight:800;font-size:14.5px;letter-spacing:.01em;font-family:var(--sans);
   box-shadow:0 10px 26px rgba(0,0,0,.35),0 3px 10px rgba(0,0,0,.25);
   transition:transform .22s ease,box-shadow .22s ease;cursor:pointer;border:none;line-height:1}
 .kakao-fab:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 16px 34px rgba(0,0,0,.42)}
 .kakao-fab .kico{width:26px;height:26px;flex:0 0 auto}
-@media(max-width:640px){.kakao-fab{right:16px;bottom:88px;padding:11px 17px 11px 14px;font-size:13.5px}.kakao-fab .kico{width:23px;height:23px}}
+@media(max-width:640px){.kakao-fab{right:16px;bottom:16px;padding:11px 17px 11px 14px;font-size:13.5px}.kakao-fab .kico{width:23px;height:23px}}
 @media(max-width:640px){.consult-fab{right:16px;bottom:16px;width:60px;height:60px}}
 
 /* ---------- 전체화면 상담 오버레이 ---------- */
@@ -881,10 +881,7 @@ body.no-scroll{overflow:hidden}
   <span>톡상담</span>
 </a>
 
-<button class="consult-fab" id="consultFab" aria-label="AI 노무상담 시작">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0013 0M12 18v3M9 21h6"/></svg>
-  <span>AI<br>상담</span>
-</button>
+<!-- AI 노무상담 오버레이 (플로팅 버튼은 제거, #consult 직링크로만 열림) -->
 
 <!-- ============================================================
      전체화면 AI 상담 오버레이 — 관점 선택 게이트(기본값 없음) → 상담
@@ -1077,7 +1074,7 @@ const CASE_DATA = {
 };
 
 /* ---------- 계산기 렌더링 ---------- */
-let currentCase='dui';
+let currentCase='dismissal';
 const selections={};
 
 function renderTabs(){
@@ -1093,7 +1090,9 @@ function renderTabs(){
 }
 function renderFactors(){
   const box=document.getElementById('factors');
+  if(!box) return;
   box.innerHTML='';
+  if(!CASE_DATA[currentCase]) currentCase=Object.keys(CASE_DATA)[0];
   selections[currentCase]=selections[currentCase]||{};
   CASE_DATA[currentCase].factors.forEach((f,i)=>{
     const wrap=document.createElement('div');wrap.className='factor';
@@ -1282,7 +1281,7 @@ coChange.onclick=()=>{
   PERSP=''; showGate();
 };
 document.getElementById('coClose').onclick=closeConsult;
-document.getElementById('consultFab').onclick=()=>{ location.hash='consult'; openConsult(); };
+var _cfab=document.getElementById('consultFab'); if(_cfab) _cfab.onclick=()=>{ location.hash='consult'; openConsult(); };
 
 function setOrb(s){orb.className='orb'+(s?' '+s:'');}
 function setStatus(t){vStatus.textContent=t;}
