@@ -33,7 +33,8 @@ app.set('trust proxy', 1); // Cloudtype 프록시 뒤에서 실제 방문자 IP 
 
 // CORS: 운영 도메인만 브라우저 교차 호출 허용 (같은 도메인 접속은 CORS와 무관하게 항상 정상)
 const ALLOWED_ORIGINS = [
-  // ⚠️ 클라우드타입 배포 후 발급되는 주소로 교체하세요 (예: https://port-0-jongno-labor-xxxx.sel3.cloudtype.app)
+  // 실제 배포 주소 (클라우드타입 발급)
+  'https://port-0-jongno-labor-mrp4d0q5a6ba37cc.sel3.cloudtype.app',
   'https://port-0-jongno-labor.sel3.cloudtype.app',
   // 도메인 연결 시 여기에 추가: 'https://www.jnhrm.co.kr',
 ];
