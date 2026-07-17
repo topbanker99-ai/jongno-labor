@@ -163,6 +163,38 @@ section.block{padding:96px 0;position:relative}
 .calc{background:linear-gradient(180deg,var(--navy-900),var(--navy-850))}
 .calc::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(700px 400px at 12% 0%,rgba(220,189,118,.08),transparent 60%)}
 .calc-shell{max-width:1080px;margin:0 auto;background:var(--glass);border:1px solid var(--card-brd);border-radius:18px;padding:10px;backdrop-filter:blur(10px)}
+/* ===== 정부지원금 간이진단 ===== */
+.subsidy-shell{max-width:1080px;margin:0 auto;background:var(--glass);border:1px solid var(--card-brd);border-radius:18px;padding:10px;backdrop-filter:blur(10px)}
+.subsidy-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.subsidy-panel{background:rgba(8,22,38,.6);border:1px solid var(--line-soft);border-radius:14px;padding:30px}
+.subsidy-panel.result{display:flex;flex-direction:column;min-height:420px}
+.sfield{margin-bottom:20px}
+.sfield label{display:block;font-size:14px;color:var(--ink-soft);margin-bottom:10px;font-weight:600}
+.sfield .smulti{font-size:11px;color:var(--gold-2);font-weight:400;margin-left:6px}
+.schips{display:flex;flex-wrap:wrap;gap:8px}
+.schip{padding:9px 15px;font-size:13.5px;font-family:var(--sans);color:var(--ink-soft);background:rgba(16,21,31,.5);border:1px solid var(--line-soft);border-radius:8px;cursor:pointer;transition:all .18s}
+.schip:hover{border-color:var(--gold-2);color:var(--ink)}
+.schip.sel{background:var(--gold-grad);color:#10151F;border-color:transparent;font-weight:700}
+.subsidy-run{width:100%;margin-top:14px;padding:15px}
+.s-empty{margin:auto;text-align:center}
+.s-empty .ic-big{font-size:44px;color:var(--gold-2);margin-bottom:14px;font-family:var(--serif)}
+.s-verify{font-size:11.5px;color:var(--ink-dim);text-align:center;margin-top:14px}
+.s-note{font-size:12px;color:var(--ink-faint);background:rgba(224,138,91,.08);border:1px solid rgba(224,138,91,.22);border-radius:8px;padding:11px 14px;margin-top:16px;line-height:1.7}
+.s-count{font-size:15px;color:var(--ink);font-weight:700;margin-bottom:4px}
+.s-count b{color:var(--gold-2)}
+.s-sub{font-size:12.5px;color:var(--ink-faint);margin-bottom:18px}
+.scard{background:rgba(16,21,31,.5);border:1px solid var(--line-soft);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.scard .snm{font-family:var(--serif);font-size:16px;color:var(--ink);font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.scard .samt{font-size:13.5px;color:var(--gold-2);font-weight:700;margin-top:6px}
+.scard .sbadge{font-size:11px;color:var(--gold-3);background:rgba(220,189,118,.14);border:1px solid var(--line-soft);border-radius:20px;padding:3px 11px;white-space:nowrap;flex:0 0 auto}
+.scard .srsn{font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.6}
+.scard .sorg{font-size:11px;color:var(--ink-dim);margin-top:6px}
+.s-docs{margin-top:18px;padding-top:16px;border-top:1px solid var(--line-soft)}
+.s-docs .sdh{font-size:13px;color:var(--ink);font-weight:600;margin-bottom:8px}
+.s-docs ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.s-docs li{font-size:11.5px;color:var(--ink-soft);background:rgba(16,21,31,.5);border:1px solid var(--line-soft);border-radius:6px;padding:5px 10px}
+.s-cta{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.s-none{text-align:center;color:var(--ink-soft);padding:20px 0}
 .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .calc-panel{background:rgba(8,22,38,.6);border:1px solid var(--line-soft);border-radius:14px;padding:30px}
 .calc-panel.result{display:flex;flex-direction:column}
@@ -351,6 +383,7 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .pcard:nth-child(3),.pcard:nth-child(4){border-top:1px solid var(--line-soft)}
   .pcard:nth-child(odd){border-left:none}
   .calc-grid{grid-template-columns:1fr}
+  .subsidy-grid{grid-template-columns:1fr}
   .voice-frame{grid-template-columns:1fr}
   .voice-stage{border-right:none;border-bottom:1px solid var(--line-soft)}
   .voice-transcript{height:340px}
@@ -495,6 +528,7 @@ body.no-scroll{overflow:hidden}
       <a href="#about">소개</a>
       <a href="#practice">업무분야</a>
       <a href="#calc">사전진단</a>
+      <a href="#subsidy">지원금진단</a>
       <a href="#ai">AI상담</a>
       <a href="#cases">주요업무</a>
       <a href="#contact">오시는길</a>
@@ -582,6 +616,78 @@ body.no-scroll{overflow:hidden}
             <div style="font-weight:600;color:var(--ink-soft)">왼쪽에서 사건 정보를 입력한 뒤<br>분석 버튼을 눌러주세요.</div>
           </div>
           <div id="rResult" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 정부지원금 간이진단 (사업주 대상) -->
+<section class="subsidy block" id="subsidy" data-view="subsidy">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="center-eyebrow"><span class="eyebrow center">사업주 정부지원금 간이진단</span></div>
+      <h2>우리 회사가 받을 수 있는 정부지원금, 1분 진단</h2>
+      <p>회사 정보를 선택하면 신청 가능성이 있는 고용장려금을 간단히 안내합니다.<br>정부지원금 신청대행은 <b style="color:var(--gold-2)">공인노무사만 합법적으로 대리</b>할 수 있습니다.</p>
+    </div>
+    <div class="subsidy-shell">
+      <div class="subsidy-grid">
+        <!-- 입력 패널 -->
+        <div class="subsidy-panel">
+          <div class="sfield">
+            <label>1. 기업 규모</label>
+            <div class="schips" data-key="size">
+              <button class="schip" data-val="우선지원">우선지원대상기업(중소)</button>
+              <button class="schip" data-val="중견">중견기업</button>
+              <button class="schip" data-val="대규모">대규모기업</button>
+            </div>
+          </div>
+          <div class="sfield">
+            <label>2. 상시근로자 수</label>
+            <div class="schips" data-key="workers">
+              <button class="schip" data-val="under10">10인 미만</button>
+              <button class="schip" data-val="over10">10인 이상</button>
+            </div>
+          </div>
+          <div class="sfield">
+            <label>3. 신규채용 계획이 있나요?</label>
+            <div class="schips" data-key="hiring">
+              <button class="schip" data-val="yes">있음</button>
+              <button class="schip" data-val="no">없음</button>
+            </div>
+          </div>
+          <div class="sfield">
+            <label>4. 채용(또는 고용) 대상 <span class="smulti">복수 선택 가능</span></label>
+            <div class="schips multi" data-key="target">
+              <button class="schip" data-val="youth">청년(만15~34세)</button>
+              <button class="schip" data-val="senior">고령자(60세+·정년후)</button>
+              <button class="schip" data-val="vulnerable">취업취약계층</button>
+              <button class="schip" data-val="disabled">장애인</button>
+            </div>
+          </div>
+          <div class="sfield">
+            <label>5. 육아휴직·육아기 근로시간 단축을 허용하나요?</label>
+            <div class="schips" data-key="parentLeave">
+              <button class="schip" data-val="yes">예</button>
+              <button class="schip" data-val="no">아니오</button>
+            </div>
+          </div>
+          <div class="sfield">
+            <label>6. (육아 외) 근로시간 단축제도를 운영하나요?</label>
+            <div class="schips" data-key="workTimeReduce">
+              <button class="schip" data-val="yes">예</button>
+              <button class="schip" data-val="no">아니오</button>
+            </div>
+          </div>
+          <button class="btn btn-primary subsidy-run" id="runSubsidy">받을 수 있는 지원금 진단하기 →</button>
+        </div>
+        <!-- 결과 패널 -->
+        <div class="subsidy-panel result" id="subsidyResult">
+          <div class="s-empty" id="sEmpty">
+            <div class="ic-big">₩</div>
+            <div style="font-weight:600;color:var(--ink-soft)">왼쪽에서 회사 정보를 선택한 뒤<br>진단 버튼을 눌러주세요.</div>
+          </div>
+          <div id="sResult" style="display:none"></div>
         </div>
       </div>
     </div>
@@ -1576,9 +1682,9 @@ window.addEventListener('load',()=>{
 /* ===== 탭(SPA) 라우터: 상단 메뉴별 화면 전환 ===== */
 (function(){
   document.body.classList.add('spa');
-  const VIEWS = ['home','about','practice','calc','ai','cases','contact'];
+  const VIEWS = ['home','about','practice','calc','subsidy','ai','cases','contact'];
   const HASH2VIEW = { '':'home', top:'home', about:'about', practice:'practice', calc:'calc',
-                      ai:'ai', cases:'cases', contact:'contact', results:'home' };
+                      subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home' };
   const secs = Array.from(document.querySelectorAll('section[data-view]'));
   const menuLinks = Array.from(document.querySelectorAll('.menu a, a[href^="#"]'));
 
@@ -1609,5 +1715,103 @@ window.addEventListener('load',()=>{
 })();
 </script>
 <script>(function(){var v=document.querySelector('.hero-motion');if(!v)return;var on=function(){v.classList.add('on')};if(v.readyState>=2){on()}else{v.addEventListener('loadeddata',on,{once:true});setTimeout(on,4000);}})();</script>
+<script src="/subsidy-data.js"></script>
+<script>
+(function(){
+  var sel = {size:null, workers:null, hiring:null, target:[], parentLeave:null, workTimeReduce:null};
+  // 칩 선택 처리
+  document.querySelectorAll('#subsidy .schips').forEach(function(group){
+    var key = group.getAttribute('data-key');
+    var multi = group.classList.contains('multi');
+    group.querySelectorAll('.schip').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        var val = chip.getAttribute('data-val');
+        if(multi){
+          chip.classList.toggle('sel');
+          var arr = sel[key];
+          var i = arr.indexOf(val);
+          if(i>=0) arr.splice(i,1); else arr.push(val);
+        } else {
+          group.querySelectorAll('.schip').forEach(function(c){c.classList.remove('sel')});
+          chip.classList.add('sel');
+          sel[key] = val;
+        }
+      });
+    });
+  });
+
+  var runBtn = document.getElementById('runSubsidy');
+  if(!runBtn) return;
+  runBtn.addEventListener('click', function(){
+    var DB = window.SUBSIDY_DB || [];
+    var COMMON = window.SUBSIDY_COMMON_DOCS || [];
+    var VERIFIED = window.SUBSIDY_LAST_VERIFIED || '';
+    var v = {
+      size: sel.size,
+      workers: sel.workers,
+      hiring: sel.hiring || 'no',
+      target: sel.target || [],
+      parentLeave: sel.parentLeave || 'no',
+      workTimeReduce: sel.workTimeReduce || 'no'
+    };
+    // 매칭
+    var matched = DB.filter(function(s){ try{return s.match(v);}catch(e){return false;} });
+    // 중복수급 배제 (충돌 시 앞선 것 우선 — 문서 5.3 간이 적용)
+    var kept = [];
+    matched.forEach(function(s){
+      var conflict = kept.some(function(k){ return (s.exclusions||[]).indexOf(k.id)>=0; });
+      if(!conflict) kept.push(s);
+    });
+
+    var empty = document.getElementById('sEmpty');
+    var out = document.getElementById('sResult');
+    empty.style.display = 'none';
+    out.style.display = 'block';
+
+    if(kept.length === 0){
+      out.innerHTML =
+        '<div class="s-none">선택하신 조건에서는 자동 매칭되는 대표 지원금이 없습니다.<br>다른 지원제도가 있을 수 있으니 노무사 상담으로 정확히 확인해 보세요.</div>' +
+        '<div class="s-cta"><a href="#contact" class="btn btn-primary">노무사에게 상담·서류 문의 →</a></div>' +
+        verifyLine(VERIFIED);
+      return;
+    }
+
+    // 서류 취합
+    var docSet = {};
+    COMMON.forEach(function(d){docSet[d]=1;});
+    kept.forEach(function(s){ (s.docs||[]).forEach(function(d){docSet[d]=1;}); });
+    var docList = Object.keys(docSet);
+
+    var html = '';
+    html += '<div class="s-count">신청 가능성이 있는 지원금 <b>'+kept.length+'건</b></div>';
+    html += '<div class="s-sub">아래는 1차 참고용 안내이며, 실제 수급 여부·금액은 노무사 검토가 필요합니다.</div>';
+    kept.forEach(function(s){
+      html += '<div class="scard">'
+        + '<div class="snm">'+s.name+'<span class="sbadge">'+s.statusBadge+'</span></div>'
+        + '<div class="samt">'+s.maxAmountText+'</div>'
+        + '<div class="srsn">'+s.reason+'</div>'
+        + '<div class="sorg">'+s.org+'</div>'
+        + '</div>';
+    });
+    // 필요서류
+    html += '<div class="s-docs"><div class="sdh">준비하면 좋은 서류</div><ul>';
+    docList.forEach(function(d){ html += '<li>'+d+'</li>'; });
+    html += '</ul></div>';
+    // 주의 + CTA
+    html += '<div class="s-note">⚠ 본 진단은 입력값 기준 1차 스크리닝입니다. 상시근로자수 산정, 중복수급 판정 등은 개별 사안별 노무사 검토가 필요합니다. 정부지원금 신청대행은 공인노무사만 합법적으로 대리할 수 있습니다.</div>';
+    html += '<div class="s-cta">'
+      + '<a href="#contact" class="btn btn-primary">이 결과로 노무사 상담·서류 제출 →</a>'
+      + '<a href="#consult" class="btn btn-ghost">AI 상담으로 더 물어보기 →</a>'
+      + '</div>';
+    html += verifyLine(VERIFIED);
+    out.innerHTML = html;
+    out.scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+
+  function verifyLine(d){
+    return '<div class="s-verify">지원금 정보 최종 검증일 · '+d+' (금액·요건은 매년 개정되므로 상담 시 재확인)</div>';
+  }
+})();
+</script>
 </body>
 </html>
