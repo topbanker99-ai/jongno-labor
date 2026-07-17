@@ -1227,7 +1227,7 @@ async function getTsToken(){
     setTimeout(()=>r(''),15000);
   });
 }
-/* [보안] 리얼타임 상담 비밀번호 — 세션 동안 1회만 물어봄 */
+/* 리얼타임 상담 비밀번호 — 방문객이 입력해야 상담 시작 (세션 동안 1회만 물어봄) */
 function getConsultPw(){
   let pw=sessionStorage.getItem('rtpw');
   if(!pw){pw=prompt('상담 비밀번호를 입력해주세요');if(pw)sessionStorage.setItem('rtpw',pw);}
