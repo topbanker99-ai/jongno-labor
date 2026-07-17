@@ -119,10 +119,17 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 /* hero portrait */
 .hero-photo{position:relative;align-self:stretch;min-height:600px;display:flex;align-items:flex-end;justify-content:center}
 .hero-photo::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(56% 52% at 52% 42%, rgba(220,189,118,.17), transparent 62%)}
-.hero-photo .frame{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:1}
+.hero-photo .frame{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:1;overflow:hidden}
 .hero-photo img{width:auto;max-width:100%;max-height:648px;object-fit:contain;object-position:bottom center;filter:drop-shadow(0 26px 42px rgba(0,0,0,.6))}
-.hero-photo .hero-video{width:auto;max-width:100%;max-height:648px;object-fit:contain;object-position:bottom center;filter:drop-shadow(0 26px 42px rgba(0,0,0,.6))}
-.hero-photo .frame::after{content:"";position:absolute;left:0;right:0;bottom:0;height:12%;background:linear-gradient(180deg,transparent,var(--navy-900));pointer-events:none}
+/* 운율 방식: 인물+배경 통짜 영상을 '벽지'로 깔고 가장자리를 바탕색으로 녹인다 */
+.hero-photo .hero-motion{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;z-index:0;pointer-events:none;opacity:0;transition:opacity .9s ease}
+.hero-photo .hero-motion.on{opacity:1}
+/* 영상 첫 프레임 정지 이미지 폴백 (로딩 중 표시) */
+.hero-photo .frame::before{content:"";position:absolute;inset:0;z-index:0;background:var(--navy-900) center/cover no-repeat;background-image:url('/img/hero-motion-poster.jpg')}
+/* 오버레이: 영상 경계를 바탕색(#10151F)으로 녹여서 '영상의 끝'을 안 보이게 */
+.hero-photo .frame::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:
+  linear-gradient(90deg, #10151F 0%, rgba(16,21,31,.92) 26%, rgba(16,21,31,.40) 54%, rgba(16,21,31,.05) 100%),
+  linear-gradient(180deg, rgba(16,21,31,.30), transparent 22%, transparent 80%, #10151F)}
 .hero-photo .corner{position:absolute;width:34px;height:34px;border:1px solid var(--gold-2);opacity:.7;z-index:2}
 .hero-photo .tl{top:14px;left:14px;border-right:none;border-bottom:none}
 .hero-photo .tr{top:14px;right:14px;border-left:none;border-bottom:none}
@@ -528,7 +535,7 @@ body.no-scroll{overflow:hidden}
     </div>
     <div class="hero-photo">
       <span class="arc" aria-hidden="true"></span>
-      <div class="frame"><video class="hero-video" autoplay muted loop playsinline poster="/img/hero-smile-poster.png"><source src="/img/hero-smile.mp4" type="video/mp4"></video></div>
+      <div class="frame"><video class="hero-motion" autoplay muted loop playsinline preload="auto" src="/img/hero-motion.mp4" onerror="this.style.display='none'"></video></div>
       <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
       <div class="plate"><div class="nm">김경동 공인노무사</div><div class="rl">노무법인 종로</div></div>
     </div>
@@ -1610,5 +1617,6 @@ window.addEventListener('load',()=>{
   route();
 })();
 </script>
+<script>(function(){var v=document.querySelector('.hero-motion');if(!v)return;var on=function(){v.classList.add('on')};if(v.readyState>=2){on()}else{v.addEventListener('loadeddata',on,{once:true});setTimeout(on,4000);}})();</script>
 </body>
 </html>
