@@ -104,10 +104,8 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .hero-badges .chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;letter-spacing:.02em;color:#C9B27E;border:none;padding:0;background:transparent}
 .hero-badges .chip::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold-2);flex:0 0 auto}
 /* 인물 뒤 골드 아치 */
-.hero-photo .arc{position:absolute;left:50%;bottom:-6%;transform:translateX(-50%);width:118%;aspect-ratio:1/1;border-radius:50%;border:1px solid rgba(220,189,118,.28);background:radial-gradient(circle at 50% 30%,rgba(220,189,118,.10),rgba(24,32,49,.35) 62%,transparent 75%);z-index:0}
-.hero-photo .arc::after{content:"";position:absolute;inset:26px;border-radius:50%;border:1px dashed rgba(220,189,118,.14)}
 .hero-watermark{position:absolute;right:-4%;top:2%;width:640px;max-width:60vw;color:rgba(220,189,118,.05);z-index:0;pointer-events:none}
-.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:40px;align-items:center;min-height:560px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,600px);gap:40px;align-items:center;min-height:560px}
 .hero-copy{padding:30px 0 60px}
 .hero .kicker{margin-bottom:26px}
 .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(40px,5.4vw,68px);line-height:1.18;letter-spacing:-.005em;color:var(--ink)}
@@ -117,27 +115,23 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .hero-actions .btn{padding:15px 30px;font-size:15.5px}
 
 /* hero portrait */
-.hero-photo{position:relative;align-self:stretch;min-height:600px;display:flex;align-items:flex-end;justify-content:center}
-.hero-photo::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(56% 52% at 52% 42%, rgba(220,189,118,.17), transparent 62%)}
-.hero-photo .frame{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:1;overflow:hidden}
-.hero-photo img{width:auto;max-width:100%;max-height:648px;object-fit:contain;object-position:bottom center;filter:drop-shadow(0 26px 42px rgba(0,0,0,.6))}
-/* 운율 방식: 인물+배경 통짜 영상을 '벽지'로 깔고 가장자리를 바탕색으로 녹인다 */
-.hero-photo .hero-motion{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;z-index:0;pointer-events:none;opacity:0;transition:opacity .9s ease}
-.hero-photo .hero-motion.on{opacity:1}
-/* 영상 첫 프레임 정지 이미지 폴백 (로딩 중 표시) */
-.hero-photo .frame::before{content:"";position:absolute;inset:0;z-index:0;background:var(--navy-900) center/cover no-repeat;background-image:url('/img/hero-motion-poster.jpg')}
-/* 오버레이: 영상 경계를 바탕색(#10151F)으로 녹여서 '영상의 끝'을 안 보이게 */
-.hero-photo .frame::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:
-  linear-gradient(90deg, #10151F 0%, rgba(16,21,31,.92) 26%, rgba(16,21,31,.40) 54%, rgba(16,21,31,.05) 100%),
-  linear-gradient(180deg, rgba(16,21,31,.30), transparent 22%, transparent 80%, #10151F)}
-.hero-photo .corner{position:absolute;width:34px;height:34px;border:1px solid var(--gold-2);opacity:.7;z-index:2}
-.hero-photo .tl{top:14px;left:14px;border-right:none;border-bottom:none}
-.hero-photo .tr{top:14px;right:14px;border-left:none;border-bottom:none}
-.hero-photo .bl{bottom:14px;left:14px;border-right:none;border-top:none}
-.hero-photo .br{bottom:14px;right:14px;border-left:none;border-top:none}
-.hero-photo .plate{position:absolute;left:20px;bottom:22px;z-index:3;background:rgba(16,21,31,.55);border:1px solid var(--line);backdrop-filter:blur(6px);padding:11px 18px;border-radius:4px}
-.hero-photo .plate .nm{font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:600}
-.hero-photo .plate .rl{font-size:11.5px;color:var(--gold-2);letter-spacing:.06em;margin-top:2px}
+/* ===== 운율 방식: 영상을 히어로 전체 배경(벽지)으로 ===== */
+/* 인물+배경 통짜 영상이 히어로 전체를 덮음 (오른쪽 칸에 가두지 않음) */
+.hero .hero-motion{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;z-index:0;pointer-events:none;opacity:0;transition:opacity .9s ease}
+.hero .hero-motion.on{opacity:1}
+/* 폴백: 영상 첫 프레임 정지 이미지 (로딩 1초간 표시) */
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:var(--navy-900) right center/cover no-repeat;background-image:url('/img/hero-motion-poster.jpg')}
+/* 오버레이: 영상 경계를 바탕색(#10151F)으로 녹여서 '영상의 끝'이 안 보이게 (운율 핵심) */
+.hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:
+  linear-gradient(90deg, #10151F 0%, rgba(16,21,31,.95) 30%, rgba(16,21,31,.55) 55%, rgba(16,21,31,.12) 100%),
+  linear-gradient(180deg, rgba(16,21,31,.45), transparent 20%, transparent 76%, #10151F)}
+/* 텍스트·그리드는 영상·오버레이 위로 */
+.hero>.wrap{position:relative;z-index:2}
+/* 네임플레이트: 영상 위 우하단 */
+.hero-plate{position:absolute;right:34px;bottom:34px;z-index:2;background:rgba(16,21,31,.55);border:1px solid var(--line);backdrop-filter:blur(6px);padding:11px 18px;border-radius:4px}
+.hero-plate .nm{font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:600}
+.hero-plate .rl{font-size:11.5px;color:var(--gold-2);letter-spacing:.06em;margin-top:2px}
+
 
 /* ---------- practice bar ---------- */
 .practice{background:var(--navy-800);border-top:1px solid var(--line);border-bottom:1px solid var(--line-soft);position:relative;z-index:2}
@@ -337,13 +331,15 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .menu,.nav-phone{display:none}
   .hamburger{display:flex}
   .hero{min-height:auto}
-  /* 씬 모드: 좁은 화면에선 빈 사진 영역 제거, 카피가 바로 배경 위에 표시 */
-  /* 상단 ~290px는 얼굴 노출 구역: 오버레이 거의 투명, 텍스트가 시작되는 중하단부터 어둡게 */
+  /* 운율 모바일 방식: 영상을 상단 밴드로, 텍스트는 그 아래 바탕색 위에 */
+  .hero .hero-motion{height:340px;bottom:auto;object-position:72% center}
+  .hero::before{height:340px;bottom:auto}
+  .hero::after{background:
+    linear-gradient(180deg, rgba(16,21,31,.25) 0%, rgba(16,21,31,.15) 32%, rgba(16,21,31,.75) 58%, #10151F 78%)}
   .hero-grid{grid-template-columns:1fr;gap:0}
-  .hero-photo{min-height:420px;order:-1;margin:0 -26px}
-  .hero-photo .arc{width:88%;bottom:-4%}
-  /* 얼굴이 가려지면 아래 290px 값을 키우고(더 내림), 여백이 과하면 줄이세요 */
-  .hero-copy{padding:290px 0 44px}
+  .hero-plate{display:none}
+  /* 상단 340px는 영상(얼굴) 구역, 텍스트는 그 아래부터 */
+  .hero-copy{padding:300px 0 44px}
   .hero-badges{margin-top:26px}
   .practice-grid{grid-template-columns:1fr 1fr}
   /* 모바일: 업무분야 타이틀 줄바꿈 방지 */
@@ -516,7 +512,8 @@ body.no-scroll{overflow:hidden}
 
 <!-- 히어로 -->
 <section class="hero" id="top" data-view="home">
-  <svg class="hero-watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5"><path d="M12 2v20M5 22h14M12 6l-8 2.4 3.2 5.6a3.2 3.2 0 01-6.4 0L4 8.4M12 6l8 2.4-3.2 5.6a3.2 3.2 0 006.4 0L20 8.4M4 8.4L12 6l8 2.4"/></svg>
+  <video class="hero-motion" autoplay muted loop playsinline preload="auto" src="/img/hero-motion.mp4" onerror="this.style.display='none'"></video>
+  <div class="hero-plate"><div class="nm">김경동 공인노무사</div><div class="rl">노무법인 종로</div></div>
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <span class="eyebrow kicker">서울 종로 · 안산 · 고양 | 노동사건 노무법인</span>
@@ -532,12 +529,6 @@ body.no-scroll{overflow:hidden}
         <span class="chip">서울·안산·고양 3개 지점</span>
         <span class="chip">AI 사전상담 시스템</span>
       </div>
-    </div>
-    <div class="hero-photo">
-      <span class="arc" aria-hidden="true"></span>
-      <div class="frame"><video class="hero-motion" autoplay muted loop playsinline preload="auto" src="/img/hero-motion.mp4" onerror="this.style.display='none'"></video></div>
-      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-      <div class="plate"><div class="nm">김경동 공인노무사</div><div class="rl">노무법인 종로</div></div>
     </div>
 </div>
 </section>
