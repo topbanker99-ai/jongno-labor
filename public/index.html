@@ -91,8 +91,25 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .nav-phone .pic{color:var(--gold-2)}
 .nav-phone .pt .num{font-family:var(--serif);font-weight:700;font-size:19px;color:var(--ink);letter-spacing:.02em}
 .nav-phone .pt .hrs{font-size:10.5px;color:var(--ink-faint);letter-spacing:.04em}
-.hamburger{display:none;flex-direction:column;gap:5px;padding:8px}
-.hamburger span{width:24px;height:2px;background:var(--gold-2);border-radius:2px}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer}
+.hamburger span{width:24px;height:2px;background:var(--gold-2);border-radius:2px;transition:transform .28s ease,opacity .2s ease}
+.hamburger.on span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.on span:nth-child(2){opacity:0}
+.hamburger.on span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* 모바일 메뉴 */
+.mnav-backdrop{position:fixed;inset:0;background:rgba(6,9,16,.6);backdrop-filter:blur(3px);z-index:78;opacity:0;transition:opacity .28s ease}
+.mnav-backdrop.on{opacity:1}
+.mnav{position:fixed;top:0;right:0;width:min(78vw,300px);height:100vh;z-index:79;
+  background:var(--navy-850);border-left:1px solid var(--line);box-shadow:-18px 0 46px rgba(0,0,0,.5);
+  padding:92px 24px 28px;display:flex;flex-direction:column;gap:2px;
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+.mnav.on{transform:translateX(0)}
+.mnav>a{font-size:16.5px;font-weight:600;color:var(--ink-soft);padding:15px 4px;border-bottom:1px solid var(--line-soft);transition:color .2s}
+.mnav>a:hover,.mnav>a.on{color:var(--gold-2)}
+.mnav-foot{margin-top:auto;padding-top:24px}
+.mnav-tel{display:block;font-size:19px;font-weight:800;color:var(--ink);margin-bottom:4px}
+.mnav-tel em{display:block;font-style:normal;font-size:12px;font-weight:400;color:var(--ink-faint);margin-top:3px}
+.mnav-cta{width:100%;text-align:center;margin-top:16px;padding:14px}
 
 /* ---------- hero: 풀블리드 씬 모드 (힉스필드 합성 이미지용) ---------- */
 
@@ -388,7 +405,9 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .hero-grid{grid-template-columns:1fr;gap:0;padding-bottom:0}
   .hero-videos{position:static;margin:26px 0 8px}
   .vstrip{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-  .hero-plate{display:none}
+  .hero-plate{right:16px;top:264px;bottom:auto;padding:9px 14px}
+  .hero-plate .nm{font-size:15px}
+  .hero-plate .rl{font-size:10.5px}
   /* 상단 340px는 영상(얼굴) 구역, 텍스트는 그 아래부터 */
   .hero-copy{padding:300px 0 44px}
   .hero-badges{margin-top:26px}
@@ -566,10 +585,25 @@ body.no-scroll{overflow:hidden}
         <span class="pt"><span class="num">02-6929-4540</span><span class="hrs">평일 09:00 - 18:00</span></span>
       </div>
       <a href="#consult" class="btn btn-primary">AI 상담 시작</a>
-      <button class="hamburger" aria-label="메뉴"><span></span><span></span><span></span></button>
+      <button class="hamburger" id="hamburger" aria-label="메뉴" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
+
+<!-- 모바일 메뉴 -->
+<div class="mnav-backdrop" id="mnavBack" hidden></div>
+<nav class="mnav" id="mnav" aria-label="모바일 메뉴" hidden>
+  <a href="#about">소개</a>
+  <a href="#calc">사전진단</a>
+  <a href="#subsidy">지원금진단</a>
+  <a href="#ai">AI상담</a>
+  <a href="#cases">주요업무</a>
+  <a href="#contact">오시는길</a>
+  <div class="mnav-foot">
+    <a href="tel:0269294540" class="mnav-tel">02-6929-4540<em>평일 09:00 - 18:00</em></a>
+    <a href="#consult" class="btn btn-primary mnav-cta">AI 상담 시작</a>
+  </div>
+</nav>
 
 <!-- 히어로 -->
 <section class="hero" id="top" data-view="home">
@@ -1870,6 +1904,34 @@ window.addEventListener('load',()=>{
   function verifyLine(d){
     return '<div class="s-verify">지원금 정보 최종 검증일 · '+d+' (금액·요건은 매년 개정되므로 상담 시 재확인)</div>';
   }
+})();
+</script>
+<script>
+/* 모바일 햄버거 메뉴 */
+(function(){
+  var btn=document.getElementById('hamburger'),
+      nav=document.getElementById('mnav'),
+      back=document.getElementById('mnavBack');
+  if(!btn||!nav||!back) return;
+  var open=false;
+  function setOpen(v){
+    open=v;
+    if(v){ nav.hidden=false; back.hidden=false;
+      requestAnimationFrame(function(){ nav.classList.add('on'); back.classList.add('on'); });
+      document.body.style.overflow='hidden';
+    } else {
+      nav.classList.remove('on'); back.classList.remove('on');
+      document.body.style.overflow='';
+      setTimeout(function(){ if(!open){ nav.hidden=true; back.hidden=true; } },300);
+    }
+    btn.classList.toggle('on',v);
+    btn.setAttribute('aria-expanded',v?'true':'false');
+  }
+  btn.addEventListener('click',function(e){ e.stopPropagation(); setOpen(!open); });
+  back.addEventListener('click',function(){ setOpen(false); });
+  nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setOpen(false); }); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&open) setOpen(false); });
+  window.addEventListener('resize',function(){ if(window.innerWidth>980&&open) setOpen(false); });
 })();
 </script>
 </body>
