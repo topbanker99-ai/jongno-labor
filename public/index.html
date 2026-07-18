@@ -105,7 +105,7 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .hero-badges .chip::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold-2);flex:0 0 auto}
 /* 인물 뒤 골드 아치 */
 .hero-watermark{position:absolute;right:-4%;top:2%;width:640px;max-width:60vw;color:rgba(220,189,118,.05);z-index:0;pointer-events:none}
-.hero-grid{display:grid;grid-template-columns:minmax(0,600px);gap:40px;align-items:center;min-height:560px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,600px);gap:40px;align-items:center;min-height:560px;padding-bottom:238px}
 .hero-copy{padding:30px 0 60px}
 .hero .kicker{margin-bottom:26px}
 .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(40px,5.4vw,68px);line-height:1.18;letter-spacing:-.005em;color:var(--ink)}
@@ -162,6 +162,24 @@ section.block{padding:96px 0;position:relative}
 /* ============ 승소가능성 계산기 ============ */
 .calc{background:linear-gradient(180deg,var(--navy-900),var(--navy-850))}
 .calc::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(700px 400px at 12% 0%,rgba(220,189,118,.08),transparent 60%)}
+/* ===== 히어로 하단 영상 띠 ===== */
+.hero-videos{position:absolute;left:0;right:0;bottom:40px;z-index:2}
+.hv-label{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--gold-2);margin-bottom:14px}
+.hv-label .hv-rule{width:34px;height:3px;background:var(--gold-2);display:inline-block}
+.hv-label em{font-style:normal;font-size:13px;font-weight:400;color:var(--ink-faint)}
+.vstrip{display:grid;grid-template-columns:repeat(4,minmax(0,252px));gap:18px}
+.hv-card{cursor:default}
+.vthumb{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line-soft);
+  background:var(--navy-900);aspect-ratio:16/9;box-shadow:0 14px 32px rgba(0,0,0,.5);
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.vthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.hv-card:hover .vthumb{transform:translateY(-4px);box-shadow:0 22px 44px rgba(0,0,0,.6);border-color:var(--line)}
+.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;
+  background:rgba(16,21,31,.62);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);opacity:0;transition:opacity .25s ease}
+.vplay svg{width:20px;height:20px;fill:var(--gold-2);margin-left:2px}
+.hv-card:hover .vplay{opacity:1}
+.vmeta{font-size:12px;color:var(--ink-faint);margin-top:9px}
 .calc-shell{max-width:1080px;margin:0 auto;background:var(--glass);border:1px solid var(--card-brd);border-radius:18px;padding:10px;backdrop-filter:blur(10px)}
 /* ===== 정부지원금 간이진단 ===== */
 .subsidy-shell{max-width:1080px;margin:0 auto;background:var(--glass);border:1px solid var(--card-brd);border-radius:18px;padding:10px;backdrop-filter:blur(10px)}
@@ -337,11 +355,10 @@ section.block{padding:96px 0;position:relative}
 .info-cta{width:100%;margin-top:8px;padding:14px;font-size:15px}
 
 /* ============ CTA 배너 ============ */
-/* CTA 배경: 골드 인장 워터마크 + 그라디언트 (외부 에셋 불필요) */
+/* CTA 배경: 골드 그라디언트 (인장 워터마크 제거) */
 .cta{background:
    radial-gradient(800px 400px at 50% 0%, rgba(220,189,118,.16), transparent 60%),
-   var(--navy-850) url('/img/seal.png') calc(100% + 90px) center/380px no-repeat;
-   background-blend-mode:normal;
+   var(--navy-850);
    border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;padding:100px 0}
 .cta h2{font-family:var(--serif);font-size:clamp(27px,3.2vw,38px);color:var(--ink);margin-bottom:14px;letter-spacing:.01em}
 .cta p{font-size:16px;color:var(--ink-faint);margin-bottom:32px}
@@ -368,7 +385,9 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .hero::before{height:340px;bottom:auto}
   .hero::after{background:
     linear-gradient(180deg, rgba(16,21,31,.25) 0%, rgba(16,21,31,.15) 32%, rgba(16,21,31,.75) 58%, #10151F 78%)}
-  .hero-grid{grid-template-columns:1fr;gap:0}
+  .hero-grid{grid-template-columns:1fr;gap:0;padding-bottom:0}
+  .hero-videos{position:static;margin:26px 0 8px}
+  .vstrip{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
   .hero-plate{display:none}
   /* 상단 340px는 영상(얼굴) 구역, 텍스트는 그 아래부터 */
   .hero-copy{padding:300px 0 44px}
@@ -535,7 +554,6 @@ body.no-scroll{overflow:hidden}
     </a>
     <nav class="menu">
       <a href="#about">소개</a>
-      <a href="#practice">업무분야</a>
       <a href="#calc">사전진단</a>
       <a href="#subsidy">지원금진단</a>
       <a href="#ai">AI상담</a>
@@ -564,7 +582,7 @@ body.no-scroll{overflow:hidden}
       <p class="lead">부당해고·징계와 임금체불·퇴직금, 근로자와 사업주<br>양쪽의 실무를 아는 공인노무사가 해법을 제시합니다.</p>
       <div class="hero-actions">
         <a href="#consult" class="btn btn-primary">AI 음성 상담 시작 <span class="ar">→</span></a>
-        <a href="#practice" class="btn btn-ghost">업무분야 보기 <span class="ar">→</span></a>
+        <a href="#cases" class="btn btn-ghost">주요업무 보기 <span class="ar">→</span></a>
       </div>
       <div class="hero-badges">
         <span class="chip">공인노무사 김경동</span>
@@ -574,31 +592,38 @@ body.no-scroll{overflow:hidden}
       </div>
     </div>
 </div>
-</section>
-
-<!-- 업무분야 -->
-<section class="practice" id="practice" data-view="home practice">
-  <div class="wrap">
-    <div class="practice-grid">
-      <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 7v11a1 1 0 001 1h14a1 1 0 001-1V7M9 7V5a1.5 1.5 0 011.5-1.5h3A1.5 1.5 0 0115 5v2M9.5 12.5l1.8 1.8 3.4-3.6"/></svg></span><span class="pt">부당해고·징계</span></div>
-        <div class="psub">구제신청 대리 · 징계 대응 · 권고사직 · 계약만료</div>
-      </div>
-      <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.2v9.6M9.2 14.4c.5 1 1.6 1.6 2.8 1.6 1.7 0 3-.9 3-2.2 0-2.9-5.6-1.5-5.6-4.2 0-1.3 1.2-2.2 2.6-2.2 1.1 0 2.1.5 2.6 1.4"/></svg></span><span class="pt">임금체불·퇴직금</span></div>
-        <div class="psub">체불임금 진정 · 퇴직금 · 연장/야간수당 · 대지급금</div>
-      </div>
-      <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="7" r="2.4"/><path d="M12 9.4v3.6M4.5 17.5c2.2-2.6 4.7-3.9 7.5-3.9s5.3 1.3 7.5 3.9M4 20h16"/></svg></span><span class="pt">괴롭힘·산재</span></div>
-        <div class="psub">직장 내 괴롭힘 신고 · 산재신청 · 요양·보상 절차</div>
-      </div>
-      <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 20V8l5-3.5L14 8v12M4 20h16M14 20V11h6v9M7.5 11h2M7.5 14.5h2M16.8 14h.9"/></svg></span><span class="pt">기업 인사노무 자문</span></div>
-        <div class="psub">취업규칙 · 인사제도 정비 · 노동청 대응 · 급여관리</div>
+  <!-- 히어로 하단 영상 띠 (링크 미연동) -->
+  <div class="hero-videos">
+    <div class="wrap">
+      <div class="hv-label"><span class="hv-rule"></span>노무 영상<em>· 곧 공개됩니다</em></div>
+      <div class="vstrip">
+        <article class="hv-card">
+          <div class="vthumb"><img src="/img/yt-1.jpg" alt="7년 다닌 회사, 카톡 한 줄로 해고당한 직원의 결말" loading="lazy">
+            <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
+          <p class="vmeta">부당해고 실제 사례</p>
+        </article>
+        <article class="hv-card">
+          <div class="vthumb"><img src="/img/yt-2.jpg" alt="직원 한 명 잘못 자르고 2천만원 물어준 사장님" loading="lazy">
+            <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
+          <p class="vmeta">사업주 인사노무</p>
+        </article>
+        <article class="hv-card">
+          <div class="vthumb"><img src="/img/yt-3.jpg" alt="부당해고인데 이거 몰라서 3개월 날린 사람들" loading="lazy">
+            <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
+          <p class="vmeta">구제신청 기한</p>
+        </article>
+        <article class="hv-card">
+          <div class="vthumb"><img src="/img/yt-4.jpg" alt="사직서 쓰면 끝입니다 — 절대 먼저 쓰지 마세요" loading="lazy">
+            <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
+          <p class="vmeta">권고사직 대응</p>
+        </article>
       </div>
     </div>
   </div>
 </section>
+
+<!-- 업무분야 -->
+<!-- 업무분야는 주요업무 섹션으로 통합됨 -->
 
 <!-- 승소가능성 계산기 -->
 <section class="calc block" id="calc" data-view="calc">
@@ -780,6 +805,25 @@ body.no-scroll{overflow:hidden}
       <span class="eyebrow">OUR SERVICES</span>
       <h2>주요 업무</h2>
       <p class="sec-sub">노무법인 종로가 수행하는 대표 업무입니다. 사안마다 사실관계가 달라 결과를 보장하지 않으며, 정확한 판단은 상담을 통해 확인하실 수 있습니다.</p>
+    </div>
+    <!-- 업무분야 요약 (4개 핵심 영역) -->
+    <div class="practice-grid" style="margin-bottom:48px">
+      <div class="pcard">
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 7v11a1 1 0 001 1h14a1 1 0 001-1V7M9 7V5a1.5 1.5 0 011.5-1.5h3A1.5 1.5 0 0115 5v2M9.5 12.5l1.8 1.8 3.4-3.6"/></svg></span><span class="pt">부당해고·징계</span></div>
+        <div class="psub">구제신청 대리 · 징계 대응 · 권고사직 · 계약만료</div>
+      </div>
+      <div class="pcard">
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.2v9.6M9.2 14.4c.5 1 1.6 1.6 2.8 1.6 1.7 0 3-.9 3-2.2 0-2.9-5.6-1.5-5.6-4.2 0-1.3 1.2-2.2 2.6-2.2 1.1 0 2.1.5 2.6 1.4"/></svg></span><span class="pt">임금체불·퇴직금</span></div>
+        <div class="psub">체불임금 진정 · 퇴직금 · 연장/야간수당 · 대지급금</div>
+      </div>
+      <div class="pcard">
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="7" r="2.4"/><path d="M12 9.4v3.6M4.5 17.5c2.2-2.6 4.7-3.9 7.5-3.9s5.3 1.3 7.5 3.9M4 20h16"/></svg></span><span class="pt">괴롭힘·산재</span></div>
+        <div class="psub">직장 내 괴롭힘 신고 · 산재신청 · 요양·보상 절차</div>
+      </div>
+      <div class="pcard">
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 20V8l5-3.5L14 8v12M4 20h16M14 20V11h6v9M7.5 11h2M7.5 14.5h2M16.8 14h.9"/></svg></span><span class="pt">기업 인사노무 자문</span></div>
+        <div class="psub">취업규칙 · 인사제도 정비 · 노동청 대응 · 급여관리</div>
+      </div>
     </div>
     <div class="cases-grid">
       <a class="ccard" href="#consult">
@@ -1696,8 +1740,9 @@ window.addEventListener('load',()=>{
 /* ===== 탭(SPA) 라우터: 상단 메뉴별 화면 전환 ===== */
 (function(){
   document.body.classList.add('spa');
-  const VIEWS = ['home','about','practice','calc','subsidy','ai','cases','contact'];
-  const HASH2VIEW = { '':'home', top:'home', about:'about', practice:'practice', calc:'calc',
+  const VIEWS = ['home','about','calc','subsidy','ai','cases','contact'];
+  const HASH2VIEW = { '':'home', top:'home', about:'about', practice:'cases', calc:'calc',
+                      videos:'home',
                       subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home' };
   const secs = Array.from(document.querySelectorAll('section[data-view]'));
   const menuLinks = Array.from(document.querySelectorAll('.menu a, a[href^="#"]'));
