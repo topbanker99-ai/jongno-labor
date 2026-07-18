@@ -538,7 +538,7 @@ body.no-scroll{overflow:hidden}
 .co-change:hover{color:var(--gold-3);border-color:var(--line)}
 .co-close{width:38px;height:38px;border-radius:10px;border:1px solid var(--line-soft);color:var(--ink-soft);font-size:16px;display:grid;place-items:center;transition:all .2s}
 .co-close:hover{color:var(--gold-3);border-color:var(--line);background:rgba(220,189,118,.07)}
-.co-step{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:44px 22px 60px}
+.co-step{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:44px 22px 60px;scroll-margin-top:80px}
 /* STEP 1: 관점 게이트 — 내용이 길어도 상단이 잘리지 않도록 auto 마진으로 중앙정렬 */
 .co-gate{justify-content:flex-start;min-height:auto}
 .co-gate>.co-gate-head{margin-top:auto}
@@ -1358,7 +1358,8 @@ function showConsult(){ coGate.style.display='none'; coMain.style.display='';
   coChange.style.display=''; }
 function openConsult(){ coOverlay.classList.add('on'); coOverlay.setAttribute('aria-hidden','false');
   document.body.classList.add('no-scroll');
-  if(PERSP) showConsult(); else showGate(); }
+  if(PERSP) showConsult(); else showGate();
+  try{ coOverlay.scrollTop=0; requestAnimationFrame(function(){ coOverlay.scrollTop=0; }); setTimeout(function(){ coOverlay.scrollTop=0; },60); }catch(e){} }
 function closeConsult(){ coOverlay.classList.remove('on'); coOverlay.setAttribute('aria-hidden','true');
   document.body.classList.remove('no-scroll');
   if(location.hash==='#consult') history.replaceState(null,'',location.pathname+'#top'); }
