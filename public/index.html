@@ -118,12 +118,12 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .hero>.wrap{width:100%}
 /* 경력 배지 칩 */
 .hero-badges{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:40px;padding-top:18px;border-top:1px solid rgba(220,189,118,.25)}
-.hero-badges .chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;letter-spacing:.02em;color:#C9B27E;border:none;padding:0;background:transparent}
+.hero-badges .chip{display:inline-flex;align-items:center;gap:7px;font-size:15.5px;letter-spacing:.02em;color:#C9B27E;border:none;padding:0;background:transparent}
 .hero-badges .chip::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold-2);flex:0 0 auto}
 /* 인물 뒤 골드 아치 */
 .hero-watermark{position:absolute;right:-4%;top:2%;width:640px;max-width:60vw;color:rgba(220,189,118,.05);z-index:0;pointer-events:none}
-.hero-grid{display:grid;grid-template-columns:minmax(0,600px);gap:40px;align-items:center;min-height:560px;padding-bottom:238px}
-.hero-copy{padding:30px 0 60px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,600px);gap:40px;align-items:center;min-height:560px;padding-bottom:210px}
+.hero-copy{padding:70px 0 60px}
 .hero .kicker{margin-bottom:26px}
 .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(40px,5.4vw,68px);line-height:1.18;letter-spacing:-.005em;color:var(--ink)}
 .hero h1 .g{display:block;color:transparent;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;margin-top:6px}
@@ -180,11 +180,11 @@ section.block{padding:96px 0;position:relative}
 .calc{background:linear-gradient(180deg,var(--navy-900),var(--navy-850))}
 .calc::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(700px 400px at 12% 0%,rgba(220,189,118,.08),transparent 60%)}
 /* ===== 히어로 하단 영상 띠 ===== */
-.hero-videos{position:absolute;left:0;right:0;bottom:40px;z-index:2}
+.hero-videos{position:absolute;left:0;right:0;bottom:32px;z-index:2}
 .hv-label{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--gold-2);margin-bottom:14px}
 .hv-label .hv-rule{width:34px;height:3px;background:var(--gold-2);display:inline-block}
 .hv-label em{font-style:normal;font-size:13px;font-weight:400;color:var(--ink-faint)}
-.vstrip{display:grid;grid-template-columns:repeat(4,minmax(0,252px));gap:18px}
+.vstrip{display:grid;grid-template-columns:repeat(4,minmax(0,230px));gap:18px}
 .hv-card{cursor:default}
 .vthumb{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line-soft);
   background:var(--navy-900);aspect-ratio:16/9;box-shadow:0 14px 32px rgba(0,0,0,.5);
@@ -403,13 +403,13 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .hero::after{background:
     linear-gradient(180deg, rgba(16,21,31,.25) 0%, rgba(16,21,31,.15) 32%, rgba(16,21,31,.75) 58%, #10151F 78%)}
   .hero-grid{grid-template-columns:1fr;gap:0;padding-bottom:0}
-  .hero-videos{position:static;margin:26px 0 8px}
+  .hero-videos{position:relative;z-index:2;margin:26px 0 8px}
   .vstrip{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
   .hero-plate{right:16px;top:264px;bottom:auto;padding:9px 14px}
   .hero-plate .nm{font-size:15px}
   .hero-plate .rl{font-size:10.5px}
   /* 상단 340px는 영상(얼굴) 구역, 텍스트는 그 아래부터 */
-  .hero-copy{padding:300px 0 44px}
+  .hero-copy{padding:348px 0 44px}
   .hero-badges{margin-top:26px}
   .practice-grid{grid-template-columns:1fr 1fr}
   /* 모바일: 업무분야 타이틀 줄바꿈 방지 */
@@ -634,22 +634,18 @@ body.no-scroll{overflow:hidden}
         <article class="hv-card">
           <div class="vthumb"><img src="/img/yt-1.jpg" alt="7년 다닌 회사, 카톡 한 줄로 해고당한 직원의 결말" loading="lazy">
             <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
-          <p class="vmeta">부당해고 실제 사례</p>
         </article>
         <article class="hv-card">
           <div class="vthumb"><img src="/img/yt-2.jpg" alt="직원 한 명 잘못 자르고 2천만원 물어준 사장님" loading="lazy">
             <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
-          <p class="vmeta">사업주 인사노무</p>
         </article>
         <article class="hv-card">
           <div class="vthumb"><img src="/img/yt-3.jpg" alt="부당해고인데 이거 몰라서 3개월 날린 사람들" loading="lazy">
             <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
-          <p class="vmeta">구제신청 기한</p>
         </article>
         <article class="hv-card">
           <div class="vthumb"><img src="/img/yt-4.jpg" alt="사직서 쓰면 끝입니다 — 절대 먼저 쓰지 마세요" loading="lazy">
             <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
-          <p class="vmeta">권고사직 대응</p>
         </article>
       </div>
     </div>
@@ -691,7 +687,7 @@ body.no-scroll{overflow:hidden}
 </section>
 
 <!-- 정부지원금 간이진단 (사업주 대상) -->
-<section class="subsidy block" id="subsidy" data-view="subsidy">
+<section class="subsidy block" id="subsidy" data-view="home subsidy">
   <div class="wrap">
     <div class="sec-head">
       <div class="center-eyebrow"><span class="eyebrow center">사업주 정부지원금 간이진단</span></div>
