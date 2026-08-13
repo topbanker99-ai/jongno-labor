@@ -99,7 +99,7 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 /* 모바일 메뉴 */
 .mnav-backdrop{position:fixed;inset:0;background:rgba(6,9,16,.6);backdrop-filter:blur(3px);z-index:78;opacity:0;transition:opacity .28s ease}
 .mnav-backdrop.on{opacity:1}
-.mnav{position:fixed;top:0;right:0;width:min(78vw,300px);height:100vh;z-index:79;
+.mnav{position:fixed;top:0;right:0;width:min(78vw,300px);height:100dvh;z-index:79;
   background:var(--navy-850);border-left:1px solid var(--line);box-shadow:-18px 0 46px rgba(0,0,0,.5);
   padding:92px 24px 28px;display:flex;flex-direction:column;gap:2px;
   transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto}
@@ -129,7 +129,28 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .hero h1 .g{display:block;color:transparent;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;margin-top:6px}
 .hero .lead{font-size:17px;color:var(--ink-soft);margin:28px 0 38px;max-width:500px;line-height:1.85}
 .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
-.hero-actions .btn{padding:15px 30px;font-size:15.5px}
+.hero-actions .btn{padding:15px 30px;font-size:15.5px;border-radius:10px}
+/* 주 버튼 — 골드 글래스 엠보싱 */
+.hero-actions .btn-primary{
+  background:rgba(201,162,75,.20);
+  border:1px solid rgba(201,162,75,.55);
+  border-top-color:rgba(247,231,184,.85);
+  box-shadow:inset 0 1px 0 rgba(255,244,214,.30), inset 0 -1px 0 rgba(0,0,0,.35);
+  color:#F1DCA6;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.hero-actions .btn-primary:hover{
+  background:rgba(201,162,75,.32);filter:none;transform:translateY(-2px);
+  box-shadow:inset 0 1px 0 rgba(255,244,214,.38), inset 0 -1px 0 rgba(0,0,0,.35)}
+/* 보조 버튼 — 무채색 글래스 */
+.hero-actions .btn-ghost{
+  background:rgba(240,233,220,.07);
+  border:1px solid rgba(201,162,75,.26);
+  border-top-color:rgba(240,233,220,.40);
+  box-shadow:inset 0 1px 0 rgba(255,244,214,.18), inset 0 -1px 0 rgba(0,0,0,.30);
+  color:#EFE7D6;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.hero-actions .btn-ghost:hover{
+  background:rgba(240,233,220,.14);border-top-color:rgba(240,233,220,.55);transform:translateY(-2px)}
 
 /* hero portrait */
 /* ===== 운율 방식: 영상을 히어로 전체 배경(벽지)으로 ===== */
@@ -410,7 +431,17 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .hero-plate .rl{font-size:10.5px}
   /* 상단 340px는 영상(얼굴) 구역, 텍스트는 그 아래부터 */
   .hero-copy{padding:348px 0 44px}
-  .hero-badges{margin-top:26px}
+  /* 텍스트 영역 뒤 보신각 세로 씬 (Higgsfield) — 배포 시 /img/hero-m.png 로 교체 권장 */
+  .hero{background:#10151F url('https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_113305_5d9c95f2-8633-4eba-a514-781271fcf282.png') center bottom/100% auto no-repeat}
+  .hero::after{background:
+    linear-gradient(180deg, rgba(16,21,31,.25) 0%, rgba(16,21,31,.15) 32%, rgba(16,21,31,.78) 56%, rgba(16,21,31,.88) 72%, rgba(16,21,31,.62) 100%)}
+  .hero h1{font-size:clamp(30px,8vw,40px);line-height:1.24}
+  .hero .lead{font-size:15px;margin:20px 0 28px;line-height:1.75}
+  .hero .lead br{display:none}
+  .hero-actions .btn{padding:14px 22px;font-size:14.5px}
+  .hero-badges{margin-top:24px;gap:7px 16px}
+  .hero-badges .chip{font-size:13px}
+  input,select,textarea{font-size:16px}   /* iOS 자동 확대 방지 */
   .practice-grid{grid-template-columns:1fr 1fr}
   /* 모바일: 업무분야 타이틀 줄바꿈 방지 */
   .pcard{padding:20px 8px;gap:6px}
@@ -430,6 +461,17 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .foot-flex{flex-direction:column}
   .foot-copy{white-space:normal}
 }
+@media(max-width:640px){
+  section.block{padding:56px 0}
+  .sec-head{margin-bottom:38px}
+  .sec-head h2{font-size:clamp(24px,6.4vw,30px)}
+  .sec-head p{font-size:14px}
+  .topbar{font-size:11px;line-height:1.5}
+  .topbar .tb-extra{display:none}   /* 모바일에서 부가 문구 숨김 */
+  .cal-box{padding:20px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .cal-grid{min-width:540px}
+  .pcard .ph .pt{font-size:15px;letter-spacing:0}
+}
 @media(max-width:520px){
   .nav{height:70px}
   .brand .bt .big{font-size:20px}
@@ -438,6 +480,24 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .grange{font-size:34px}
 }
 
+
+/* ---------- AI상담 섹션 앰비언트 배경 (Higgsfield 씬) — 배포 시 /img/ai-scene.png 로 교체 권장 ---------- */
+#ai.block{background:linear-gradient(180deg,rgba(6,17,31,.93),rgba(6,17,31,.90) 40%,rgba(6,17,31,.96)),url('https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_113305_650a6767-e9ec-4b50-b9bf-0b954915bb8e.png') center 30%/cover no-repeat}
+
+
+/* ---------- 오시는길 지도 + 길찾기 ---------- */
+.map-wrap{max-width:760px;margin:40px auto 0}
+.map-frame{border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;background:#0B1E33}
+.map-frame iframe{display:block;width:100%;height:340px;border:0;filter:grayscale(.15) brightness(.92)}
+.map-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.map-btns a{display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 10px;border-radius:10px;font-size:14px;font-weight:600;color:#EFE7D6;
+  background:rgba(240,233,220,.05);border:1px solid rgba(240,233,220,.14);
+  transition:background .25s,border-color .25s}
+.map-btns a:hover{background:rgba(240,233,220,.10);border-color:rgba(240,233,220,.26)}
+.map-btns .bdot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.map-note{margin-top:8px;text-align:center;font-size:12px;color:var(--ink-faint)}
+@media(max-width:640px){.map-frame iframe{height:250px}.map-btns a{font-size:13px;padding:12px 6px}}
 
 /* ---------- 예약 캘린더 (시안) ---------- */
 .calendar{padding:80px 0 90px;border-top:1px solid var(--line)}
@@ -501,12 +561,6 @@ body.spa .hero.view-on{display:block}
 @media(max-width:760px){.ai-arrow{display:none}.ai-step{max-width:none}}
 
 /* ---------- AI 상담 플로팅 버튼 ---------- */
-.consult-fab{position:fixed;right:22px;bottom:22px;z-index:60;width:68px;height:68px;border-radius:50%;
-  background:var(--gold-grad);color:#241708;display:grid;place-items:center;gap:0;box-shadow:0 10px 30px rgba(220,189,118,.35),0 4px 12px rgba(0,0,0,.4);
-  transition:transform .25s ease,box-shadow .25s ease;line-height:1.05}
-.consult-fab svg{width:22px;height:22px;margin-bottom:1px}
-.consult-fab span{font-size:10.5px;font-weight:800;letter-spacing:.04em}
-.consult-fab:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 14px 36px rgba(220,189,118,.45),0 6px 16px rgba(0,0,0,.45)}
 /* 톡상담 플로팅 버튼 (카카오 스타일 · AI상담 버튼 위) */
 .kakao-fab{position:fixed;right:22px;bottom:22px;z-index:60;display:inline-flex;align-items:center;gap:8px;
   padding:12px 20px 12px 16px;border-radius:30px;background:#FEE500;color:#191600;text-decoration:none;
@@ -516,7 +570,6 @@ body.spa .hero.view-on{display:block}
 .kakao-fab:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 16px 34px rgba(0,0,0,.42)}
 .kakao-fab .kico{width:26px;height:26px;flex:0 0 auto}
 @media(max-width:640px){.kakao-fab{right:16px;bottom:16px;padding:11px 17px 11px 14px;font-size:13.5px}.kakao-fab .kico{width:23px;height:23px}}
-@media(max-width:640px){.consult-fab{right:16px;bottom:16px;width:60px;height:60px}}
 
 /* ---------- 전체화면 상담 오버레이 ---------- */
 body.no-scroll{overflow:hidden}
@@ -575,7 +628,7 @@ body.no-scroll{overflow:hidden}
 </head>
 <body>
 
-<div class="topbar">AI 사전진단·상담은 <b>참고용</b>이며 노무 자문을 대체하지 않습니다 · 상담문의 <b>02-6929-4540</b> · <b>中文咨询可</b></div>
+<div class="topbar">상담문의 <b>02-6929-4540</b> · <b>中文咨询可</b><span class="tb-extra"> · AI 사전진단·상담은 <b>참고용</b>이며 노무 자문을 대체하지 않습니다</span></div>
 
 <!-- 헤더 -->
 <header>
@@ -920,6 +973,18 @@ body.no-scroll{overflow:hidden}
     <div class="cta-actions">
       <a href="tel:0269294540" class="btn btn-primary">전화 상담 02-6929-4540</a>
       <a href="#consult" class="btn btn-ghost">AI 음성 상담 시작 <span class="ar">→</span></a>
+    </div>
+    <div class="map-wrap">
+      <div class="map-frame">
+        <iframe src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%A2%85%EB%A1%9C96%20%ED%95%9C%EC%98%AC%ED%83%80%EC%9B%8C&z=17&hl=ko&output=embed" title="노무법인 종로 본사 위치 지도" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+      <div class="map-btns">
+        <a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%A2%85%EB%A1%9C96%20%ED%95%9C%EC%98%AC%ED%83%80%EC%9B%8C" target="_blank" rel="noopener">
+          <span class="bdot" style="background:#03C75A"></span>네이버지도 길찾기</a>
+        <a href="https://map.kakao.com/link/search/%EC%84%9C%EC%9A%B8%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%A2%85%EB%A1%9C96%20%ED%95%9C%EC%98%AC%ED%83%80%EC%9B%8C" target="_blank" rel="noopener">
+          <span class="bdot" style="background:#FEE500"></span>카카오맵 길찾기</a>
+      </div>
+      <div class="map-note">본사 (03191) 서울시 종로구 종로96, 한올타워 6층 · 지하철 1호선 종각역 인근</div>
     </div>
   </div>
 </section>
@@ -1371,7 +1436,6 @@ coChange.onclick=()=>{
   PERSP=''; showGate();
 };
 document.getElementById('coClose').onclick=closeConsult;
-var _cfab=document.getElementById('consultFab'); if(_cfab) _cfab.onclick=()=>{ location.hash='consult'; openConsult(); };
 
 function setOrb(s){orb.className='orb'+(s?' '+s:'');}
 function setStatus(t){vStatus.textContent=t;}
