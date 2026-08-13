@@ -444,17 +444,19 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .hero-plate{right:16px;top:264px;bottom:auto;padding:9px 14px}
   .hero-plate .nm{font-size:15px}
   .hero-plate .rl{font-size:10.5px}
-  /* 공감형(수정): 영상은 낮은 밴드로 원비율 유지 → 인물 작게, 글자는 페이드에 걸쳐 오버레이 */
+  /* 인물 1.4배 확대판: 영상 밴드를 버튼 아래까지 키우고 오른쪽 기준 크롭(왼쪽 일부 잘림 허용) */
   .hero{min-height:auto}
-  .hero .hero-motion{position:absolute;left:0;right:0;top:0;bottom:auto;width:100%;height:258px;display:block;
-    object-fit:cover;object-position:center 30%;opacity:1;border:none;border-radius:0;margin:0;box-shadow:none}
-  .hero::before{display:block;height:258px;bottom:auto;opacity:1}
+  .hero .hero-motion{position:absolute;left:0;right:0;top:0;bottom:auto;width:100%;height:372px;display:block;
+    object-fit:cover;object-position:88% 22%;opacity:1;border:none;border-radius:0;margin:0;box-shadow:none}
+  .hero::before{display:block;height:372px;bottom:auto;opacity:1}
   .hero::after{display:block;background:
-    linear-gradient(180deg, rgba(16,21,31,.22) 0, rgba(16,21,31,.16) 110px, rgba(16,21,31,.72) 205px, #10151F 260px)}
-  .hero-plate{bottom:auto;top:14px;right:14px;padding:6px 11px}
+    linear-gradient(90deg, rgba(16,21,31,.72), rgba(16,21,31,.30) 46%, transparent 68%),
+    linear-gradient(180deg, rgba(16,21,31,.15) 0, rgba(16,21,31,.14) 150px, rgba(16,21,31,.55) 285px, #10151F 374px)}
+  .hero-plate{bottom:auto;top:224px;right:12px;padding:6px 11px}
   .hero-plate .nm{font-size:12.5px}
   .hero-plate .rl{font-size:9px}
   .hero-copy{padding:168px 0 40px;text-align:left}
+  .hero-copy .eyebrow.kicker{display:none}
   .hero h1{font-size:clamp(27px,7.2vw,34px)}
   .hero-actions{gap:9px;margin-top:26px;flex-wrap:nowrap}
   .hero-actions .btn{padding:11px 16px;font-size:12.5px;white-space:nowrap}
@@ -523,11 +525,21 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 .yt-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line-soft);background:#0B1E33;aspect-ratio:16/9;cursor:pointer;transition:transform .3s,border-color .3s}
 .yt-card:hover{transform:translateY(-4px);border-color:rgba(220,189,118,.45)}
 .yt-card img{width:100%;height:100%;object-fit:cover;display:block}
-.yt-card .yt-t{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;font-size:13.5px;font-weight:700;line-height:1.35;color:#F3EFE6;background:linear-gradient(180deg,transparent,rgba(6,17,31,.92) 55%);text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.yt-info{position:absolute;inset:0;padding:9% 8%;display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:linear-gradient(90deg,rgba(6,17,31,.55),rgba(6,17,31,.15) 55%,transparent 75%)}
+.yt-brand{display:flex;align-items:center;gap:6px;margin-bottom:auto}
+.yt-brand img{width:9%;min-width:20px;max-width:26px;border-radius:50%;background:#fff}
+.yt-brand .b1{font-family:var(--serif);font-size:clamp(9px,3.2cqw,13px);font-weight:700;color:#F3EFE6;line-height:1.15}
+.yt-brand .b2{font-size:clamp(6px,2.2cqw,9px);color:#C9B27E;letter-spacing:.06em}
+.yt-eb{display:flex;align-items:center;gap:6px;font-size:clamp(7px,2.6cqw,10.5px);color:#D6AF5A;letter-spacing:.08em;margin-bottom:3%}
+.yt-eb::before{content:"";width:14px;height:2px;background:var(--gold-2)}
+.yt-tt{font-family:var(--serif);font-weight:800;color:#F6F1E4;font-size:clamp(12px,5.4cqw,21px);line-height:1.32;text-shadow:0 2px 8px rgba(0,0,0,.55)}
+.yt-tt .u{display:inline-block;border-bottom:2px solid var(--gold-2);padding-bottom:2px}
+.yt-sub{font-size:clamp(7px,2.7cqw,11px);color:#C3CDDC;margin-top:4%}
+.yt-card{container-type:inline-size}
 .yt-card .yt-p{position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:40px;height:40px;border-radius:50%;background:rgba(6,17,31,.55);border:1px solid rgba(220,189,118,.5);display:grid;place-items:center;opacity:.85}
 .yt-card .yt-p svg{width:16px;height:16px;fill:#F1D089;margin-left:2px}
 .yt-note{text-align:center;font-size:12.5px;color:var(--ink-faint);margin-top:18px}
-@media(max-width:960px){.yt-grid{grid-template-columns:repeat(2,1fr);gap:10px}.yt-card .yt-t{font-size:12px;padding:20px 9px 8px}}
+@media(max-width:960px){.yt-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
 
 
 /* ---------- 하단 섹션 바로가기 띠 (공감식) ---------- */
@@ -1017,7 +1029,7 @@ body.no-scroll{overflow:hidden}
 <!-- CTA -->
 
 <!-- 유튜브 -->
-<section class="block" id="youtube" data-view="home">
+<section class="block" id="youtube" data-view="youtube">
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow center-eyebrow center">YOUTUBE</span>
@@ -1029,18 +1041,18 @@ body.no-scroll{overflow:hidden}
       <article class="yt-card"><img src="/img/yt-2.jpg" alt="직원 한 명 해고하고 2천만원" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
       <article class="yt-card"><img src="/img/yt-3.jpg" alt="부당해고 맞는데 3개월 지나면 끝" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
       <article class="yt-card"><img src="/img/yt-4.jpg" alt="사직서 쓰는 순간 되돌릴 수 없다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_818826cf-614f-4648-8c3d-268388c8c09c.png" alt="해고예고수당, 몰라서 못 받는 돈" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">해고예고수당, 몰라서 못 받는 돈</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_a8754aec-1ec0-469b-8127-4a0289cc9ba5.png" alt="사직서에 절대 쓰면 안 되는 한 줄" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">사직서에 절대 쓰면 안 되는 한 줄</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_8c186164-98a5-41d8-9d4d-4b3659376b5f.png" alt="5인 미만 사업장, 되는 것 안 되는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">5인 미만 사업장, 되는 것 안 되는 것</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_c8e0915b-e704-46e7-a87b-c7d5af4e8f04.png" alt="포괄임금제 계약서의 함정" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">포괄임금제 계약서의 함정</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_59c709f3-90da-4229-a797-ca89d310d2fd.png" alt="주휴수당 계산법 1분 정리" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">주휴수당 계산법 1분 정리</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_2cc3c542-e8d0-4823-9cea-065aa431aba0.png" alt="노동청 진정, 이 순서로 하세요" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">노동청 진정, 이 순서로 하세요</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_d705c9b3-78ce-43af-8a79-de8161fa89d4.png" alt="권고사직 압박받을 때 첫마디" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">권고사직 압박받을 때 첫마디</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_bfd1c9b6-48d9-4b43-8b84-c6b0e6902c47.png" alt="퇴직금, 14일 지나면 이자 붙습니다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">퇴직금, 14일 지나면 이자 붙습니다</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_6de2c6ad-81e5-46d9-939d-489802dc0e89.png" alt="출퇴근 기록이 증거가 되는 순간" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">출퇴근 기록이 증거가 되는 순간</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_6305dc48-07d5-4089-b3cb-0dbd6e272ebb.png" alt="연차수당, 회사가 말 안 해주는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">연차수당, 회사가 말 안 해주는 것</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_549814ef-4a5c-4ad5-b333-ad82721e7b08.png" alt="직장 내 괴롭힘 신고 전 준비물" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">직장 내 괴롭힘 신고 전 준비물</span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_677c7ecc-18c7-47c8-9ab9-7290c55e6e2b.png" alt="실업급여, 자진퇴사도 되는 경우" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">실업급여, 자진퇴사도 되는 경우</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_818826cf-614f-4648-8c3d-268388c8c09c.png" alt="해고예고수당, 몰라서 못 받는 돈" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">수당 체불</span><span class="yt-tt">해고예고수당<br><span class="u">몰라서 못 받는 돈</span></span><span class="yt-sub">30일 전 통보가 없었다면</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_a8754aec-1ec0-469b-8127-4a0289cc9ba5.png" alt="사직서에 절대 쓰면 안 되는 한 줄" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">사직 전 필독</span><span class="yt-tt">사직서에 절대<br><span class="u">쓰면 안 되는 한 줄</span></span><span class="yt-sub">이 문구면 다툼이 어렵습니다</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_8c186164-98a5-41d8-9d4d-4b3659376b5f.png" alt="5인 미만 사업장, 되는 것 안 되는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">소규모 사업장</span><span class="yt-tt">5인 미만 사업장<br><span class="u">되는 것 안 되는 것</span></span><span class="yt-sub">연차·해고·수당 총정리</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_c8e0915b-e704-46e7-a87b-c7d5af4e8f04.png" alt="포괄임금제 계약서의 함정" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">근로계약 주의</span><span class="yt-tt">포괄임금제<br><span class="u">계약서의 함정</span></span><span class="yt-sub">야근수당이 사라지는 구조</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_59c709f3-90da-4229-a797-ca89d310d2fd.png" alt="주휴수당 계산법 1분 정리" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">임금 상식</span><span class="yt-tt">주휴수당 계산법<br><span class="u">1분 정리</span></span><span class="yt-sub">내 시급에 곱하면 끝</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_2cc3c542-e8d0-4823-9cea-065aa431aba0.png" alt="노동청 진정, 이 순서로 하세요" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">권리구제 절차</span><span class="yt-tt">노동청 진정<br><span class="u">이 순서로 하세요</span></span><span class="yt-sub">순서 틀리면 길어집니다</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_d705c9b3-78ce-43af-8a79-de8161fa89d4.png" alt="권고사직 압박받을 때 첫마디" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">권고사직 대응</span><span class="yt-tt">권고사직 압박받을 때<br><span class="u">첫마디가 중요합니다</span></span><span class="yt-sub">이 말부터 하세요</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_bfd1c9b6-48d9-4b43-8b84-c6b0e6902c47.png" alt="퇴직금, 14일 지나면 이자 붙습니다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">퇴직금 상식</span><span class="yt-tt">퇴직금 14일 지나면<br><span class="u">이자가 붙습니다</span></span><span class="yt-sub">연 20% 지연이자</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_6de2c6ad-81e5-46d9-939d-489802dc0e89.png" alt="출퇴근 기록이 증거가 되는 순간" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">증거 확보</span><span class="yt-tt">출퇴근 기록이<br><span class="u">증거가 되는 순간</span></span><span class="yt-sub">교통카드도 증거입니다</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_6305dc48-07d5-4089-b3cb-0dbd6e272ebb.png" alt="연차수당, 회사가 말 안 해주는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">연차 상식</span><span class="yt-tt">연차수당<br><span class="u">회사가 말 안 해주는 것</span></span><span class="yt-sub">퇴직 전 꼭 확인하세요</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_549814ef-4a5c-4ad5-b333-ad82721e7b08.png" alt="직장 내 괴롭힘 신고 전 준비물" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">괴롭힘 대응</span><span class="yt-tt">직장 내 괴롭힘<br><span class="u">신고 전 준비물</span></span><span class="yt-sub">녹음과 기록이 먼저입니다</span></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_677c7ecc-18c7-47c8-9ab9-7290c55e6e2b.png" alt="실업급여, 자진퇴사도 되는 경우" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">실업급여</span><span class="yt-tt">실업급여<br><span class="u">자진퇴사도 되는 경우</span></span><span class="yt-sub">이 사유면 가능합니다</span></span></article>
     </div>
     <div class="yt-note">채널 공개 준비 중입니다. 영상이 업로드되는 대로 이곳에서 바로 보실 수 있습니다.</div>
   </div>
@@ -1942,10 +1954,10 @@ window.addEventListener('load',()=>{
 /* ===== 탭(SPA) 라우터: 상단 메뉴별 화면 전환 ===== */
 (function(){
   document.body.classList.add('spa');
-  const VIEWS = ['home','about','calc','subsidy','ai','cases','contact'];
+  const VIEWS = ['home','about','calc','subsidy','ai','cases','contact','youtube'];
   const HASH2VIEW = { '':'home', top:'home', about:'about', practice:'cases', calc:'calc',
                       videos:'home',
-                      subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home' };
+                      subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home', youtube:'youtube' };
   const secs = Array.from(document.querySelectorAll('section[data-view]'));
   const menuLinks = Array.from(document.querySelectorAll('.menu a, a[href^="#"]'));
 
