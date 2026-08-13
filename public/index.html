@@ -401,6 +401,15 @@ section.block{padding:96px 0;position:relative}
 .info-row .irt .k{font-size:14px;color:var(--ink);font-weight:600}
 .info-row .irt .v{font-size:13px;color:var(--ink-faint);margin-top:2px;line-height:1.5}
 .info-cta{width:100%;margin-top:8px;padding:14px;font-size:15px}
+/* 하단 3카드: 업무 칩 · 각주 */
+.lc-chips{display:flex;flex-wrap:wrap;gap:7px;margin:-8px 0 20px}
+.lc-chips span{font-size:12px;color:var(--ink-soft);background:rgba(16,21,31,.55);
+  border:1px solid var(--line-soft);border-radius:999px;padding:5px 11px;white-space:nowrap}
+.lc-chips.sm{margin:6px 0 0}
+.lc-chips.sm span{font-size:11.5px;padding:4px 10px}
+.lc-foot{font-size:11.5px;color:var(--ink-faint);line-height:1.6;margin-top:12px;word-break:keep-all}
+#about .lc-chips{position:relative;z-index:1;max-width:62%}
+.lcard p.desc,.ach-list li,.info-row .irt .v{word-break:keep-all}
 
 /* ============ CTA 배너 ============ */
 /* CTA 배경: 골드 그라디언트 (인장 워터마크 제거) */
@@ -488,10 +497,23 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .pcard:nth-child(odd){border-left:none}
   .calc-grid{grid-template-columns:1fr}
   .subsidy-grid{grid-template-columns:1fr}
+  .subsidy-panel{padding:20px 16px}
+  .subsidy-panel.result{min-height:0}
   .voice-frame{grid-template-columns:1fr}
   .voice-stage{border-right:none;border-bottom:1px solid var(--line-soft)}
   .voice-transcript{height:340px}
   .lower-grid{grid-template-columns:1fr}
+  /* 모바일 하단 3카드: 여백·행간 축소 */
+  .lcard{padding:20px 16px}
+  .lcard .lc-title{font-size:18px;margin-bottom:16px}
+  .lcard p.desc{font-size:13.5px;line-height:1.75;margin-bottom:16px}
+  .lc-chips{margin:-8px 0 16px}
+  .ach-list{gap:9px;margin-bottom:16px}
+  .ach-list li{font-size:13px;line-height:1.55}
+  .info-row{margin-bottom:13px}
+  .info-row .irt .k{font-size:13px}
+  .info-row .irt .v{font-size:12.5px}
+  #about .desc,#about .lc-btn,#about .lc-chips{max-width:100%}
   section.block{padding:66px 0}
   .foot-flex{flex-direction:column}
   .foot-copy{white-space:normal}
@@ -506,8 +528,7 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .sec-head p{font-size:14px}
   .topbar{font-size:11px;line-height:1.5}
   .topbar .tb-extra{display:none}   /* 모바일에서 부가 문구 숨김 */
-  .cal-box{padding:20px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .cal-grid{min-width:540px}
+  /* (가로 스크롤 제거 — 아래 640px 규칙에서 색 막대 방식으로 대체) */
   .pcard .ph .pt{font-size:15px;letter-spacing:0}
 }
 @media(max-width:520px){
@@ -589,7 +610,25 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 .cal-cell.past{opacity:.28}
 .cal-cell.has-open{border-color:rgba(220,189,118,.4)}
 .cal-note{text-align:center;font-size:12px;color:var(--ink-faint);margin-top:16px}
+.cal-hint{display:none}
 @media(max-width:960px){.cal-cell{font-size:12px}.cal-cell .st{font-size:8.5px}}
+/* 모바일: 가로 스크롤 없이 한 화면에 — 오전/오후를 색 막대로 압축 */
+@media(max-width:640px){
+  .cal-box{padding:16px 10px;overflow:visible;margin-top:26px}
+  .cal-head{flex-direction:column;align-items:flex-start;gap:9px;margin-bottom:14px}
+  .cal-legend{gap:11px;font-size:11px;flex-wrap:wrap}
+  .cal-grid{min-width:0;gap:4px}
+  .cal-grid .dow{font-size:11px;padding:3px 0}
+  .cal-cell{min-height:54px;font-size:12.5px;padding:6px 3px;gap:4px;border-radius:8px}
+  .cal-cell .slot{display:block;width:100%;font-size:0;line-height:0}
+  .cal-cell .slot::before{content:"";display:block;height:4px;border-radius:2px;background:#8b97a8;opacity:.5}
+  .cal-cell .s-open::before{background:var(--gold-2);opacity:1}
+  .cal-cell .s-court::before{background:#7BA3D9;opacity:1}
+  .cal-cell.past .slot{font-size:8.5px;line-height:1.4}
+  .cal-cell.past .slot::before{display:none}
+  .cal-hint{display:block;text-align:center;font-size:11.5px;color:var(--ink-faint);margin-top:14px;word-break:keep-all}
+  .cal-hint b{color:var(--gold-2);font-weight:500}
+}
 
 /* ---------- 성공사례 ---------- */
 .cases{padding:90px 0;border-top:1px solid var(--line)}
@@ -881,10 +920,10 @@ body.no-scroll{overflow:hidden}
           <button class="btn btn-primary subsidy-run" id="runSubsidy">받을 수 있는 지원금 진단하기 →</button>
         </div>
         <!-- 결과 패널 -->
-        <div class="subsidy-panel result" id="subsidyResult">
+        <div class="subsidy-panel result" id="subsidyResult" hidden>
           <div class="s-empty" id="sEmpty">
             <div class="ic-big">₩</div>
-            <div style="font-weight:600;color:var(--ink-soft)">왼쪽에서 회사 정보를 선택한 뒤<br>진단 버튼을 눌러주세요.</div>
+            <div style="font-weight:600;color:var(--ink-soft)">위 항목을 고른 뒤<br>진단 버튼을 눌러주세요.</div>
           </div>
           <div id="sResult" style="display:none"></div>
         </div>
@@ -931,31 +970,33 @@ body.no-scroll{overflow:hidden}
             <div class="about-cred">노무법인 종로 대표<br>한·중 이중언어 상담</div>
           </div>
         </div>
-        <p class="desc">근로자와 사업주 양쪽의 실무를 두루 아는 공인노무사가 사건 초기 단계부터 함께합니다. 중국어 상담이 가능해 외국인 근로자·중국계 기업 사안도 지원합니다.</p>
+        <p class="desc">근로자·사업주 양쪽 실무를 아는 노무사가 사건 초기부터 함께합니다.</p>
+        <div class="lc-chips"><span>부당해고·징계</span><span>임금·퇴직금</span><span>中文 상담</span></div>
         <a href="#contact" class="btn btn-ghost lc-btn">자세히 보기 <span class="ar">→</span></a>
       </div>
       <!-- AI 승소가능성 분석 -->
       <div class="lcard glass" id="results">
         <div class="lc-title"><span class="licon"><svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M21 20H3M16 8l3-3m0 0h-2.4M19 5v2.4"/></svg></span>AI 사전진단</div>
-        <p class="desc">상황을 선택하면 근로기준법 등 법령 기준에 따라 유리·불리 요소를 짚어 참고 지표를 밴드(낮음·보통·높음)로 안내합니다. 참고용이며, 정확한 판단은 공인노무사 상담을 통해 확인하세요.</p>
+        <p class="desc">상황만 고르면 법령 기준으로 유리·불리 요소를 짚어 참고 지표를 밴드로 보여드립니다.</p>
         <ul class="ach-list">
-          <li>부당해고·징계 · 임금체불·퇴직금 · 괴롭힘 · 산재 지원</li>
+          <li>부당해고 · 임금체불 · 괴롭힘 · 산재</li>
           <li>유리·불리 요소 투명 공개</li>
-          <li>결과는 밴드·범위로 정직하게 표시</li>
+          <li>결과는 낮음·보통·높음 밴드로 표시</li>
         </ul>
         <a href="#calc" class="btn btn-ghost lc-btn">사전진단 해보기 <span class="ar">→</span></a>
+        <div class="lc-foot">참고용입니다. 정확한 판단은 공인노무사 상담으로 확인하세요.</div>
       </div>
       <!-- 상담 안내 -->
       <div class="lcard glass">
         <div class="lc-title"><span class="licon"><svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5z"/></svg></span>상담 안내</div>
-        <p class="desc">의뢰인의 상황을 경청하고, 사안에 맞는 실무 해법을 제시합니다. 종로 본사 외 안산·고양지사에서도 상담이 가능합니다.</p>
+        <p class="desc">종로 본사와 안산·고양지사에서 상담합니다.</p>
         <div class="info-row">
           <span class="iri"><svg class="ic ic-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>
-          <div class="irt"><div class="k">상담 가능 시간</div><div class="v">평일 09:00 - 18:00 (전화 예약 후 방문)</div></div>
+          <div class="irt"><div class="k">평일 09:00 – 18:00</div><div class="v">전화 예약 후 방문</div></div>
         </div>
         <div class="info-row">
           <span class="iri"><svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5z"/></svg></span>
-          <div class="irt"><div class="k">상담 방법</div><div class="v">전화 · 방문(종로/안산/고양) · 온라인(AI 사전상담) · 中文상담 가능</div></div>
+          <div class="irt"><div class="k">상담 방법</div><div class="lc-chips sm"><span>전화</span><span>방문</span><span>온라인</span><span>中文</span></div></div>
         </div>
         <a href="#contact" class="btn btn-primary info-cta">상담 예약하기 <span class="ar">→</span></a>
       </div>
@@ -1047,18 +1088,18 @@ body.no-scroll{overflow:hidden}
       <article class="yt-card"><img src="/img/yt-2.jpg" alt="직원 한 명 해고하고 2천만원" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
       <article class="yt-card"><img src="/img/yt-3.jpg" alt="부당해고 맞는데 3개월 지나면 끝" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
       <article class="yt-card"><img src="/img/yt-4.jpg" alt="사직서 쓰는 순간 되돌릴 수 없다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_818826cf-614f-4648-8c3d-268388c8c09c.png" alt="해고예고수당, 몰라서 못 받는 돈" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">수당 체불</span><span class="yt-tt">해고예고수당<br><span class="u">몰라서 못 받는 돈</span></span><span class="yt-sub">30일 전 통보가 없었다면</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_a8754aec-1ec0-469b-8127-4a0289cc9ba5.png" alt="사직서에 절대 쓰면 안 되는 한 줄" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">사직 전 필독</span><span class="yt-tt">사직서에 절대<br><span class="u">쓰면 안 되는 한 줄</span></span><span class="yt-sub">이 문구면 다툼이 어렵습니다</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_8c186164-98a5-41d8-9d4d-4b3659376b5f.png" alt="5인 미만 사업장, 되는 것 안 되는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">소규모 사업장</span><span class="yt-tt">5인 미만 사업장<br><span class="u">되는 것 안 되는 것</span></span><span class="yt-sub">연차·해고·수당 총정리</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_c8e0915b-e704-46e7-a87b-c7d5af4e8f04.png" alt="포괄임금제 계약서의 함정" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">근로계약 주의</span><span class="yt-tt">포괄임금제<br><span class="u">계약서의 함정</span></span><span class="yt-sub">야근수당이 사라지는 구조</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_59c709f3-90da-4229-a797-ca89d310d2fd.png" alt="주휴수당 계산법 1분 정리" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">임금 상식</span><span class="yt-tt">주휴수당 계산법<br><span class="u">1분 정리</span></span><span class="yt-sub">내 시급에 곱하면 끝</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_2cc3c542-e8d0-4823-9cea-065aa431aba0.png" alt="노동청 진정, 이 순서로 하세요" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">권리구제 절차</span><span class="yt-tt">노동청 진정<br><span class="u">이 순서로 하세요</span></span><span class="yt-sub">순서 틀리면 길어집니다</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_d705c9b3-78ce-43af-8a79-de8161fa89d4.png" alt="권고사직 압박받을 때 첫마디" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">권고사직 대응</span><span class="yt-tt">권고사직 압박받을 때<br><span class="u">첫마디가 중요합니다</span></span><span class="yt-sub">이 말부터 하세요</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_bfd1c9b6-48d9-4b43-8b84-c6b0e6902c47.png" alt="퇴직금, 14일 지나면 이자 붙습니다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">퇴직금 상식</span><span class="yt-tt">퇴직금 14일 지나면<br><span class="u">이자가 붙습니다</span></span><span class="yt-sub">연 20% 지연이자</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_6de2c6ad-81e5-46d9-939d-489802dc0e89.png" alt="출퇴근 기록이 증거가 되는 순간" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">증거 확보</span><span class="yt-tt">출퇴근 기록이<br><span class="u">증거가 되는 순간</span></span><span class="yt-sub">교통카드도 증거입니다</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_6305dc48-07d5-4089-b3cb-0dbd6e272ebb.png" alt="연차수당, 회사가 말 안 해주는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">연차 상식</span><span class="yt-tt">연차수당<br><span class="u">회사가 말 안 해주는 것</span></span><span class="yt-sub">퇴직 전 꼭 확인하세요</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_549814ef-4a5c-4ad5-b333-ad82721e7b08.png" alt="직장 내 괴롭힘 신고 전 준비물" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">괴롭힘 대응</span><span class="yt-tt">직장 내 괴롭힘<br><span class="u">신고 전 준비물</span></span><span class="yt-sub">녹음과 기록이 먼저입니다</span></span></article>
-      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_677c7ecc-18c7-47c8-9ab9-7290c55e6e2b.png" alt="실업급여, 자진퇴사도 되는 경우" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">실업급여</span><span class="yt-tt">실업급여<br><span class="u">자진퇴사도 되는 경우</span></span><span class="yt-sub">이 사유면 가능합니다</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-1.jpg" alt="해고예고수당, 몰라서 못 받는 돈" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">수당 체불</span><span class="yt-tt">해고예고수당<br><span class="u">몰라서 못 받는 돈</span></span><span class="yt-sub">30일 전 통보가 없었다면</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-2.jpg" alt="사직서에 절대 쓰면 안 되는 한 줄" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">사직 전 필독</span><span class="yt-tt">사직서에 절대<br><span class="u">쓰면 안 되는 한 줄</span></span><span class="yt-sub">이 문구면 다툼이 어렵습니다</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-3.jpg" alt="5인 미만 사업장, 되는 것 안 되는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">소규모 사업장</span><span class="yt-tt">5인 미만 사업장<br><span class="u">되는 것 안 되는 것</span></span><span class="yt-sub">연차·해고·수당 총정리</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-1.jpg" alt="포괄임금제 계약서의 함정" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">근로계약 주의</span><span class="yt-tt">포괄임금제<br><span class="u">계약서의 함정</span></span><span class="yt-sub">야근수당이 사라지는 구조</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-2.jpg" alt="주휴수당 계산법 1분 정리" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">임금 상식</span><span class="yt-tt">주휴수당 계산법<br><span class="u">1분 정리</span></span><span class="yt-sub">내 시급에 곱하면 끝</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-3.jpg" alt="노동청 진정, 이 순서로 하세요" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">권리구제 절차</span><span class="yt-tt">노동청 진정<br><span class="u">이 순서로 하세요</span></span><span class="yt-sub">순서 틀리면 길어집니다</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-1.jpg" alt="권고사직 압박받을 때 첫마디" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">권고사직 대응</span><span class="yt-tt">권고사직 압박받을 때<br><span class="u">첫마디가 중요합니다</span></span><span class="yt-sub">이 말부터 하세요</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-2.jpg" alt="퇴직금, 14일 지나면 이자 붙습니다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">퇴직금 상식</span><span class="yt-tt">퇴직금 14일 지나면<br><span class="u">이자가 붙습니다</span></span><span class="yt-sub">연 20% 지연이자</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-3.jpg" alt="출퇴근 기록이 증거가 되는 순간" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">증거 확보</span><span class="yt-tt">출퇴근 기록이<br><span class="u">증거가 되는 순간</span></span><span class="yt-sub">교통카드도 증거입니다</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-1.jpg" alt="연차수당, 회사가 말 안 해주는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">연차 상식</span><span class="yt-tt">연차수당<br><span class="u">회사가 말 안 해주는 것</span></span><span class="yt-sub">퇴직 전 꼭 확인하세요</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-2.jpg" alt="직장 내 괴롭힘 신고 전 준비물" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">괴롭힘 대응</span><span class="yt-tt">직장 내 괴롭힘<br><span class="u">신고 전 준비물</span></span><span class="yt-sub">녹음과 기록이 먼저입니다</span></span></article>
+      <article class="yt-card"><img src="/img/yt-base-3.jpg" alt="실업급여, 자진퇴사도 되는 경우" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">실업급여</span><span class="yt-tt">실업급여<br><span class="u">자진퇴사도 되는 경우</span></span><span class="yt-sub">이 사유면 가능합니다</span></span></article>
     </div>
     <div class="yt-note">채널 공개 준비 중입니다. 영상이 업로드되는 대로 이곳에서 바로 보실 수 있습니다.</div>
   </div>
@@ -1105,6 +1146,7 @@ body.no-scroll{overflow:hidden}
         </div>
       </div>
       <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-hint">각 날짜의 <b>위 막대는 오전</b>, <b>아래 막대는 오후</b>입니다.</div>
       <div class="cal-note">※ 표시된 현황은 홈페이지 시안용 예시입니다.</div>
     </div>
   </div>
@@ -2042,10 +2084,13 @@ window.addEventListener('load',()=>{
       if(!conflict) kept.push(s);
     });
 
+    var panel = document.getElementById('subsidyResult');
     var empty = document.getElementById('sEmpty');
     var out = document.getElementById('sResult');
+    panel.hidden = false;                       // 진단 실행 시에만 결과 패널 노출
     empty.style.display = 'none';
     out.style.display = 'block';
+    setTimeout(function(){ panel.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
 
     if(kept.length === 0){
       out.innerHTML =
