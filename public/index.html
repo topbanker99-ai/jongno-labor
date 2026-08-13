@@ -444,20 +444,20 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .hero-plate{right:16px;top:264px;bottom:auto;padding:9px 14px}
   .hero-plate .nm{font-size:15px}
   .hero-plate .rl{font-size:10.5px}
-  /* 인물 1.4배 확대판: 영상 밴드를 버튼 아래까지 키우고 오른쪽 기준 크롭(왼쪽 일부 잘림 허용) */
+  /* 최종: 인물 80% 축소·우측 밀착, 좌측 남색 그라데이션이 제목 구역까지 */
   .hero{min-height:auto}
-  .hero .hero-motion{position:absolute;left:0;right:0;top:0;bottom:auto;width:100%;height:372px;display:block;
-    object-fit:cover;object-position:88% 22%;opacity:1;border:none;border-radius:0;margin:0;box-shadow:none}
-  .hero::before{display:block;height:372px;bottom:auto;opacity:1}
+  .hero .hero-motion{position:absolute;left:0;right:0;top:0;bottom:auto;width:100%;height:300px;display:block;
+    object-fit:cover;object-position:100% 20%;opacity:1;border:none;border-radius:0;margin:0;box-shadow:none}
+  .hero::before{display:block;height:300px;bottom:auto;opacity:1}
   .hero::after{display:block;background:
-    linear-gradient(90deg, rgba(16,21,31,.72), rgba(16,21,31,.30) 46%, transparent 68%),
-    linear-gradient(180deg, rgba(16,21,31,.15) 0, rgba(16,21,31,.14) 150px, rgba(16,21,31,.55) 285px, #10151F 374px)}
-  .hero-plate{bottom:auto;top:224px;right:12px;padding:6px 11px}
-  .hero-plate .nm{font-size:12.5px}
-  .hero-plate .rl{font-size:9px}
-  .hero-copy{padding:168px 0 40px;text-align:left}
+    linear-gradient(90deg, #10151F 0%, rgba(16,21,31,.96) 30%, rgba(16,21,31,.60) 54%, rgba(16,21,31,.10) 76%, transparent 90%),
+    linear-gradient(180deg, rgba(16,21,31,.10) 0, rgba(16,21,31,.12) 170px, rgba(16,21,31,.62) 262px, #10151F 302px)}
+  .hero-plate{bottom:auto;top:252px;right:10px;padding:5px 10px;background:rgba(16,21,31,.72)}
+  .hero-plate .nm{font-size:12px}
+  .hero-plate .rl{font-size:8.5px}
+  .hero-copy{padding:150px 0 40px;text-align:left}
   .hero-copy .eyebrow.kicker{display:none}
-  .hero h1{font-size:clamp(27px,7.2vw,34px)}
+  .hero h1{font-size:clamp(26px,6.9vw,32px)}
   .hero-actions{gap:9px;margin-top:26px;flex-wrap:nowrap}
   .hero-actions .btn{padding:11px 16px;font-size:12.5px;white-space:nowrap}
   /* 텍스트 영역 뒤 보신각 세로 씬 (Higgsfield) — 배포 시 /img/hero-m.png 로 교체 권장 */
