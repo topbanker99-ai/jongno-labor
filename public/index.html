@@ -174,7 +174,8 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 /* 텍스트·그리드는 영상·오버레이 위로 */
 .hero>.wrap{position:relative;z-index:2}
 /* 네임플레이트: 영상 위 우하단 */
-.hero-plate{position:absolute;right:34px;bottom:34px;z-index:2;background:rgba(16,21,31,.55);border:1px solid var(--line);backdrop-filter:blur(6px);padding:11px 18px;border-radius:4px}
+/* bottom: 영상 띠(라벨36+썸네일≈130+패딩48≈214px) 위로 띄워 4번째 카드와 겹침 방지 */
+.hero-plate{position:absolute;right:34px;bottom:236px;z-index:3;background:rgba(16,21,31,.55);border:1px solid var(--line);backdrop-filter:blur(6px);padding:11px 18px;border-radius:4px}
 .hero-plate .nm{font-family:var(--serif);font-size:17px;color:var(--ink);font-weight:600}
 .hero-plate .rl{font-size:11.5px;color:var(--gold-2);letter-spacing:.06em;margin-top:2px}
 
@@ -439,26 +440,28 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .hero::after{background:
     linear-gradient(180deg, rgba(16,21,31,.25) 0%, rgba(16,21,31,.15) 32%, rgba(16,21,31,.75) 58%, #10151F 78%)}
   .hero-grid{grid-template-columns:1fr;gap:0;padding-bottom:0}
-  .hero-videos{position:relative;z-index:2;margin:26px 0 0;padding-bottom:26px}
+  .hero-videos{position:relative;z-index:2;margin:14px 0 0;padding-bottom:26px}
   .vstrip{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
   .hero-plate{right:16px;top:264px;bottom:auto;padding:9px 14px}
   .hero-plate .nm{font-size:15px}
   .hero-plate .rl{font-size:10.5px}
   /* 최종: 인물 80% 축소·우측 밀착, 좌측 남색 그라데이션이 제목 구역까지 */
   .hero{min-height:auto}
-  .hero .hero-motion{position:absolute;left:0;right:0;top:0;bottom:auto;width:100%;height:300px;display:block;
+  .hero .hero-motion{position:absolute;left:0;right:0;top:0;bottom:auto;width:100%;height:260px;display:block;
     object-fit:cover;object-position:100% 20%;opacity:1;border:none;border-radius:0;margin:0;box-shadow:none}
-  .hero::before{display:block;height:300px;bottom:auto;opacity:1}
+  .hero::before{display:block;height:260px;bottom:auto;opacity:1}
   .hero::after{display:block;background:
     linear-gradient(90deg, #10151F 0%, rgba(16,21,31,.96) 30%, rgba(16,21,31,.60) 54%, rgba(16,21,31,.10) 76%, transparent 90%),
-    linear-gradient(180deg, rgba(16,21,31,.10) 0, rgba(16,21,31,.12) 170px, rgba(16,21,31,.62) 262px, #10151F 302px)}
-  .hero-plate{bottom:auto;top:252px;right:10px;padding:5px 10px;background:rgba(16,21,31,.72)}
+    linear-gradient(180deg, rgba(16,21,31,.10) 0, rgba(16,21,31,.12) 146px, rgba(16,21,31,.62) 226px, #10151F 262px)}
+  /* 안 3(압축형): 모바일에서는 이름표 숨김 — 겹침 원천 차단 + CTA 첫 화면 노출 */
+  .hero-plate{display:none}
   .hero-plate .nm{font-size:12px}
   .hero-plate .rl{font-size:8.5px}
-  .hero-copy{padding:150px 0 40px;text-align:left}
+  /* 제목 시작점 = 영상 밴드(260px) 바로 아래 */
+  .hero-copy{padding:274px 0 18px;text-align:left}
   .hero-copy .eyebrow.kicker{display:none}
   .hero h1{font-size:clamp(26px,6.9vw,32px)}
-  .hero-actions{gap:9px;margin-top:26px;flex-wrap:nowrap}
+  .hero-actions{gap:9px;margin-top:28px;flex-wrap:nowrap}
   .hero-actions .btn{padding:11px 16px;font-size:12.5px;white-space:nowrap}
   /* 텍스트 영역 뒤 보신각 세로 씬 (Higgsfield) — 배포 시 /img/hero-m.png 로 교체 권장 */
   .hero{background:#10151F url('https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_113305_5d9c95f2-8633-4eba-a514-781271fcf282.png') center bottom/100% auto no-repeat}
@@ -525,16 +528,16 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 .yt-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line-soft);background:#0B1E33;aspect-ratio:16/9;cursor:pointer;transition:transform .3s,border-color .3s}
 .yt-card:hover{transform:translateY(-4px);border-color:rgba(220,189,118,.45)}
 .yt-card img{width:100%;height:100%;object-fit:cover;display:block}
-.yt-info{position:absolute;inset:0;padding:9% 8%;display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:linear-gradient(90deg,rgba(6,17,31,.55),rgba(6,17,31,.15) 55%,transparent 75%)}
+.yt-info{position:absolute;inset:0;padding:7.5% 7%;display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:linear-gradient(90deg,rgba(6,17,31,.55),rgba(6,17,31,.15) 55%,transparent 75%)}
 .yt-brand{display:flex;align-items:center;gap:6px;margin-bottom:auto}
-.yt-brand img{width:9%;min-width:20px;max-width:26px;border-radius:50%;background:#fff}
+.yt-brand img{width:9%;min-width:20px;max-width:26px;aspect-ratio:1;height:auto;object-fit:contain;border-radius:50%;background:#fff;padding:1px;flex:0 0 auto}
 .yt-brand .b1{font-family:var(--serif);font-size:clamp(9px,3.2cqw,13px);font-weight:700;color:#F3EFE6;line-height:1.15}
 .yt-brand .b2{font-size:clamp(6px,2.2cqw,9px);color:#C9B27E;letter-spacing:.06em}
-.yt-eb{display:flex;align-items:center;gap:6px;font-size:clamp(7px,2.6cqw,10.5px);color:#D6AF5A;letter-spacing:.08em;margin-bottom:3%}
+.yt-eb{display:flex;align-items:center;gap:6px;font-size:clamp(7px,2.6cqw,10.5px);line-height:1.25;color:#D6AF5A;letter-spacing:.08em;margin-bottom:2.5%}
 .yt-eb::before{content:"";width:14px;height:2px;background:var(--gold-2)}
-.yt-tt{font-family:var(--serif);font-weight:800;color:#F6F1E4;font-size:clamp(12px,5.4cqw,21px);line-height:1.32;text-shadow:0 2px 8px rgba(0,0,0,.55)}
+.yt-tt{font-family:var(--serif);font-weight:800;color:#F6F1E4;font-size:clamp(12px,5.4cqw,21px);line-height:1.28;text-shadow:0 2px 8px rgba(0,0,0,.55)}
 .yt-tt .u{display:inline-block;border-bottom:2px solid var(--gold-2);padding-bottom:2px}
-.yt-sub{font-size:clamp(7px,2.7cqw,11px);color:#C3CDDC;margin-top:4%}
+.yt-sub{font-size:clamp(7px,2.7cqw,11px);line-height:1.4;color:#C3CDDC;margin-top:3%}
 .yt-card{container-type:inline-size}
 .yt-card .yt-p{position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:40px;height:40px;border-radius:50%;background:rgba(6,17,31,.55);border:1px solid rgba(220,189,118,.5);display:grid;place-items:center;opacity:.85}
 .yt-card .yt-p svg{width:16px;height:16px;fill:#F1D089;margin-left:2px}
