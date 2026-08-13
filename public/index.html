@@ -89,8 +89,9 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .nav-right{display:flex;align-items:center;gap:22px}
 .nav-phone{display:flex;align-items:center;gap:10px}
 .nav-phone .pic{color:var(--gold-2)}
+.nav-phone .pt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
 .nav-phone .pt .num{font-family:var(--serif);font-weight:700;font-size:19px;color:var(--ink);letter-spacing:.02em}
-.nav-phone .pt .hrs{font-size:10.5px;color:var(--ink-faint);letter-spacing:.04em}
+.nav-phone .pt .hrs{font-size:10.5px;color:var(--ink-faint);letter-spacing:.04em;margin-top:2px}
 .hamburger{display:none;flex-direction:column;gap:5px;padding:8px;background:none;border:none;cursor:pointer}
 .hamburger span{width:24px;height:2px;background:var(--gold-2);border-radius:2px;transition:transform .28s ease,opacity .2s ease}
 .hamburger.on span:nth-child(1){transform:translateY(7px) rotate(45deg)}
@@ -123,6 +124,13 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 /* 인물 뒤 골드 아치 */
 .hero-watermark{position:absolute;right:-4%;top:2%;width:640px;max-width:60vw;color:rgba(220,189,118,.05);z-index:0;pointer-events:none}
 .hero-grid{display:grid;grid-template-columns:minmax(0,600px);gap:40px;align-items:center;min-height:auto;padding-bottom:0}
+/* 모바일 히어로 중앙정렬 엠블럼 (데스크톱 숨김) */
+.hero-emblem{display:none;width:118px;height:118px;border-radius:50%;margin:0 auto 16px;
+  border:1px solid rgba(214,175,90,.55);
+  background:radial-gradient(circle at 50% 42%,rgba(214,175,90,.22),rgba(11,30,51,.35) 62%,transparent 76%);
+  place-items:center;box-shadow:0 0 40px rgba(214,175,90,.18) inset,0 6px 24px rgba(0,0,0,.4)}
+.hero-emblem span{font-family:var(--serif);font-size:34px;font-weight:700;color:var(--gold-3);letter-spacing:.04em}
+.hero-emblem-sub{display:none;text-align:center;font-size:12px;letter-spacing:.28em;color:var(--gold-2);margin-bottom:26px}
 .hero-copy{padding:100px 0 52px}
 .hero .kicker{margin-bottom:26px}
 .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(40px,5.4vw,68px);line-height:1.18;letter-spacing:-.005em;color:var(--ink)}
@@ -414,7 +422,7 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 .foot-copy{color:var(--ink-dim);font-size:12px;white-space:nowrap}
 
 /* ---------- responsive ---------- */
-@media(max-width:980px){
+@media(max-width:960px){
   .menu,.nav-phone{display:none}
   .hamburger{display:flex}
   .hero{min-height:auto}
@@ -429,8 +437,18 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .hero-plate{right:16px;top:264px;bottom:auto;padding:9px 14px}
   .hero-plate .nm{font-size:15px}
   .hero-plate .rl{font-size:10.5px}
-  /* 상단 340px는 영상(얼굴) 구역, 텍스트는 그 아래부터 */
-  .hero-copy{padding:348px 0 44px}
+  /* C안 반전형: 영상 카드가 위, 글자·버튼이 아래 */
+  .hero .hero-motion{position:relative;inset:auto;display:block;width:calc(100% - 32px);
+    height:224px;margin:16px auto 0;border-radius:14px;border:1px solid rgba(214,175,90,.35);
+    object-fit:cover;object-position:72% center;opacity:1;box-shadow:0 14px 34px rgba(0,0,0,.45)}
+  .hero::before{display:none}
+  .hero::after{display:none}
+  .hero-plate{top:176px;right:26px;bottom:auto;padding:8px 13px}
+  .hero-plate .nm{font-size:14px}
+  .hero-plate .rl{font-size:10px}
+  .hero-copy{padding:22px 0 46px;text-align:left}
+  .hero-actions{gap:10px;margin-top:4px}
+  .hero-actions .btn{padding:12px 18px;font-size:13.5px}
   /* 텍스트 영역 뒤 보신각 세로 씬 (Higgsfield) — 배포 시 /img/hero-m.png 로 교체 권장 */
   .hero{background:#10151F url('https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_113305_5d9c95f2-8633-4eba-a514-781271fcf282.png') center bottom/100% auto no-repeat}
   .hero::after{background:
@@ -463,6 +481,9 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 }
 @media(max-width:640px){
   section.block{padding:56px 0}
+  .foot-info{min-width:0;font-size:13px;line-height:2.05}
+  .foot-info br{content:'';display:block;margin-bottom:2px}
+  .foot-flex{gap:20px}
   .sec-head{margin-bottom:38px}
   .sec-head h2{font-size:clamp(24px,6.4vw,30px)}
   .sec-head p{font-size:14px}
@@ -475,15 +496,30 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 @media(max-width:520px){
   .nav{height:70px}
   .brand .bt .big{font-size:20px}
-  .hero-actions .btn,.cta .btn{width:100%}
+  .cta .btn{width:100%}
+  .hero-actions{flex-wrap:nowrap}
+  .hero-actions .btn{flex:1;padding:12px 8px;font-size:12.5px;white-space:nowrap}
   .tr-turn{max-width:90%}
-  .grange{font-size:34px}
+  .grange{font-size:30px}
+  .grange small{font-size:15px}
 }
 
 
 /* ---------- AI상담 섹션 앰비언트 배경 (Higgsfield 씬) — 배포 시 /img/ai-scene.png 로 교체 권장 ---------- */
 #ai.block{background:linear-gradient(180deg,rgba(6,17,31,.93),rgba(6,17,31,.90) 40%,rgba(6,17,31,.96)),url('https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_113305_650a6767-e9ec-4b50-b9bf-0b954915bb8e.png') center 30%/cover no-repeat}
 
+
+
+/* ---------- 유튜브 16썸네일 그리드 ---------- */
+.yt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:40px}
+.yt-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line-soft);background:#0B1E33;aspect-ratio:16/9;cursor:pointer;transition:transform .3s,border-color .3s}
+.yt-card:hover{transform:translateY(-4px);border-color:rgba(220,189,118,.45)}
+.yt-card img{width:100%;height:100%;object-fit:cover;display:block}
+.yt-card .yt-t{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;font-size:13.5px;font-weight:700;line-height:1.35;color:#F3EFE6;background:linear-gradient(180deg,transparent,rgba(6,17,31,.92) 55%);text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.yt-card .yt-p{position:absolute;top:50%;left:50%;transform:translate(-50%,-62%);width:40px;height:40px;border-radius:50%;background:rgba(6,17,31,.55);border:1px solid rgba(220,189,118,.5);display:grid;place-items:center;opacity:.85}
+.yt-card .yt-p svg{width:16px;height:16px;fill:#F1D089;margin-left:2px}
+.yt-note{text-align:center;font-size:12.5px;color:var(--ink-faint);margin-top:18px}
+@media(max-width:960px){.yt-grid{grid-template-columns:repeat(2,1fr);gap:10px}.yt-card .yt-t{font-size:12px;padding:20px 9px 8px}}
 
 /* ---------- 오시는길 지도 + 길찾기 ---------- */
 .map-wrap{max-width:760px;margin:40px auto 0}
@@ -519,7 +555,7 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 .cal-cell.past{opacity:.28}
 .cal-cell.has-open{border-color:rgba(220,189,118,.4)}
 .cal-note{text-align:center;font-size:12px;color:var(--ink-faint);margin-top:16px}
-@media(max-width:980px){.cal-cell{font-size:12px}.cal-cell .st{font-size:8.5px}}
+@media(max-width:960px){.cal-cell{font-size:12px}.cal-cell .st{font-size:8.5px}}
 
 /* ---------- 성공사례 ---------- */
 .cases{padding:90px 0;border-top:1px solid var(--line)}
@@ -534,7 +570,7 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 .ccard .cgo{display:inline-block;margin-top:14px;font-size:13px;color:var(--gold-2)}
 .cases-more{text-align:center;margin-top:36px}
 
-@media(max-width:980px){
+@media(max-width:960px){
   .cases-grid{grid-template-columns:1fr}
 }
 
@@ -645,6 +681,7 @@ body.no-scroll{overflow:hidden}
       <a href="#subsidy">지원금진단</a>
       <a href="#ai">AI상담</a>
       <a href="#cases">주요업무</a>
+      <a href="#youtube">유튜브</a>
       <a href="#contact">오시는길</a>
     </nav>
     <div class="nav-right">
@@ -653,19 +690,20 @@ body.no-scroll{overflow:hidden}
         <span class="pt"><span class="num">02-6929-4540</span><span class="hrs">평일 09:00 - 18:00</span></span>
       </div>
       <a href="#consult" class="btn btn-primary">AI 상담 시작</a>
-      <button class="hamburger" id="hamburger" aria-label="메뉴" aria-expanded="false"><span></span><span></span><span></span></button>
+      <button class="hamburger" id="hamburger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
 
 <!-- 모바일 메뉴 -->
 <div class="mnav-backdrop" id="mnavBack" hidden></div>
-<nav class="mnav" id="mnav" aria-label="모바일 메뉴" hidden>
+<nav class="mnav" id="mnav" aria-label="모바일 메뉴" aria-hidden="true" hidden>
   <a href="#about">소개</a>
   <a href="#calc">사전진단</a>
   <a href="#subsidy">지원금진단</a>
   <a href="#ai">AI상담</a>
   <a href="#cases">주요업무</a>
+  <a href="#youtube">유튜브</a>
   <a href="#contact">오시는길</a>
   <div class="mnav-foot">
     <a href="tel:0269294540" class="mnav-tel">02-6929-4540<em>평일 09:00 - 18:00</em></a>
@@ -679,18 +717,13 @@ body.no-scroll{overflow:hidden}
   <div class="hero-plate"><div class="nm">김경동 공인노무사</div><div class="rl">노무법인 종로</div></div>
   <div class="wrap hero-grid">
     <div class="hero-copy">
+      <div class="hero-emblem" aria-hidden="true"><span>종로</span></div>
+      <div class="hero-emblem-sub">노무법인 종로</div>
       <span class="eyebrow kicker">서울 종로 · 안산 · 고양 | 노동사건 노무법인</span>
       <h1>일터의 문제를<span class="g">종로가 함께 풉니다</span></h1>
-      <p class="lead">부당해고·징계와 임금체불·퇴직금, 근로자와 사업주<br>양쪽의 실무를 아는 공인노무사가 해법을 제시합니다.</p>
       <div class="hero-actions">
         <a href="#consult" class="btn btn-primary">AI 음성 상담 시작 <span class="ar">→</span></a>
         <a href="#cases" class="btn btn-ghost">주요업무 보기 <span class="ar">→</span></a>
-      </div>
-      <div class="hero-badges">
-        <span class="chip">공인노무사 김경동</span>
-        <span class="chip">한·중 이중언어 상담</span>
-        <span class="chip">서울·안산·고양 3개 지점</span>
-        <span class="chip">AI 사전상담 시스템</span>
       </div>
     </div>
 </div>
@@ -966,6 +999,37 @@ body.no-scroll{overflow:hidden}
 </section>
 
 <!-- CTA -->
+
+<!-- 유튜브 -->
+<section class="block" id="youtube" data-view="home">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow center-eyebrow center">YOUTUBE</span>
+      <h2>노무 이야기, 영상으로 만나보세요</h2>
+      <p>부당해고·임금체불부터 실업급여까지, 김경동 노무사가 쉽게 풀어드립니다.</p>
+    </div>
+    <div class="yt-grid">
+      <article class="yt-card"><img src="/img/yt-1.jpg" alt="7년 다닌 회사, 카톡 한 줄로 해고" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
+      <article class="yt-card"><img src="/img/yt-2.jpg" alt="직원 한 명 해고하고 2천만원" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
+      <article class="yt-card"><img src="/img/yt-3.jpg" alt="부당해고 맞는데 3개월 지나면 끝" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
+      <article class="yt-card"><img src="/img/yt-4.jpg" alt="사직서 쓰는 순간 되돌릴 수 없다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_818826cf-614f-4648-8c3d-268388c8c09c.png" alt="해고예고수당, 몰라서 못 받는 돈" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">해고예고수당, 몰라서 못 받는 돈</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_a8754aec-1ec0-469b-8127-4a0289cc9ba5.png" alt="사직서에 절대 쓰면 안 되는 한 줄" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">사직서에 절대 쓰면 안 되는 한 줄</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_8c186164-98a5-41d8-9d4d-4b3659376b5f.png" alt="5인 미만 사업장, 되는 것 안 되는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">5인 미만 사업장, 되는 것 안 되는 것</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_c8e0915b-e704-46e7-a87b-c7d5af4e8f04.png" alt="포괄임금제 계약서의 함정" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">포괄임금제 계약서의 함정</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_59c709f3-90da-4229-a797-ca89d310d2fd.png" alt="주휴수당 계산법 1분 정리" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">주휴수당 계산법 1분 정리</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_2cc3c542-e8d0-4823-9cea-065aa431aba0.png" alt="노동청 진정, 이 순서로 하세요" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">노동청 진정, 이 순서로 하세요</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_d705c9b3-78ce-43af-8a79-de8161fa89d4.png" alt="권고사직 압박받을 때 첫마디" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">권고사직 압박받을 때 첫마디</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_bfd1c9b6-48d9-4b43-8b84-c6b0e6902c47.png" alt="퇴직금, 14일 지나면 이자 붙습니다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">퇴직금, 14일 지나면 이자 붙습니다</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_6de2c6ad-81e5-46d9-939d-489802dc0e89.png" alt="출퇴근 기록이 증거가 되는 순간" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">출퇴근 기록이 증거가 되는 순간</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_6305dc48-07d5-4089-b3cb-0dbd6e272ebb.png" alt="연차수당, 회사가 말 안 해주는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">연차수당, 회사가 말 안 해주는 것</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_549814ef-4a5c-4ad5-b333-ad82721e7b08.png" alt="직장 내 괴롭힘 신고 전 준비물" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">직장 내 괴롭힘 신고 전 준비물</span></article>
+      <article class="yt-card"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_132900_677c7ecc-18c7-47c8-9ab9-7290c55e6e2b.png" alt="실업급여, 자진퇴사도 되는 경우" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-t">실업급여, 자진퇴사도 되는 경우</span></article>
+    </div>
+    <div class="yt-note">채널 공개 준비 중입니다. 영상이 업로드되는 대로 이곳에서 바로 보실 수 있습니다.</div>
+  </div>
+</section>
+
 <section class="cta" id="contact" data-view="home contact">
   <div class="wrap">
     <h2>노동 문제, 혼자 끙끙 앓지 마세요</h2>
@@ -1992,6 +2056,7 @@ window.addEventListener('load',()=>{
   var open=false;
   function setOpen(v){
     open=v;
+    document.documentElement.setAttribute('data-menu',v?'true':'false');
     if(v){ nav.hidden=false; back.hidden=false;
       requestAnimationFrame(function(){ nav.classList.add('on'); back.classList.add('on'); });
       document.body.style.overflow='hidden';
@@ -2002,12 +2067,14 @@ window.addEventListener('load',()=>{
     }
     btn.classList.toggle('on',v);
     btn.setAttribute('aria-expanded',v?'true':'false');
+    btn.setAttribute('aria-label',v?'메뉴 닫기':'메뉴 열기');
+    nav.setAttribute('aria-hidden',v?'false':'true');
   }
   btn.addEventListener('click',function(e){ e.stopPropagation(); setOpen(!open); });
   back.addEventListener('click',function(){ setOpen(false); });
   nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setOpen(false); }); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&open) setOpen(false); });
-  window.addEventListener('resize',function(){ if(window.innerWidth>980&&open) setOpen(false); });
+  window.addEventListener('resize',function(){ if(window.innerWidth>=960&&open) setOpen(false); });
 })();
 </script>
 </body>
