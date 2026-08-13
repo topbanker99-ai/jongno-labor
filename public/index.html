@@ -432,7 +432,10 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 }
 @media(max-width:960px){
   .menu,.nav-phone{display:none}
-  .hamburger{display:flex}
+  .nav-right>.btn-primary{display:none}   /* 모바일 헤더 CTA 제거 — 햄버거 메뉴 안에 유지 */
+  .nav-right{gap:8px}
+  .hamburger{display:flex;gap:4px;padding:6px}
+  .hamburger span{width:19px;height:1.8px}
   .hero{min-height:auto}
   /* 운율 모바일 방식: 영상을 상단 밴드로, 텍스트는 그 아래 바탕색 위에 */
   .hero .hero-motion{height:340px;bottom:auto;object-position:72% center}
@@ -451,23 +454,23 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
     object-fit:cover;object-position:100% 20%;opacity:1;border:none;border-radius:0;margin:0;box-shadow:none}
   .hero::before{display:block;height:260px;bottom:auto;opacity:1}
   .hero::after{display:block;background:
-    linear-gradient(90deg, #10151F 0%, rgba(16,21,31,.96) 30%, rgba(16,21,31,.60) 54%, rgba(16,21,31,.10) 76%, transparent 90%),
+    linear-gradient(90deg, #10151F 0%, rgba(16,21,31,.97) 42%, rgba(16,21,31,.78) 62%, rgba(16,21,31,.34) 82%, transparent 97%),
     linear-gradient(180deg, rgba(16,21,31,.10) 0, rgba(16,21,31,.12) 146px, rgba(16,21,31,.62) 226px, #10151F 262px)}
   /* 안 3(압축형): 모바일에서는 이름표 숨김 — 겹침 원천 차단 + CTA 첫 화면 노출 */
   .hero-plate{display:none}
   .hero-plate .nm{font-size:12px}
   .hero-plate .rl{font-size:8.5px}
-  /* 제목 시작점 = 영상 밴드(260px) 바로 아래 */
-  .hero-copy{padding:274px 0 18px;text-align:left}
+  /* 제목을 인물 어깨라인 좌측(영상 밴드 위)에 올려 배치 */
+  .hero-copy{padding:132px 0 18px;text-align:left}
   .hero-copy .eyebrow.kicker{display:none}
   .hero h1{font-size:clamp(26px,6.9vw,32px)}
-  .hero-actions{gap:9px;margin-top:28px;flex-wrap:nowrap}
+  .hero-actions{gap:9px;margin-top:34px;flex-wrap:nowrap}
   .hero-actions .btn{padding:11px 16px;font-size:12.5px;white-space:nowrap}
   /* 텍스트 영역 뒤 보신각 세로 씬 (Higgsfield) — 배포 시 /img/hero-m.png 로 교체 권장 */
   .hero{background:#10151F url('https://d8j0ntlcm91z4.cloudfront.net/user_39KiC2ufcSRTJwFZGH2eNtuwskA/hf_20260813_113305_5d9c95f2-8633-4eba-a514-781271fcf282.png') center bottom/100% auto no-repeat}
   .hero::after{background:
     linear-gradient(180deg, rgba(16,21,31,.25) 0%, rgba(16,21,31,.15) 32%, rgba(16,21,31,.78) 56%, rgba(16,21,31,.88) 72%, rgba(16,21,31,.62) 100%)}
-  .hero h1{font-size:clamp(30px,8vw,40px);line-height:1.24}
+  .hero h1{font-size:clamp(20px,5.6vw,26px);line-height:1.26;max-width:64vw;text-shadow:0 2px 14px rgba(6,10,18,.75)}
   .hero .lead{font-size:15px;margin:20px 0 28px;line-height:1.75}
   .hero .lead br{display:none}
   .hero-actions .btn{padding:14px 22px;font-size:14.5px}
