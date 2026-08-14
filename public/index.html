@@ -232,6 +232,12 @@ section.block{padding:96px 0;position:relative}
 /* ===== 정부지원금 간이진단 ===== */
 .subsidy-shell{max-width:1080px;margin:0 auto;background:var(--glass);border:1px solid var(--card-brd);border-radius:18px;padding:10px;backdrop-filter:blur(10px)}
 .subsidy-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* 섹션 헤드 각주 */
+.sec-foot{margin-top:16px;font-size:12px;color:var(--ink-faint);text-align:center;word-break:keep-all;line-height:1.6}
+.sec-foot b{color:var(--gold-2);font-weight:500}
+.sec-foot em{font-style:normal;opacity:.6}
+#subsidy .sec-head h2{letter-spacing:0;word-break:keep-all}
+#subsidy .sec-head p{word-break:keep-all}
 .subsidy-panel{background:rgba(8,22,38,.6);border:1px solid var(--line-soft);border-radius:14px;padding:30px}
 .subsidy-panel.result{display:flex;flex-direction:column;min-height:420px}
 .sfield{margin-bottom:20px}
@@ -441,7 +447,6 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 }
 @media(max-width:960px){
   .menu,.nav-phone{display:none}
-  .nav-right>.btn-primary{display:none}   /* 모바일 헤더 CTA 제거 — 햄버거 메뉴 안에 유지 */
   .nav-right{gap:8px}
   .hamburger{display:flex;gap:4px;padding:6px}
   .hamburger span{width:19px;height:1.8px}
@@ -498,6 +503,8 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .calc-grid{grid-template-columns:1fr}
   .subsidy-grid{grid-template-columns:1fr}
   .subsidy-panel{padding:20px 16px}
+  .sec-foot{font-size:11.5px;margin-top:13px}
+  #subsidy .sec-head p br{display:none}
   .subsidy-panel.result{min-height:0}
   .voice-frame{grid-template-columns:1fr}
   .voice-stage{border-right:none;border-bottom:1px solid var(--line-soft)}
@@ -571,10 +578,35 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 
 /* ---------- 하단 섹션 바로가기 띠 (공감식) ---------- */
 .quicknav{border-top:1px solid var(--line-soft);background:var(--navy-850)}
-.quicknav .wrap{display:flex;justify-content:center;flex-wrap:wrap;gap:0 8px;padding:18px 26px}
-.quicknav a{font-size:14.5px;font-weight:600;color:var(--ink-soft);padding:10px 18px;border-radius:8px;transition:color .2s,background .2s}
-.quicknav a:hover{color:var(--gold-3);background:rgba(214,175,90,.07)}
-@media(max-width:640px){.quicknav .wrap{padding:12px 10px}.quicknav a{font-size:13px;padding:9px 12px}}
+.quicknav .wrap{max-width:1080px;margin:0 auto;padding:26px 26px 28px}
+.qn-eyebrow{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px}
+.qn-eyebrow .ln{width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--gold))}
+.qn-eyebrow .ln.r{background:linear-gradient(90deg,var(--gold),transparent)}
+.qn-eyebrow>span:not(.ln){font-size:11px;letter-spacing:.22em;color:var(--gold-2);font-weight:500}
+.qn-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;background:rgba(255,255,255,.012)}
+.qn-grid a{position:relative;display:flex;align-items:center;justify-content:center;padding:18px 20px;border-right:1px solid var(--line-soft);border-top:1px solid var(--line-soft);color:var(--ink-soft);transition:background .25s}
+.qn-grid a:nth-child(-n+4){border-top:none}
+.qn-grid a:nth-child(4n){border-right:none}
+.qn-grid a .tx{font-size:14px;font-weight:600;letter-spacing:.01em}
+.qn-grid a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:2px;background:var(--gold-grad);transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+.qn-grid a:hover{background:rgba(220,189,118,.05)}
+.qn-grid a:hover .tx{color:var(--gold-3)}
+.qn-grid a:hover::after{transform:scaleX(1)}
+.qn-grid a.back .tx{color:var(--ink-faint)}
+.qn-grid a.back:hover .tx{color:var(--gold-3)}
+/* 모바일: 위 3 · 아래 4 (12칼럼 스팬) — '맨 위로'는 숨김 */
+@media(max-width:640px){
+  .quicknav .wrap{padding:22px 14px 20px}
+  .qn-eyebrow{margin-bottom:14px}
+  .qn-grid{grid-template-columns:repeat(12,1fr)}
+  .qn-grid a{padding:14px 6px;border-top:1px solid var(--line-soft)}
+  .qn-grid a .tx{font-size:12.5px}
+  .qn-grid a.back{display:none}
+  .qn-grid a:nth-child(-n+3){grid-column:span 4;border-top:none}
+  .qn-grid a:nth-child(n+4){grid-column:span 3}
+  .qn-grid a{border-right:1px solid var(--line-soft)}
+  .qn-grid a:nth-child(3),.qn-grid a:nth-child(7){border-right:none}
+}
 
 /* ---------- 오시는길 지도 + 길찾기 ---------- */
 .map-wrap{max-width:760px;margin:40px auto 0}
@@ -632,6 +664,9 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 
 /* ---------- 성공사례 ---------- */
 .cases{padding:90px 0;border-top:1px solid var(--line)}
+.cases-tabs{display:none}
+.cases-grid .cgo{display:none}
+@media(min-width:961px){ .cases-grid .ccard{display:block!important} }
 .cases-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:44px}
 .ccard{display:block;padding:26px 28px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);transition:border-color .3s,background .3s,transform .3s;text-decoration:none}
 .ccard:hover{border-color:rgba(220,189,118,.45);background:rgba(220,189,118,.04);transform:translateY(-3px)}
@@ -644,7 +679,20 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 .cases-more{text-align:center;margin-top:36px}
 
 @media(max-width:960px){
-  .cases-grid{grid-template-columns:1fr}
+  /* 개선안 A: 근로자/사업주 탭 + 카드 축약 */
+  .cases-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:30px}
+  .cases-tabs .ctab{font-family:var(--sans);font-size:13.5px;font-weight:700;padding:11px 0;border-radius:8px;cursor:pointer;
+    border:1px solid var(--line-soft);background:rgba(16,21,31,.5);color:var(--ink-soft)}
+  .cases-tabs .ctab span{opacity:.65;margin-left:3px}
+  .cases-tabs .ctab.on{background:linear-gradient(180deg,rgba(242,230,175,.92),rgba(185,143,78,.88));color:#151004;border-color:rgba(242,230,175,.5)}
+  .ccard[hidden]{display:none}
+  .ccard{padding:18px 16px}
+  .ccard .cmeta{margin-bottom:9px;gap:8px}
+  .ccard .creg{font-size:10.5px;padding:3px 9px}
+  .ccard .ctitle{font-size:16.5px;margin-bottom:7px;line-height:1.4;word-break:keep-all}
+  .ccard .csum{font-size:12.5px;line-height:1.65;word-break:keep-all}
+  .sec-foot{margin-top:16px}
+  .cases-grid{grid-template-columns:1fr;margin-top:14px}
 }
 
 /* ---------- 탭(SPA) 라우터 ---------- */
@@ -755,14 +803,13 @@ body.no-scroll{overflow:hidden}
       <a href="#ai">AI상담</a>
       <a href="#cases">주요업무</a>
       <a href="#youtube">유튜브</a>
-      <a href="#contact">오시는길</a>
+      <a href="#location">오시는길</a>
     </nav>
     <div class="nav-right">
       <div class="nav-phone">
         <span class="pic"><svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15a2 2 0 002-2v-2.5a1 1 0 00-.8-1l-3.3-.7a1 1 0 00-1 .4l-.9 1.2A12 12 0 018.9 11l1.2-.9a1 1 0 00.4-1l-.7-3.3a1 1 0 00-1-.8H6a2 2 0 00-2 2z"/></svg></span>
         <span class="pt"><span class="num">02-6929-4540</span><span class="hrs">평일 09:00 - 18:00</span></span>
       </div>
-      <a href="#consult" class="btn btn-primary">AI 상담 시작</a>
       <button class="hamburger" id="hamburger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -777,7 +824,7 @@ body.no-scroll{overflow:hidden}
   <a href="#ai">AI상담</a>
   <a href="#cases">주요업무</a>
   <a href="#youtube">유튜브</a>
-  <a href="#contact">오시는길</a>
+  <a href="#location">오시는길</a>
   <div class="mnav-foot">
     <a href="tel:0269294540" class="mnav-tel">02-6929-4540<em>평일 09:00 - 18:00</em></a>
     <a href="#consult" class="btn btn-primary mnav-cta">AI 상담 시작</a>
@@ -864,9 +911,10 @@ body.no-scroll{overflow:hidden}
 <section class="subsidy block" id="subsidy" data-view="home subsidy">
   <div class="wrap">
     <div class="sec-head">
-      <div class="center-eyebrow"><span class="eyebrow center">사업주 정부지원금 간이진단</span></div>
-      <h2>우리 회사가 받을 수 있는 정부지원금, 1분 진단</h2>
-      <p>회사 정보를 선택하면 신청 가능성이 있는 고용장려금을 간단히 안내합니다.<br>정부지원금 신청대행은 <b style="color:var(--gold-2)">공인노무사만 합법적으로 대리</b>할 수 있습니다.</p>
+      <div class="center-eyebrow"><span class="eyebrow center">사업주 지원금 진단</span></div>
+      <h2>정부지원금, 1분 진단</h2>
+      <p class="sec-sub">기업 규모·근로자 수 등 6가지를 고르면<br>신청 가능한 고용장려금을 안내합니다.</p>
+      <div class="sec-foot">신청대행은 <b>공인노무사만 합법적으로 대리</b>할 수 있습니다. <em>· 결과는 참고용입니다</em></div>
     </div>
     <div class="subsidy-shell">
       <div class="subsidy-grid">
@@ -1010,66 +1058,66 @@ body.no-scroll{overflow:hidden}
     <div class="sec-head">
       <span class="eyebrow">OUR SERVICES</span>
       <h2>주요 업무</h2>
-      <p class="sec-sub">노무법인 종로가 수행하는 대표 업무입니다. 사안마다 사실관계가 달라 결과를 보장하지 않으며, 정확한 판단은 상담을 통해 확인하실 수 있습니다.</p>
+      <p class="sec-sub">노무법인 종로가 직접 수행하는 대표 업무입니다.</p>
     </div>
     <!-- 업무분야 요약 (4개 핵심 영역) -->
     <div class="practice-grid" style="margin-bottom:48px">
       <div class="pcard">
         <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 7v11a1 1 0 001 1h14a1 1 0 001-1V7M9 7V5a1.5 1.5 0 011.5-1.5h3A1.5 1.5 0 0115 5v2M9.5 12.5l1.8 1.8 3.4-3.6"/></svg></span><span class="pt">부당해고·징계</span></div>
-        <div class="psub">구제신청 대리 · 징계 대응 · 권고사직 · 계약만료</div>
+        <div class="psub">구제신청 · 징계 대응 · 권고사직</div>
       </div>
       <div class="pcard">
         <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.2v9.6M9.2 14.4c.5 1 1.6 1.6 2.8 1.6 1.7 0 3-.9 3-2.2 0-2.9-5.6-1.5-5.6-4.2 0-1.3 1.2-2.2 2.6-2.2 1.1 0 2.1.5 2.6 1.4"/></svg></span><span class="pt">임금체불·퇴직금</span></div>
-        <div class="psub">체불임금 진정 · 퇴직금 · 연장/야간수당 · 대지급금</div>
+        <div class="psub">체불 진정 · 퇴직금 · 대지급금</div>
       </div>
       <div class="pcard">
         <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="7" r="2.4"/><path d="M12 9.4v3.6M4.5 17.5c2.2-2.6 4.7-3.9 7.5-3.9s5.3 1.3 7.5 3.9M4 20h16"/></svg></span><span class="pt">괴롭힘·산재</span></div>
-        <div class="psub">직장 내 괴롭힘 신고 · 산재신청 · 요양·보상 절차</div>
+        <div class="psub">괴롭힘 신고 · 산재신청 · 보상</div>
       </div>
       <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 20V8l5-3.5L14 8v12M4 20h16M14 20V11h6v9M7.5 11h2M7.5 14.5h2M16.8 14h.9"/></svg></span><span class="pt">기업 인사노무 자문</span></div>
-        <div class="psub">취업규칙 · 인사제도 정비 · 노동청 대응 · 급여관리</div>
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 20V8l5-3.5L14 8v12M4 20h16M14 20V11h6v9M7.5 11h2M7.5 14.5h2M16.8 14h.9"/></svg></span><span class="pt">기업 인사노무</span></div>
+        <div class="psub">취업규칙 · 인사제도 · 노동청 대응</div>
       </div>
     </div>
+    <!-- 근로자/사업주 탭 (모바일에서 한 번에 보이는 카드 수 축소) -->
+    <div class="cases-tabs" role="tablist">
+      <button class="ctab on" data-t="worker" role="tab" aria-selected="true">근로자 <span>4</span></button>
+      <button class="ctab" data-t="employer" role="tab" aria-selected="false">사업주 <span>2</span></button>
+    </div>
     <div class="cases-grid">
-      <a class="ccard" href="#consult">
+      <a class="ccard" data-r="worker" href="#consult">
         <div class="cmeta"><span class="creg">근로자</span><span class="ccat">부당해고</span></div>
         <div class="ctitle">부당해고 구제신청 대리</div>
-        <p class="csum">노동위원회 구제신청(초심·재심) 절차 대리, 이유서·증거 정리, 심문회의 대응까지 함께합니다.</p>
-        <span class="cgo">AI 상담으로 이어가기 →</span>
+        <p class="csum">노동위원회 구제신청 대리, 이유서·증거 정리, 심문회의 대응.</p>
       </a>
-      <a class="ccard" href="#consult">
+      <a class="ccard" data-r="worker" href="#consult">
         <div class="cmeta"><span class="creg">근로자</span><span class="ccat">임금체불</span></div>
         <div class="ctitle">체불임금·퇴직금 청구</div>
-        <p class="csum">노동청 진정 제기, 체불액(임금·퇴직금·수당) 산정, 도산 사업장 대지급금 신청을 지원합니다.</p>
-        <span class="cgo">AI 상담으로 이어가기 →</span>
+        <p class="csum">노동청 진정, 체불액 산정, 도산 사업장 대지급금 신청.</p>
       </a>
-      <a class="ccard" href="#consult">
+      <a class="ccard" data-r="worker" href="#consult">
         <div class="cmeta"><span class="creg">근로자</span><span class="ccat">징계</span></div>
         <div class="ctitle">징계 대응·소명 조력</div>
-        <p class="csum">징계 사유·절차·수위 3요소를 검토하고 소명자료 준비, 재심 청구, 부당징계 구제신청을 조력합니다.</p>
-        <span class="cgo">AI 상담으로 이어가기 →</span>
+        <p class="csum">사유·절차·수위 검토, 소명자료 준비, 재심·구제신청.</p>
       </a>
-      <a class="ccard" href="#consult">
+      <a class="ccard" data-r="worker" href="#consult">
         <div class="cmeta"><span class="creg">근로자</span><span class="ccat">괴롭힘·산재</span></div>
         <div class="ctitle">직장 내 괴롭힘 · 산재 신청</div>
-        <p class="csum">괴롭힘 신고와 조사 절차 대응, 불리한 처우 구제, 산재 요양·휴업급여 신청과 불승인 심사청구를 수행합니다.</p>
-        <span class="cgo">AI 상담으로 이어가기 →</span>
+        <p class="csum">괴롭힘 신고·조사 대응, 산재 요양·휴업급여 신청, 불승인 심사청구.</p>
       </a>
-      <a class="ccard" href="#consult">
+      <a class="ccard" data-r="employer" href="#consult">
         <div class="cmeta"><span class="creg">사업주</span><span class="ccat">분쟁 대응</span></div>
         <div class="ctitle">노동청·노동위원회 사건 대응</div>
-        <p class="csum">체불 진정·구제신청을 당한 사업주의 답변서 작성, 출석조사 동행, 화해 절차를 대리합니다.</p>
-        <span class="cgo">AI 상담으로 이어가기 →</span>
+        <p class="csum">답변서 작성, 출석조사 동행, 화해 절차 대리.</p>
       </a>
-      <a class="ccard" href="#consult">
+      <a class="ccard" data-r="employer" href="#consult">
         <div class="cmeta"><span class="creg">사업주</span><span class="ccat">인사노무 자문</span></div>
         <div class="ctitle">취업규칙·인사제도 정비</div>
-        <p class="csum">취업규칙 제·개정, 근로계약서·임금체계 점검, 해고·징계 절차 설계로 분쟁을 예방합니다.</p>
-        <span class="cgo">AI 상담으로 이어가기 →</span>
+        <p class="csum">취업규칙 제·개정, 근로계약서·임금체계 점검, 해고 절차 설계.</p>
       </a>
     </div>
-    <div class="cases-more"><a class="btn btn-ghost" href="#contact">상담 예약 안내 보기 <span class="ar">→</span></a></div>
+    <div class="cases-more"><a class="btn btn-primary" href="#consult">AI 상담으로 이어가기 <span class="ar">→</span></a></div>
+    <div class="sec-foot">사안마다 사실관계가 달라 결과를 보장하지 않습니다. 정확한 판단은 상담으로 확인해 주세요.</div>
   </div>
 </section>
 
@@ -1113,18 +1161,6 @@ body.no-scroll{overflow:hidden}
       <a href="tel:0269294540" class="btn btn-primary">전화 상담 02-6929-4540</a>
       <a href="#consult" class="btn btn-ghost">AI 음성 상담 시작 <span class="ar">→</span></a>
     </div>
-    <div class="map-wrap">
-      <div class="map-frame">
-        <iframe src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%A2%85%EB%A1%9C96%20%ED%95%9C%EC%98%AC%ED%83%80%EC%9B%8C&z=17&hl=ko&output=embed" title="노무법인 종로 본사 위치 지도" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-      </div>
-      <div class="map-btns">
-        <a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%A2%85%EB%A1%9C96%20%ED%95%9C%EC%98%AC%ED%83%80%EC%9B%8C" target="_blank" rel="noopener">
-          <span class="bdot" style="background:#03C75A"></span>네이버지도 길찾기</a>
-        <a href="https://map.kakao.com/link/search/%EC%84%9C%EC%9A%B8%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%A2%85%EB%A1%9C96%20%ED%95%9C%EC%98%AC%ED%83%80%EC%9B%8C" target="_blank" rel="noopener">
-          <span class="bdot" style="background:#FEE500"></span>카카오맵 길찾기</a>
-      </div>
-      <div class="map-note">본사 (03191) 서울시 종로구 종로96, 한올타워 6층 · 지하철 1호선 종각역 인근</div>
-    </div>
   </div>
 </section>
 
@@ -1152,16 +1188,43 @@ body.no-scroll{overflow:hidden}
   </div>
 </section>
 
+<!-- 오시는 길 (홈 최하단) -->
+<section class="location block" id="location" data-view="home contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">LOCATION</span>
+      <h2>오시는 길</h2>
+      <p class="sec-sub">지하철 1호선 종각역 인근, 방문 전 전화로 예약해 주세요.</p>
+    </div>
+    <div class="map-wrap">
+      <div class="map-frame">
+        <iframe src="https://www.google.com/maps?q=%EC%84%9C%EC%9A%B8%EC%8B%9C%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%A2%85%EB%A1%9C96%20%ED%95%9C%EC%98%AC%ED%83%80%EC%9B%8C&z=17&hl=ko&output=embed" title="노무법인 종로 본사 위치 지도" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+      <div class="map-btns">
+        <a href="https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%A2%85%EB%A1%9C96%20%ED%95%9C%EC%98%AC%ED%83%80%EC%9B%8C" target="_blank" rel="noopener">
+          <span class="bdot" style="background:#03C75A"></span>네이버지도 길찾기</a>
+        <a href="https://map.kakao.com/link/search/%EC%84%9C%EC%9A%B8%20%EC%A2%85%EB%A1%9C%EA%B5%AC%20%EC%A2%85%EB%A1%9C96%20%ED%95%9C%EC%98%AC%ED%83%80%EC%9B%8C" target="_blank" rel="noopener">
+          <span class="bdot" style="background:#FEE500"></span>카카오맵 길찾기</a>
+      </div>
+      <div class="map-note">본사 (03191) 서울시 종로구 종로96, 한올타워 6층 · 지하철 1호선 종각역 인근</div>
+    </div>
+  </div>
+</section>
+
 <!-- 푸터 -->
 <nav class="quicknav" aria-label="섹션 바로가기">
   <div class="wrap">
-    <a href="#about">소개</a>
-    <a href="#calc">사전진단</a>
-    <a href="#subsidy">지원금진단</a>
-    <a href="#ai">AI 상담</a>
-    <a href="#cases">주요업무</a>
-    <a href="#youtube">유튜브</a>
-    <a href="#contact">오시는길</a>
+    <div class="qn-eyebrow"><span class="ln"></span><span>SITE MAP</span><span class="ln r"></span></div>
+    <div class="qn-grid">
+      <a href="#about"><span class="tx">소개</span></a>
+      <a href="#calc"><span class="tx">사전진단</span></a>
+      <a href="#subsidy"><span class="tx">지원금진단</span></a>
+      <a href="#ai"><span class="tx">AI 상담</span></a>
+      <a href="#cases"><span class="tx">주요업무</span></a>
+      <a href="#youtube"><span class="tx">유튜브</span></a>
+      <a href="#location"><span class="tx">오시는길</span></a>
+      <a href="#top" class="back"><span class="tx">맨 위로 ↑</span></a>
+    </div>
   </div>
 </nav>
 
@@ -2167,6 +2230,26 @@ window.addEventListener('load',()=>{
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&open) setOpen(false); });
   window.addEventListener('resize',function(){ if(window.innerWidth>=960&&open) setOpen(false); });
 })();
+
+  // 주요 업무: 근로자/사업주 탭 (모바일)
+  (function(){
+    var tabs = document.querySelectorAll('.cases-tabs .ctab');
+    if(!tabs.length) return;
+    function apply(t){
+      document.querySelectorAll('.cases-grid .ccard').forEach(function(c){
+        c.hidden = (c.getAttribute('data-r') !== t);
+      });
+    }
+    tabs.forEach(function(b){
+      b.addEventListener('click', function(){
+        tabs.forEach(function(x){ x.classList.remove('on'); x.setAttribute('aria-selected','false'); });
+        b.classList.add('on'); b.setAttribute('aria-selected','true');
+        apply(b.getAttribute('data-t'));
+      });
+    });
+    apply('worker');
+  })();
+
 </script>
 </body>
 </html>
