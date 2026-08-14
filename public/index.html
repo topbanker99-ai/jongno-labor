@@ -163,10 +163,10 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 /* hero portrait */
 /* ===== 운율 방식: 영상을 히어로 전체 배경(벽지)으로 ===== */
 /* 인물+배경 통짜 영상이 히어로 전체를 덮음 (오른쪽 칸에 가두지 않음) */
-.hero .hero-motion{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;z-index:0;pointer-events:none;opacity:0;transition:opacity .9s ease}
+.hero .hero-motion{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right top;z-index:0;pointer-events:none;opacity:0;transition:opacity .9s ease}
 .hero .hero-motion.on{opacity:1}
 /* 폴백: 영상 첫 프레임 정지 이미지 (로딩 1초간 표시) */
-.hero::before{content:"";position:absolute;inset:0;z-index:0;background:var(--navy-900) right center/cover no-repeat;background-image:url('/img/hero-motion-poster.jpg')}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:var(--navy-900) right top/cover no-repeat;background-image:url('/img/hero-motion-poster.jpg')}
 /* 오버레이: 영상 경계를 바탕색(#10151F)으로 녹여서 '영상의 끝'이 안 보이게 (운율 핵심) */
 .hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:
   linear-gradient(90deg, #10151F 0%, rgba(16,21,31,.95) 30%, rgba(16,21,31,.55) 55%, rgba(16,21,31,.12) 100%),
