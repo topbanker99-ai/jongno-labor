@@ -18,7 +18,7 @@
  * ------------------------------------------------------------
  *  [보안 구조 요약 — 2026-11 강화]
  *   · 실제 방문자 IP 판별: X-Forwarded-For 위조로 사용량 제한을 우회하지 못하도록 오른쪽(프록시가 붙인) 공인 IP 사용
- *   · AI 음성상담: gpt-realtime-2.1 단일 운영 · 비밀번호 없이 공개 · 1인(IP) 하루 2회 · 전체 하루 10회 · 1회 25분
+ *   · AI 음성상담: gpt-realtime-2.1 단일 운영 · 비밀번호 없이 공개 · 1회 최대 30분 · 1인(IP) 하루 6회·총 40분 · 전체 하루 10회
  *   · 상담요약: gpt-6-luna (실패 시 gpt-4o-mini 대체) · 회신 연락처는 개인정보 동의 후에만 메일로 전달(서버 저장 없음)
  *   · 상담 세션 토큰(x-consult-session): 상담을 정상 시작한 브라우저만 사례검색·판례검색·메일전송 가능
  *     → 외부 스크립트가 API만 직접 두드려 사례 DB를 긁어가거나 노무사 메일함에 스팸을 보내는 것을 차단
@@ -157,12 +157,12 @@ async function turnstileGate(req, res, next) {
 /* 3층: 상담 세션 토큰 — 상담을 정상적으로 시작(리얼타임 토큰 발급 / 절약형 첫인사)한 브라우저에만 발급.
    서버 비밀키로 서명하므로 위조 불가. 세션당 사용 횟수 제한 + 메일 전송은 1회만. */
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
-const SESSION_TTL_MS = 2 * 60 * 60 * 1000;               // 상담 25분 + 요약·연락처 입력·전송 여유
+const SESSION_TTL_MS = 2 * 60 * 60 * 1000;               // 상담 최대 30분 + 요약·연락처 입력·전송 여유
 const SESSION_LIMITS = { search: 80, finish: 1 };
 const sessUse = new Map();                                // nonce → { exp, counts, sending }
 const sign = (body) => crypto.createHmac('sha256', SESSION_SECRET).update(body).digest('base64url');
-function issueSession(mode) {
-  const body = Buffer.from(JSON.stringify({ n: crypto.randomBytes(12).toString('base64url'), m: mode, exp: Date.now() + SESSION_TTL_MS })).toString('base64url');
+function issueSession(mode, n = crypto.randomBytes(12).toString('base64url')) {
+  const body = Buffer.from(JSON.stringify({ n, m: mode, exp: Date.now() + SESSION_TTL_MS })).toString('base64url');
   return `${body}.${sign(body)}`;
 }
 function verifySession(tok) {
@@ -289,14 +289,52 @@ function perspectiveNote(persp) {
 /* ============================================================
    1) AI 음성상담 — OpenAI Realtime 임시 접속키(ephemeral client secret) 발급
       GA 엔드포인트: POST /v1/realtime/client_secrets → 브라우저가 value(ek_...)로 WebRTC 연결
-      [운영 기준 2026-11] 비밀번호 없이 공개 · 1인(IP) 하루 2회 · 사이트 전체 하루 10회 · 1회 최대 25분
+      [운영 기준 2026-11] 비밀번호 없이 공개 · 1회 최대 30분 · 1인(IP) 하루 6회·총 40분 · 사이트 전체 하루 10회
       [모델] gpt-realtime-2.1 (2026-07 출시 신버전). 구버전 gpt-realtime은 2027-01-20 종료 예정
    ============================================================ */
 const RT_MODEL = 'gpt-realtime-2.1';       // 상담 모델
 const RT_TRANSCRIBE = 'gpt-transcribe';    // 상담자 음성 → 글자 (구 gpt-4o-mini-transcribe는 2027-02-26 종료)
-const RT_MAX_MIN = 25;                     // 1회 상담 최대 시간(분) — index.html 타이머와 맞춤
+const RT_MAX_MIN = 30;                     // 1회 상담 최대 시간(분)
+const RT_PERSON_DAY_COUNT = 6;             // 1인(같은 인터넷 주소) 하루 최대 횟수
+const RT_PERSON_DAY_MIN = 40;              // 1인 하루 최대 총 이용 시간(분)
+const RT_MIN_START_SEC = 180;              // 남은 시간이 3분 미만이면 새 상담을 시작하지 않음
 
-function realtimeSession(persp, variant) {
+/* 1인 하루 이용 관리 — 상담 시간은 서버 시계로 잰다(토큰 발급 ~ 마지막 사용 보고).
+   진행 중인 상담은 최대 시간을 미리 잡아 두고, 끝나면 실제 사용 시간으로 정산.
+   연결에 실패한 상담은 횟수·시간을 되돌린다(사이트 전체 하루 횟수는 되돌리지 않음). */
+const personDay = new Map();   // `${날짜}:${IP}` → { count, sessions: [] }
+const rtSessions = new Map();  // 세션 nonce → 세션 기록 (IP가 바뀌어도 사용 보고를 받을 수 있게)
+function personState(ip) {
+  const day = kstToday(), key = `${day}:${ip}`;
+  let st = personDay.get(key);
+  if (!st) {
+    st = { count: 0, sessions: [] }; personDay.set(key, st);
+    for (const k of personDay.keys()) if (!k.startsWith(day + ':')) personDay.delete(k);           // 지난 날짜 정리
+    for (const [n, r] of rtSessions) if (Date.now() - r.start > 6 * 3600 * 1000) rtSessions.delete(n);
+  }
+  return st;
+}
+function sessionUsedSec(r, now = Date.now()) {
+  if (r.ended) return r.usedSec;
+  const silentMs = now - r.lastBeat;
+  if (silentMs > 120000) return r.beats ? Math.min(r.maxSec, r.usedSec + 60) : r.maxSec;   // 보고가 끊긴 상담
+  return r.maxSec;                                                                          // 진행 중 → 최대치 예약
+}
+const personUsedSec = (st) => st.sessions.reduce((a, r) => a + sessionUsedSec(r), 0);
+function personGate(req, res, next) {
+  const st = personState(getIP(req));
+  if (st.count >= RT_PERSON_DAY_COUNT) {
+    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 횟수(1인 하루 ${RT_PERSON_DAY_COUNT}회)를 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6929-4540)로 상담해주세요.`, code: 'person_count' });
+  }
+  const remainSec = RT_PERSON_DAY_MIN * 60 - personUsedSec(st);
+  if (remainSec < RT_MIN_START_SEC) {
+    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 시간(1인 하루 총 ${RT_PERSON_DAY_MIN}분)을 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6929-4540)로 상담해주세요.`, code: 'person_time' });
+  }
+  req.rt = { st, maxSec: Math.floor(Math.min(RT_MAX_MIN * 60, remainSec)), remainSec };
+  next();
+}
+
+function realtimeSession(persp, variant, maxMin = RT_MAX_MIN) {
   const modern = variant !== 'legacy';
   const session = {
     type: 'realtime',
@@ -320,7 +358,7 @@ function realtimeSession(persp, variant) {
         speed: 0.85,                       // 말 속도 (1=기본, 낮을수록 천천히)
       },
     },
-    instructions: VOICE_PROMPT + perspectiveNote(persp) + `\n\n[상담 시간] 1회 상담은 최대 ${RT_MAX_MIN}분이다. 시스템이 남은 시간을 알려주면 반드시 그 안내에 따라 마무리를 진행하고, 시간 안내 이후에는 새 주제를 확장하지 마라.
+    instructions: VOICE_PROMPT + perspectiveNote(persp) + `\n\n[상담 시간] 이번 상담은 최대 ${maxMin}분이다. 시스템이 남은 시간을 알려주면 반드시 그 안내에 따라 마무리를 진행하고, 시간 안내 이후에는 새 주제를 확장하지 마라.
 
 [검색 도구 사용법] 너에게 두 가지 검색 도구가 있다.
 1) search_cases — 실제 상담사례 검색. 2) search_precedents — 실제 법원 판례 검색.
@@ -370,8 +408,7 @@ let rtStart = 0;        // 마지막으로 성공한 단계 번호
 let rtVariantOk = '';   // 마지막으로 성공한 설정 (로그 확인용)
 
 app.get('/api/realtime/token',
-  ipLimit('rt', 2, 24 * 60 * 60 * 1000, '오늘 이용 가능한 AI 상담 횟수(1인 하루 2회)를 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6929-4540)로 상담해주세요.'),
-  requireAI, turnstileGate, dailyCap('realtime'), async (req, res) => {
+  ipLimit('rtq', 20), requireAI, personGate, turnstileGate, dailyCap('realtime'), async (req, res) => {
   // ?perspective=노동자|사업주 — 관점 선택 게이트에서 전달 (없으면 지침 미주입)
   const persp = ['노동자', '사업주'].includes(req.query.perspective) ? req.query.perspective : '';
   try {
@@ -384,26 +421,55 @@ app.get('/api/realtime/token',
           Authorization: `Bearer ${OPENAI_KEY}`,
           'OpenAI-Safety-Identifier': safetyId(req),   // IP 원문 대신 해시값
         },
-        body: JSON.stringify({ session: realtimeSession(persp, variant) }),
+        body: JSON.stringify({ session: realtimeSession(persp, variant, Math.max(1, Math.round(req.rt.maxSec / 60))) }),
       });
       const data = await r.json().catch(() => ({}));
       if (r.ok && data.value) {
         rtStart = vi;
         if (rtVariantOk !== variant) { rtVariantOk = variant; console.log(`[realtime/token] 상담 설정: ${variant} (${variant === 'legacy' ? 'gpt-realtime 구버전' : RT_MODEL})`); }
         // 시스템 지침(상담 지식) 원문이 담긴 session 객체는 돌려주지 않고 필요한 값만 전달
-        return res.json({ value: data.value, expires_at: data.expires_at, maxMinutes: RT_MAX_MIN, cst: issueSession('rt') });
+        const nonce = crypto.randomBytes(12).toString('base64url');
+        const now = Date.now();
+        const rec = { maxSec: req.rt.maxSec, start: now, lastBeat: now, usedSec: 0, beats: 0, ended: false, refunded: false, st: req.rt.st };
+        req.rt.st.count += 1; req.rt.st.sessions.push(rec); rtSessions.set(nonce, rec);
+        const st = req.rt.st;
+        return res.json({
+          value: data.value, expires_at: data.expires_at, cst: issueSession('rt', nonce),
+          maxSeconds: req.rt.maxSec, maxMinutes: Math.round(req.rt.maxSec / 60),
+          todayLeft: { count: RT_PERSON_DAY_COUNT - st.count, minutes: Math.max(0, Math.floor((RT_PERSON_DAY_MIN * 60 - personUsedSec(st)) / 60)) },
+        });
       }
       // OpenAI 오류 원문은 방문자에게 보여주지 않고 서버 로그에만 남김
       console.error(`[realtime/token] ${variant} 설정 거절`, r.status, data?.error?.message || '');
       if (r.status !== 400) break;   // 설정 문제(400)일 때만 다음 단계로, 키·한도 문제는 즉시 중단
     }
-    refundCap('realtime'); ipRefund('rt', req);
+    refundCap('realtime');
     return res.status(502).json({ error: 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', code: 'upstream' });
   } catch (e) {
     console.error('[realtime/token]', e.message);
-    refundCap('realtime'); ipRefund('rt', req);
+    refundCap('realtime');
     res.status(502).json({ error: 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', code: 'upstream' });
   }
+});
+
+/* 상담 사용 보고 — 상담 중 30초마다, 끝날 때 1번. 1인 하루 총 이용 시간 정산용
+   body: { cst?, end?:bool, failed?:bool }  (페이지를 닫을 때 sendBeacon은 헤더를 못 붙여 cst를 본문으로 받음) */
+app.post('/api/realtime/usage', ipLimit('ru', 400), (req, res) => {
+  const p = verifySession(req.headers['x-consult-session'] || req.body?.cst);
+  const r = p && rtSessions.get(p.n);
+  if (!r) return res.status(404).json({ ok: false });
+  const now = Date.now();
+  if (!r.ended) {
+    r.lastBeat = now; r.beats += 1;
+    r.usedSec = Math.min(r.maxSec, Math.max(r.usedSec, Math.round((now - r.start) / 1000)));   // 서버 시계 기준
+    if (req.body?.failed === true && now - r.start < 120000 && !r.refunded) {
+      // 연결 자체가 안 된 상담 → 1인 횟수·시간 되돌림
+      r.usedSec = 0; r.refunded = true; r.st.count = Math.max(0, r.st.count - 1);
+      r.ended = true;
+    } else if (req.body?.end === true) r.ended = true;
+  }
+  const remain = Math.max(0, r.maxSec - r.usedSec);
+  res.json({ ok: true, remainSec: remain });
 });
 
 /* ============================================================
@@ -870,7 +936,7 @@ function configReport() {
   console.log(' 판례(LAW_OC)              :', ok(LAW_OC));
   console.log(' 상담요약 메일(SMTP_*)      :', ok(mailReady()));
   console.log(' 봇 차단(TURNSTILE_SECRET) :', process.env.TURNSTILE_SECRET ? '켜짐 (index.html TURNSTILE_SITEKEY도 입력돼 있어야 함)' : '꺼짐');
-  console.log(` 상담 모델: ${RT_MODEL} (음성인식 ${RT_TRANSCRIBE}) · 요약: ${SUMMARY_ATTEMPTS[0].model} · 1회 ${RT_MAX_MIN}분 · 1인 하루 2회 · 전체 하루 ${DAILY_CAPS.realtime}회`);
+  console.log(` 상담 모델: ${RT_MODEL} (음성인식 ${RT_TRANSCRIBE}) · 요약: ${SUMMARY_ATTEMPTS[0].model} · 1회 최대 ${RT_MAX_MIN}분 · 1인 하루 ${RT_PERSON_DAY_COUNT}회·총 ${RT_PERSON_DAY_MIN}분 · 전체 하루 ${DAILY_CAPS.realtime}회`);
   if (!process.env.SESSION_SECRET) console.log(' (안내) SESSION_SECRET 미설정 → 재시작마다 자동 생성. 서버 재시작 시 진행 중 상담 세션은 만료됩니다.');
   console.log('──────────────────────────────────');
 }
