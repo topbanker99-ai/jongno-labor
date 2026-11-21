@@ -366,6 +366,17 @@ section.block{padding:96px 0;position:relative}
 .sc-row:last-of-type{border-bottom:none}
 .sc-row .k{width:96px;flex:none;color:var(--gold-2);font-weight:600}
 .sc-row .v{color:var(--ink-soft);flex:1}
+.sc-contact{margin:4px 18px 10px;padding:14px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.03)}
+.sc-contact .scc-t{font-weight:700;color:var(--gold-2);font-size:13.5px;margin-bottom:10px}
+.sc-contact .scc-g{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}
+.sc-contact .scc-g .full{grid-column:1/-1}
+.sc-contact input[type=text],.sc-contact input[type=tel]{width:100%;box-sizing:border-box;padding:11px 12px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.28);color:var(--ink);font-size:15px;font-family:inherit}
+.sc-contact input::placeholder{color:var(--ink-dim)}
+.sc-contact input:focus{outline:none;border-color:var(--gold-2)}
+.sc-contact .scc-agree{display:flex;gap:8px;align-items:flex-start;margin-top:11px;font-size:12px;line-height:1.55;color:var(--ink-faint);cursor:pointer}
+.sc-contact .scc-agree input{margin-top:2px;flex:none;width:16px;height:16px;accent-color:#C9A45C}
+.sc-contact .scc-agree b{color:var(--ink-soft)}
+@media(max-width:640px){.sc-contact .scc-g{grid-template-columns:1fr}}
 .sc-send{margin:6px 18px 18px;display:flex;gap:10px}
 .sc-send .btn{flex:1;font-size:13.5px;padding:12px}
 .sent-ok{margin:6px 18px 18px;background:rgba(95,185,140,.12);border:1px solid rgba(95,185,140,.35);color:var(--fav);border-radius:10px;padding:13px 16px;font-size:13px;display:flex;gap:10px;align-items:center}
@@ -992,7 +1003,7 @@ body.no-scroll{overflow:hidden}
       <div class="ai-steps">
         <div class="ai-step"><span class="n">1</span><b>관점 선택</b><small>근로자 / 사업주 중<br>내 입장을 고릅니다</small></div>
         <div class="ai-arrow">→</div>
-        <div class="ai-step"><span class="n">2</span><b>음성 상담</b><small>말하면 AI가 사례·판례를<br>찾아 안내합니다 (최대 40분)</small></div>
+        <div class="ai-step"><span class="n">2</span><b>음성 상담</b><small>말하면 AI가 사례·판례를<br>찾아 안내합니다 (최대 25분)</small></div>
         <div class="ai-arrow">→</div>
         <div class="ai-step"><span class="n">3</span><b>노무사 전달</b><small>상담 요약이 김경동 노무사<br>메일로 전송됩니다</small></div>
       </div>
@@ -1306,14 +1317,12 @@ body.no-scroll{overflow:hidden}
         <div class="voice-timer" id="voiceTimer" style="display:none">00:00</div>
         <div class="voice-mode-tag" id="modeTag" style="display:none">데모 모드</div>
         <div class="voice-controls">
-          <button class="btn btn-primary vc-start" id="btnStart">🎙 리얼타임 상담 시작</button>
-          <button class="btn btn-ghost vc-start" id="btnMini" style="margin-top:10px">리얼타임 미니 상담 시작</button>
-          <button class="btn btn-ghost vc-start" id="btnEco" style="margin-top:10px">일반 음성 상담 (절약형) 시작</button>
+          <button class="btn btn-primary vc-start" id="btnStart">🎙 AI 음성 상담 시작</button>
           <button class="vc-mute" id="btnMute" style="display:none" title="마이크 음소거">🎤</button>
           <button class="vc-end" id="btnEnd" style="display:none">상담 종료 &amp; 노무사에게 전송</button>
           <button class="btn btn-ghost" id="btnReset" style="display:none;margin-top:10px;font-size:13px;padding:9px 18px">↩ 상담 중지 · 처음으로</button>
         </div>
-        <div class="voice-hint" id="voiceHint">마이크 권한이 필요합니다 · 1회 최대 40분</div>
+        <div class="voice-hint" id="voiceHint">마이크 권한이 필요합니다 · 1회 최대 25분 · 1인 하루 2회</div>
       </div>
       <div class="voice-transcript" id="transcript">
         <div class="tr-empty" id="trEmpty">상담을 시작하면 대화 내용이<br>여기에 실시간으로 표시됩니다.</div>
@@ -1596,15 +1605,6 @@ async function getTsToken(){
     setTimeout(()=>r(''),15000);
   });
 }
-/* 리얼타임 상담 비밀번호 — 방문객이 입력해야 상담 시작 (세션 동안 1회만 물어봄)
-   [보안] 비밀번호는 주소(?pw=)가 아니라 요청 헤더로만 전송 → 접속 기록·브라우저 기록에 남지 않음 */
-function getConsultPw(){
-  let pw='';
-  try{ pw=sessionStorage.getItem('rtpw')||''; }catch(_){}
-  if(!pw){pw=prompt('상담 비밀번호를 입력해주세요')||''; try{ if(pw)sessionStorage.setItem('rtpw',pw); }catch(_){}}
-  return pw;
-}
-function forgetConsultPw(){ try{ sessionStorage.removeItem('rtpw'); }catch(_){} }
 /* [보안] 상담 세션 토큰 — 상담을 정상 시작하면 서버가 발급. 사례검색·음성대화·메일전송에 함께 보냄 */
 let CST='';
 const CONSULT_PHONE='02-6929-4540';
@@ -1617,7 +1617,7 @@ async function consultHeaders(){
   if(CST) h['x-consult-session']=CST;
   return h;
 }
-/* 서버 기능 상태 확인(/api/health) — AI 키가 없으면 비밀번호·마이크를 묻기 전에 '준비 중'으로 안내 */
+/* 서버 기능 상태 확인(/api/health) — AI 키가 없으면 마이크를 묻기 전에 '준비 중'으로 안내 */
 let _health=null;
 async function serverFeatures(){
   if(_health) return _health;
@@ -1632,7 +1632,7 @@ function consultErrorMsg(status,j){
   if(status===403) return '보안 확인에 실패했습니다. 새로고침 후 다시 시도해주세요.';
   return 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도하거나 전화('+CONSULT_PHONE+')로 상담해주세요.';
 }
-let RT_MODEL='';   // ''=gpt-realtime, 'mini'=gpt-realtime-mini
+let RT_MAX_MIN=25;   // 1회 상담 최대 시간(분) — 서버가 내려주는 값으로 갱신
 const FINISH_ENDPOINT='/api/consult/finish';
 const REALTIME_CALLS_URL='https://api.openai.com/v1/realtime/calls';
 const VOICE_PROMPT='너는 노무법인 종로의 AI 음성 상담원이다. 한 번에 하나씩 공감적으로 짧게 질문한다. 상담유형(부당해고·징계/임금체불·퇴직금/괴롭힘/산재)과 보유 증빙을 반드시 확인하고, 확정적 판정 예측·결과 보장은 하지 않는다. 참고 정보만 제공하고 공인노무사 상담으로 연결한다.';
@@ -1695,26 +1695,24 @@ function addTurn(who,text,partial){
   trBox.appendChild(el);trBox.scrollTop=trBox.scrollHeight;return el;
 }
 
-const btnMini=document.getElementById('btnMini');
 const btnReset=document.getElementById('btnReset');
-function hideStartBtns(){ [btnStart,btnMini,document.getElementById('btnEco')].forEach(b=>{if(b)b.style.display='none';}); if(btnReset)btnReset.style.display=''; }
+function hideStartBtns(){ if(btnStart)btnStart.style.display='none'; if(btnReset)btnReset.style.display=''; }
 /* 연결 실패 시: 가짜(데모) 대화를 보여주지 않고 정직하게 안내 + 마이크 즉시 해제 + 시작 버튼 복구 */
 function consultFail(msg,statusText){
   try{ dc&&dc.close(); pc&&pc.close(); }catch(_){}
   try{ micStream&&micStream.getTracks().forEach(t=>t.stop()); micStream=null; }catch(_){}
-  [btnStart,btnMini,document.getElementById('btnEco')].forEach(b=>{ if(b){b.style.display='';b.disabled=false;} });
-  const be=document.getElementById('btnEco'); if(be) be.textContent='일반 음성 상담 (절약형) 시작';
+  if(btnStart){ btnStart.style.display=''; btnStart.disabled=false; }
   if(btnReset) btnReset.style.display='none';
   if(modeTag) modeTag.style.display='none';
   setOrb(''); setStatus(statusText||'연결 실패');
   vHint.textContent=msg||consultErrorMsg(0);
 }
-async function beginRealtime(model,label){
+async function beginRealtime(label){
   if(!PERSP){ showGate(); return; }   // 관점 선택 없이는 시작 불가
   if(DEMO_ALLOWED){ hideStartBtns(); startDemo(); return; }   // ?demo=1 시연 전용
   const f=await serverFeatures();
   if(!f.ai){ consultFail('AI 음성상담 서비스 준비 중입니다. 전화('+CONSULT_PHONE+')로 상담해주세요.','상담 준비 중'); return; }
-  RT_MODEL=model; hideStartBtns(); setStatus('연결 중…');
+  hideStartBtns(); setStatus('연결 중…');
   try{ await startRealtime(); if(modeTag){modeTag.style.display='';modeTag.textContent=label;} }
   catch(err){
     console.warn('실시간 연결 실패',err);
@@ -1722,23 +1720,22 @@ async function beginRealtime(model,label){
     consultFail(msg);
   }
 }
-btnStart.onclick=()=>beginRealtime('','리얼타임');
-if(btnMini)btnMini.onclick=()=>beginRealtime('mini','리얼타임 미니');
+btnStart.onclick=()=>beginRealtime('AI 음성 상담');
 
 async function startRealtime(){
-  micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-  micStream.getAudioTracks().forEach(tr=>tr.enabled=false);   // 시작은 마이크 OFF — 첫 인사가 끝난 뒤에만 켠다
-  const _pw=getConsultPw();
   const fail=(m)=>{const e=new Error(m);e.userMsg=m;return e;};
-  if(!_pw) throw fail('상담 비밀번호를 입력해야 리얼타임 상담을 시작할 수 있습니다.');
-  const _h={'x-consult-pw':_pw}; const _ts=await getTsToken(); if(_ts)_h['x-turnstile-token']=_ts;
-  const tr=await fetch(TOKEN_ENDPOINT+'?perspective='+encodeURIComponent(PERSP)+(RT_MODEL?'&model='+RT_MODEL:''),{headers:_h,cache:'no-store'});
+  // 1) 이용 가능 여부(하루 횟수 등)를 먼저 확인한 뒤에 마이크 권한을 묻는다
+  const _h={}; const _ts=await getTsToken(); if(_ts)_h['x-turnstile-token']=_ts;
+  const tr=await fetch(TOKEN_ENDPOINT+'?perspective='+encodeURIComponent(PERSP),{headers:_h,cache:'no-store'});
   const tok=await safeJson(tr);
-  if(tr.status===401){forgetConsultPw();throw fail('상담 비밀번호가 올바르지 않습니다. 다시 시작 버튼을 눌러 입력해주세요.');}
   if(!tr.ok)throw fail(consultErrorMsg(tr.status,tok));
   const EK=tok.value||(tok.client_secret&&tok.client_secret.value);
   if(!EK)throw fail(consultErrorMsg(502));
   CST=tok.cst||'';
+  if(tok.maxMinutes>0) RT_MAX_MIN=Math.min(60,tok.maxMinutes);
+  // 2) 마이크 연결
+  micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+  micStream.getAudioTracks().forEach(tr=>tr.enabled=false);   // 시작은 마이크 OFF — 첫 인사가 끝난 뒤에만 켠다
 
   pc=new RTCPeerConnection();
   const audioEl=document.createElement('audio');audioEl.autoplay=true;
@@ -1772,17 +1769,17 @@ async function startRealtime(){
     /* 지침은 서버(/api/realtime/token)가 도구 정의와 함께 설정 — 여기서 덮어쓰지 않음 */
     if(!window.__greeted){ window.__greeted=true;
       setTimeout(()=>{ try{ dc.send(JSON.stringify({type:'response.create'})); }catch(e){} }, 400); }  // 인사는 딱 1회
-    /* [40분 상담 시간 관리] 35분: 마무리 안내 지령 → 39분: 마지막 인사 지령 → 40분: 자동 종료 */
+    /* [상담 시간 관리] 종료 5분 전: 마무리 안내 지령 → 1분 전: 마지막 인사 지령 → 최대 시간(기본 25분): 자동 종료 */
     const inject=(txt)=>{ try{ dc.send(JSON.stringify({type:'conversation.item.create',item:{type:'message',role:'system',content:[{type:'input_text',text:txt}]}})); }catch(_){ } };
     demoTimers.push(setTimeout(()=>{
       inject('상담 시간이 5분 남았다. 의뢰인님의 현재 이야기가 일단락되면, 진행 중인 답변을 마친 뒤 자연스럽게 다음 안내를 하라: "의뢰인님, 안내드린 상담 시간이 이제 5분 정도 남았습니다. 혹시 아직 말씀 못 하신 중요한 내용이 있으시면 지금 편하게 말씀해 주세요." 이후 남은 시간 동안은 새 주제를 확장하지 말고 마무리에 집중하라.');
       setStatus('상담 마무리 단계 (약 5분 남음)');
-    }, 35*60*1000));
+    }, (RT_MAX_MIN-5)*60*1000));
     demoTimers.push(setTimeout(()=>{
       inject('상담 시간이 약 1분 남았다. 의뢰인님의 발언이 끝나는 대로 다음 마무리 인사를 하고 상담을 끝맺으라: "오늘 말씀해 주신 내용은 정리해서 김경동 노무사님께 전달해 드리겠습니다. 더 자세한 상담은 지금까지의 상담 내용을 바탕으로 김경동 노무사님께서 직접 안내해 주실 예정입니다. 필요하시면 02-6929-4540으로 연락 주세요. 시간 내주셔서 감사합니다." 이 인사 후에는 새 질문을 하지 마라.');
       setStatus('상담 종료 임박 (약 1분)');
-    }, 39*60*1000));
-    demoTimers.push(setTimeout(()=>{ try{ endVoice(); }catch(_){ } }, 40*60*1000));
+    }, (RT_MAX_MIN-1)*60*1000));
+    demoTimers.push(setTimeout(()=>{ try{ endVoice(); }catch(_){ } }, RT_MAX_MIN*60*1000));
   };
   dc.onmessage=onRealtimeEvent;
 
@@ -1864,14 +1861,13 @@ btnMute.onclick=()=>{
 
 btnEnd.onclick=endVoice;
 
-/* 상담 중지 · 처음으로: 진행 중인 모든 것(리얼타임/미니/절약형) 정리 후 초기 화면 복귀 */
+/* 상담 중지 · 처음으로: 진행 중인 상담 정리 후 초기 화면 복귀 */
 btnReset.onclick=()=>{
   if(!confirm('상담을 중지하고 처음으로 돌아갈까요? (노무사 전송 없이 대화가 지워집니다)')) return;
   CST='';
   try{ clearInterval(timerId); demoTimers.forEach(clearTimeout); }catch(_){}
   try{ dc&&dc.close(); pc&&pc.close(); }catch(_){}
   try{ micStream&&micStream.getTracks().forEach(t=>t.stop()); micStream=null; }catch(_){}
-  try{ if(window.__ecoReset) window.__ecoReset(); }catch(_){}
   try{
     turns.length=0; window.__pendingUser=[]; window.__greeted=false;
     trBox.innerHTML='<div class="tr-empty" id="trEmpty">상담을 시작하면 대화 내용이<br>여기에 실시간으로 표시됩니다.</div>';
@@ -1879,9 +1875,8 @@ btnReset.onclick=()=>{
     orb.classList.remove('done'); setOrb(''); setStatus('상담 준비됨');
     vTimer.style.display='none'; vTimer.textContent='00:00'; seconds=0;
     modeTag.style.display='none'; btnMute.style.display='none'; btnEnd.style.display='none'; btnReset.style.display='none';
-    vHint.textContent='마이크 권한이 필요합니다 · 1회 최대 40분';
-    [btnStart,btnMini,document.getElementById('btnEco')].forEach(b=>{ if(b){b.style.display='';b.disabled=false;} });
-    const be=document.getElementById('btnEco'); if(be) be.textContent='일반 음성 상담 (절약형) 시작';
+    vHint.textContent='마이크 권한이 필요합니다 · 1회 최대 25분 · 1인 하루 2회';
+    btnStart.style.display=''; btnStart.disabled=false;
     // 복구 검증: 시작 버튼이 안 보이면 수동 복구 실패로 간주
     if(btnStart.style.display==='none' || btnReset.style.display!=='none') throw new Error('reset incomplete');
   }catch(err){
@@ -1894,7 +1889,6 @@ btnReset.onclick=()=>{
 function endVoice(){
   clearInterval(timerId);demoTimers.forEach(clearTimeout);
   try{dc&&dc.close();pc&&pc.close();micStream&&micStream.getTracks().forEach(t=>t.stop());}catch(_){}
-  try{ if(window.__ecoReset) window.__ecoReset(); }catch(_){}   // [개인정보] 절약형 모드도 종료 즉시 마이크 해제·녹음 중단
   setOrb('done');setStatus('상담 종료');
   btnMute.style.display='none';btnEnd.style.display='none';vHint.textContent='요약을 정리했습니다.';
   renderSummary();
@@ -1918,6 +1912,15 @@ function renderSummary(){
       '<div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;color:var(--ink-faint)">전체 대화 기록 ('+turns.length+'턴)</div>'+
       dialogue+
     '</div>'+
+    '<div class="sc-contact">'+
+      '<div class="scc-t">📞 김경동 노무사 회신 받을 연락처</div>'+
+      '<div class="scc-g">'+
+        '<input type="text" id="vcName" maxlength="30" placeholder="이름 (선택)" autocomplete="name">'+
+        '<input type="tel" id="vcPhone" maxlength="20" placeholder="연락처 (필수) 예: 010-1234-5678" autocomplete="tel" inputmode="tel">'+
+        '<input type="text" class="full" id="vcTime" maxlength="60" placeholder="연락 희망 시간 (선택) 예: 평일 오후 2시 이후">'+
+      '</div>'+
+      '<label class="scc-agree"><input type="checkbox" id="vcAgree"><span><b>[필수] 개인정보 수집·이용 동의</b> — 이름·연락처·상담 내용을 상담 회신 목적으로 김경동 공인노무사에게 메일로 전달합니다. 이 홈페이지 서버에는 저장하지 않습니다. 동의하지 않으셔도 전화(02-6929-4540) 상담은 가능합니다.</span></label>'+
+    '</div>'+
     '<div class="sc-send">'+
       '<button class="btn btn-primary" id="vSend">✉ 노무사에게 메일 전송</button>'+
       '<button class="btn btn-ghost" id="vRestart">새 상담</button>'+
@@ -1927,15 +1930,29 @@ function renderSummary(){
 
   /* 전송 결과를 서버 응답으로 확인한 뒤에만 '전송 완료' 표시 (실패를 성공으로 보여주지 않음) */
   card.querySelector('#vSend').onclick=async(ev)=>{
-    const btn=ev.currentTarget; btn.disabled=true; btn.textContent='전송 중…';
+    const btn=ev.currentTarget;
     const old=card.querySelector('.sent-fail'); if(old) old.remove();
+    const showFail=(m)=>{ const f=document.createElement('div');f.className='sent-ok sent-fail';
+      f.style.cssText='background:#FFF4F2;color:#A33A2B;border-color:#F1C9C2'; f.textContent='⚠ '+m; card.appendChild(f); };
+    const contact={
+      name:(card.querySelector('#vcName').value||'').trim(),
+      phone:(card.querySelector('#vcPhone').value||'').trim(),
+      time:(card.querySelector('#vcTime').value||'').trim(),
+      consent:card.querySelector('#vcAgree').checked
+    };
+    if(!demoMode){
+      const d=contact.phone.replace(/\D/g,'');
+      if(d.length<9||d.length>12||!/^[0-9+\-\s().]+$/.test(contact.phone)){ showFail('회신 받을 연락처(전화번호)를 정확히 입력해주세요.'); card.querySelector('#vcPhone').focus(); return; }
+      if(!contact.consent){ showFail('개인정보 수집·이용 동의에 체크해주셔야 노무사에게 전달할 수 있습니다.'); return; }
+    }
+    btn.disabled=true; btn.textContent='전송 중…';
     let ok=false,msg='';
     if(demoMode){
       msg='데모(시연) 대화라 실제로 전송되지 않았습니다.';
     }else{
       try{
         const r=await fetch(FINISH_ENDPOINT,{method:'POST',headers:await consultHeaders(),
-          body:JSON.stringify({type:guess,transcript:turns,durationSec:seconds,perspective:PERSP})});
+          body:JSON.stringify({type:guess,transcript:turns,durationSec:seconds,perspective:PERSP,contact})});
         const j=await safeJson(r);
         ok=(r.ok&&j.ok)||(r.status===429&&j.code==='already_sent');
         if(!ok) msg=(r.status>=500&&!j.error)?'전송에 실패했습니다. 잠시 후 다시 시도하거나 전화('+CONSULT_PHONE+')로 연락해주세요.':consultErrorMsg(r.status,j);
@@ -1943,14 +1960,12 @@ function renderSummary(){
     }
     if(ok){
       const sc=card.querySelector('.sc-send');if(sc)sc.remove();
+      card.querySelectorAll('.sc-contact input').forEach(i=>i.disabled=true);
       const done=document.createElement('div');done.className='sent-ok';
-      done.textContent='✅ 전송 완료 — 김경동 노무사에게 음성상담 요약이 전달되었습니다. 확인 후 연락드리겠습니다.';
+      done.textContent='✅ 전송 완료 — 김경동 노무사에게 상담 요약과 연락처가 전달되었습니다. 확인 후 남겨주신 번호로 연락드리겠습니다.';
       card.appendChild(done);
     }else{
-      const fail=document.createElement('div');fail.className='sent-ok sent-fail';
-      fail.style.cssText='background:#FFF4F2;color:#A33A2B;border-color:#F1C9C2';
-      fail.textContent='⚠ '+msg;
-      card.appendChild(fail);
+      showFail(msg);
       if(demoMode){ btn.remove(); } else { btn.disabled=false; btn.textContent='✉ 다시 전송'; }
     }
   };
@@ -1998,134 +2013,6 @@ window.addEventListener('load',()=>{
 
 /* 부드러운 스크롤 시 헤더 오프셋 (선택) */
 
-
-/* ===== 절약형 음성상담: 자동 감지 연속 대화 (STT → GPT → TTS) =====
-   시작하면 브라우저가 음량을 감시: 말 시작→자동 녹음, 0.9초 침묵→자동 전송.
-   AI가 말하는 동안은 감지 중지(반이중)로 끼어들기·에코 차단. */
-(function(){
-  const btnEco = document.getElementById('btnEco');
-  const btnPtt = document.getElementById('btnPtt');
-  const btnStartEl = document.getElementById('btnStart');
-  if (!btnEco) return;
-  if (btnPtt) btnPtt.remove();   // 수동 버튼 제거 — 자동 감지로 대체
-
-  let ecoHistory = [], rec = null, chunks = [], ecoStream = null;
-  let listening = false, aiBusy = false, recOn = false;
-  let silence = 0, voiced = 0, lastT = 0;
-  const START_RMS = 0.045, KEEP_RMS = 0.03, END_SILENCE = 650, MIN_SPEECH = 350;   // 침묵 0.65초면 전송 (반응속도 개선)
-  const ecoAudio = new Audio();
-  let vadAn = null, vadBuf = null, ecoCtx = null;
-  // 브라우저가 지원하는 녹음 형식 자동 선택 (아이폰 사파리는 webm 미지원 → mp4)
-  const REC_MIME = ['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus']
-    .find(t=>{ try{ return window.MediaRecorder && MediaRecorder.isTypeSupported(t); }catch(_){ return false; } }) || '';
-
-  async function playB64(b64){
-    return new Promise(r=>{ ecoAudio.src='data:audio/mp3;base64,'+b64; ecoAudio.onended=r; ecoAudio.onerror=r;
-      orb.classList.add('fallback'); setOrb('speaking'); setStatus('답변 중…'); ecoAudio.play().catch(r); });
-  }
-  async function playSegs(d){
-    const segs = (d.audioSegs && d.audioSegs.length) ? d.audioSegs : (d.audioB64 ? [d.audioB64] : []);
-    for (const s of segs) await playB64(s);
-  }
-  function rms(){
-    vadAn.getByteTimeDomainData(vadBuf);
-    let s=0; for(let i=0;i<vadBuf.length;i++){ const v=(vadBuf[i]-128)/128; s+=v*v; }
-    return Math.sqrt(s/vadBuf.length);
-  }
-  function startUtter(){
-    chunks=[]; rec = REC_MIME ? new MediaRecorder(ecoStream,{mimeType:REC_MIME}) : new MediaRecorder(ecoStream);
-    rec.ondataavailable = e=>{ if(e.data.size) chunks.push(e.data); };
-    rec.start(); recOn=true; voiced=0; silence=0;
-    setOrb('listening'); setStatus('듣는 중…');
-  }
-  function endUtter(){
-    if(!rec || rec.state!=='recording'){ recOn=false; return; }
-    recOn=false; aiBusy=true; setStatus('생각 중…');
-    rec.onstop = async ()=>{
-      try{
-        if(!listening) return;   // 상담 종료·중지 후에는 녹음분을 보내지 않음
-        const recType = (rec && rec.mimeType) || REC_MIME || 'audio/webm';
-        const blob = new Blob(chunks,{type:recType});
-        if (blob.size < 2000 || voiced < MIN_SPEECH){ aiBusy=false; setOrb('listening'); setStatus('듣는 중…'); return; }
-        const b64 = await new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result.split(',')[1]); fr.readAsDataURL(blob); });
-        const r = await fetch('/api/voice-chat',{method:'POST',headers:await consultHeaders(),
-          body:JSON.stringify({audioB64:b64, mime:recType, history:ecoHistory.slice(-16), perspective:PERSP})});
-        const d = await safeJson(r);
-        if(!listening) return;
-        if(r.status===401 || r.status===429 || r.status===503){   // 세션 만료·이용량 초과·서비스 중지 → 듣기 중단 후 안내
-          listening=false; try{ ecoStream&&ecoStream.getTracks().forEach(t=>t.stop()); }catch(_){}
-          setOrb(''); setStatus('상담 중단'); vHint.textContent=consultErrorMsg(r.status,d); return;
-        }
-        if(!r.ok) throw new Error('처리 실패');
-        if(!d.empty){
-          addTurn('user', d.userText); turns.push({who:'user',text:d.userText}); ecoHistory.push({who:'user',text:d.userText});
-          addTurn('ai', d.aiText); turns.push({who:'ai',text:d.aiText}); ecoHistory.push({who:'ai',text:d.aiText});
-          await playSegs(d);
-        }
-      }catch(e){ setStatus('오류: 다시 말씀해 주세요'); }
-      aiBusy=false; setOrb('listening'); setStatus('듣는 중…');
-    };
-    rec.stop();
-  }
-  function vadLoop(t){
-    if(!listening) return;
-    const dt = lastT ? (t-lastT) : 16; lastT = t;
-    if(!aiBusy){
-      const v = rms();
-      if(!recOn){
-        if(v > START_RMS) startUtter();
-      }else{
-        if(v > KEEP_RMS){ voiced += dt; silence = 0; } else { silence += dt; }
-        if(silence > END_SILENCE) endUtter();
-        if(voiced > 30000) endUtter();   // 발화 최대 30초 안전장치
-      }
-    }
-    requestAnimationFrame(vadLoop);
-  }
-
-  btnEco.addEventListener('click', async ()=>{
-    if(!PERSP){ showGate(); return; }   // 관점 선택 없이는 시작 불가
-    if(DEMO_ALLOWED){ hideStartBtns(); startDemo(); return; }   // ?demo=1 시연 전용
-    btnEco.disabled = true; btnEco.textContent = '연결 중…';
-    const f = await serverFeatures();
-    if(!f.ai){ btnEco.disabled=false; btnEco.textContent='일반 음성 상담 (절약형) 시작'; setStatus('상담 준비 중'); vHint.textContent='AI 음성상담 서비스 준비 중입니다. 전화('+CONSULT_PHONE+')로 상담해주세요.'; return; }
-    try{
-      ecoStream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-      if (!window.MediaRecorder){ const er=new Error('rec'); er.userMsg='이 브라우저는 음성 녹음을 지원하지 않습니다. 최신 크롬·사파리에서 이용하시거나 전화('+CONSULT_PHONE+')로 상담해주세요.'; throw er; }
-      const actx = ecoCtx = new (window.AudioContext||window.webkitAudioContext)();
-      const src = actx.createMediaStreamSource(ecoStream);
-      vadAn = actx.createAnalyser(); vadAn.fftSize = 1024; src.connect(vadAn);
-      vadBuf = new Uint8Array(vadAn.fftSize);
-      CST='';
-      const r = await fetch('/api/voice-chat',{method:'POST',headers:await consultHeaders(),body:JSON.stringify({greet:true, perspective:PERSP})});
-      const d = await safeJson(r);
-      if(!r.ok || !d.audioB64){ const er=new Error('greet'); er.userMsg=consultErrorMsg(r.status,d); throw er; }
-      CST = d.cst || '';
-      btnStartEl.style.display='none'; btnEco.style.display='none';
-      const bm=document.getElementById('btnMini'); if(bm) bm.style.display='none';
-      const br=document.getElementById('btnReset'); if(br) br.style.display='';
-      const be2=document.getElementById('btnEnd'); if(be2) be2.style.display='';
-      window.__ecoReset=()=>{ listening=false; recOn=false; aiBusy=false; try{ecoAudio.pause();}catch(_){}
-        try{rec&&rec.state==='recording'&&rec.stop();}catch(_){}
-        try{ecoStream&&ecoStream.getTracks().forEach(t=>t.stop());}catch(_){} ecoStream=null; ecoHistory=[];
-        try{ecoCtx&&ecoCtx.close();}catch(_){} ecoCtx=null; };
-      startTimer();                                                                   // 상담 시간 표시·기록
-      demoTimers.push(setTimeout(()=>{ try{ endVoice(); }catch(_){ } }, 40*60*1000)); // 1회 최대 40분
-      if (typeof modeTag !== 'undefined' && modeTag){ modeTag.style.display=''; modeTag.textContent='절약형 모드'; }
-      addTurn('ai', d.aiText); turns.push({who:'ai',text:d.aiText}); ecoHistory.push({who:'ai',text:d.aiText});
-      aiBusy=true; await playSegs(d); aiBusy=false;
-      listening = true; setOrb('listening'); setStatus('듣는 중…');
-      requestAnimationFrame(vadLoop);
-    }catch(e){
-      console.warn('절약형 상담 연결 실패', e);
-      try{ ecoStream&&ecoStream.getTracks().forEach(t=>t.stop()); }catch(_){} ecoStream=null;   // [개인정보] 실패 시 마이크 즉시 해제
-      try{ ecoCtx&&ecoCtx.close(); }catch(_){} ecoCtx=null;
-      btnEco.disabled=false; btnEco.textContent='일반 음성 상담 (절약형) 시작';
-      setOrb(''); setStatus('연결 실패');
-      vHint.textContent = e&&e.name==='NotAllowedError' ? '마이크 권한이 필요합니다. 브라우저 주소창의 마이크 권한을 허용한 뒤 다시 시도해주세요.' : ((e&&e.userMsg)||consultErrorMsg(0));
-    }
-  });
-})();
 
 /* ===== 예약 캘린더 렌더 (시안용 예시 데이터) ===== */
 (function(){
