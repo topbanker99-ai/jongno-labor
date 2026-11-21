@@ -205,7 +205,7 @@ const jsonSmall = express.json({ limit: '300kb' });    // 그 외 모든 요청
 app.use((req, res, next) => (req.path === '/api/voice-chat' ? jsonVoice : jsonSmall)(req, res, next));
 app.use(express.static('public', { dotfiles: 'ignore' }));   // 프론트(public/index.html) 서빙
 
-const OPENAI_KEY = String(process.env.OPENAI_API_KEY || '').trim();
+const OPENAI_KEY = String(process.env.OPENAI_API_KEY || '').trim().replace(/^["']|["']$/g, '');
 const OPENAI_BASE = String(process.env.OPENAI_BASE_URL || 'https://api.openai.com').replace(/\/+$/, '');
 const LAW_OC = String(process.env.LAW_OC || '').trim();
 const mailReady = () => !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && process.env.LAWYER_EMAIL);
@@ -787,8 +787,9 @@ app.get('/api/youtube/latest', ipLimit('yt', 60), async (req, res) => {
    활성 조건: 클라우드타입 환경변수 UPSTASH_VECTOR_URL / UPSTASH_VECTOR_TOKEN
    (읽기전용 토큰 권장). 없으면 이 기능만 조용히 꺼져 있음.
    ============================================================ */
-const UPSTASH_URL = String(process.env.UPSTASH_VECTOR_URL || '').replace(/\/+$/, '');
-const UPSTASH_TOKEN = process.env.UPSTASH_VECTOR_TOKEN;
+// 복사·붙여넣기 때 섞여 들어간 공백·줄바꿈·따옴표 자동 제거
+const UPSTASH_URL = String(process.env.UPSTASH_VECTOR_URL || '').trim().replace(/^["']|["']$/g, '').replace(/\/+$/, '');
+const UPSTASH_TOKEN = String(process.env.UPSTASH_VECTOR_TOKEN || '').trim().replace(/^["']|["']$/g, '');
 const RAG_NAMESPACE = String(process.env.RAG_NAMESPACE || 'nomusa').replace(/[^\w-]/g, '');
 
 async function ragSearch(question, topK = 4, namespace = RAG_NAMESPACE, perspective = '') {
