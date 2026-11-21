@@ -339,7 +339,7 @@ function realtimeSession(persp, variant) {
       parameters: {
         type: 'object',
         properties: {
-          query: { type: 'string', description: '의뢰인 상황을 요약한 검색 질문 (한국어, 예: "권고사직 거부 후 해고 통보 구제신청")' },
+          query: { type: 'string', description: '의뢰인이 노무사에게 묻는 듯한 짧은 질문 한 문장(15~35자, 한국어). 사례 DB가 실제 상담 질문으로 되어 있어 질문 형태일수록 잘 찾아진다. 쟁점 하나만 담을 것. 예: "카톡으로 해고 통보를 받았는데 부당해고인가요?", "퇴직금을 14일 넘게 안 주면 어떻게 하나요?"' },
         },
         required: ['query'],
       },
