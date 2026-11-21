@@ -808,7 +808,7 @@ async function ragSearch(question, topK = 4, namespace = RAG_NAMESPACE, perspect
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${UPSTASH_TOKEN}` },
     body: JSON.stringify(body),
   }, 15000);
-  if (!qr.ok) throw new Error('vector ' + qr.status);
+  if (!qr.ok) throw new Error('vector ' + qr.status + ' ' + (await qr.text().catch(() => '')).slice(0, 200));
   const j = await qr.json();
   return (j.result || []).map(m => ({ score: m.score, ...m.metadata }));
 }
@@ -908,7 +908,7 @@ app.get('/api/health', ipLimit('hz', 120), (req, res) => {
     ok: true,
     features: {
       ai: !!OPENAI_KEY,                                   // 리얼타임·절약형 음성상담
-      cases: !!(OPENAI_KEY && UPSTASH_URL && UPSTASH_TOKEN), // 상담사례 19,718건 검색
+      cases: !!(OPENAI_KEY && UPSTASH_URL && UPSTASH_TOKEN) && ragStatus !== 'missing', // 상담사례 19,718건 검색
       precedents: !!LAW_OC,                              // 판례 검색
       mail: mailReady(),                                 // 상담요약 메일
       botCheck: !!process.env.TURNSTILE_SECRET,          // 봇 차단
@@ -927,6 +927,25 @@ app.use((err, req, res, next) => {
 process.on('unhandledRejection', (e) => console.error('[unhandledRejection]', e));
 
 // 시작 시 설정 점검 — Cloudtype 로그에서 바로 확인 가능
+/* 상담사례 저장소(Upstash) 점검 — 저장소 안의 묶음(namespace)별 사례 수와 벡터 차원만 로그에 표시 (키·주소는 출력하지 않음) */
+let ragStatus = 'unknown';
+async function checkRagStore() {
+  if (!UPSTASH_URL || !UPSTASH_TOKEN) return;
+  try {
+    const r = await fx(`${UPSTASH_URL}/info`, { headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` } }, 10000);
+    const body = await r.json().catch(() => ({}));
+    const info = body.result || body;
+    if (!r.ok) { ragStatus = 'error'; return console.log(` ⚠️ 사례 저장소 접속 실패 (HTTP ${r.status}) — 주소·토큰을 확인하세요.`); }
+    const ns = info.namespaces || {};
+    const list = Object.entries(ns).map(([k, v]) => `${k === '' ? '(기본)' : k}=${v?.vectorCount ?? '?'}건`).join(', ') || '(없음)';
+    console.log(` 사례 저장소: 총 ${info.vectorCount ?? '?'}건 · 차원 ${info.dimension ?? '?'} · 묶음 ${list}`);
+    const mine = ns[RAG_NAMESPACE];
+    if (!mine || !mine.vectorCount) { ragStatus = 'missing'; console.log(` ⚠️ 이 사이트가 찾는 묶음 '${RAG_NAMESPACE}'이(가) 저장소에 없습니다 → 노무 상담사례가 아직 적재되지 않음`); }
+    else if (info.dimension && info.dimension !== 512) { ragStatus = 'dim'; console.log(` ⚠️ 저장소 차원(${info.dimension})이 검색 설정(512)과 다릅니다`); }
+    else { ragStatus = 'ok'; console.log(` 사례 검색 준비 완료: '${RAG_NAMESPACE}' ${mine.vectorCount}건`); }
+  } catch (e) { ragStatus = 'error'; console.log(' ⚠️ 사례 저장소 점검 실패:', e.message); }
+}
+
 function configReport() {
   const ok = (b) => (b ? '켜짐' : '꺼짐 ⚠️');
   console.log('──── 노무법인 종로 서버 설정 점검 ────');
@@ -943,5 +962,5 @@ function configReport() {
 const PORT = process.env.PORT || 3000;
 // Vercel(서버리스)에서는 플랫폼이 요청을 전달하므로 직접 listen하지 않음. 로컬/일반 서버에서만 listen.
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => { console.log(`▶ server on http://localhost:${PORT}`); configReport(); });
+  app.listen(PORT, () => { console.log(`▶ server on http://localhost:${PORT}`); configReport(); checkRagStore(); });
 }
