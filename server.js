@@ -772,6 +772,15 @@ async function ragSearch(question, topK = 4, namespace = RAG_NAMESPACE, perspect
   return (j.result || []).map(m => ({ score: m.score, ...m.metadata }));
 }
 
+// 사례 답변 정리 — 원 답변자(다른 노무사·행정사 등)의 이름·인사말·광고 문구를 지워 AI가 타인 이름을 말하지 않게
+function cleanAnswer(t) {
+  return String(t || '')
+    .replace(/(안녕하세요[.,!]?\s*)?[가-힣]{2,4}\s*(공인\s*)?(노무사|행정사|변호사|세무사)(\s*[/·,]\s*(공인\s*)?(노무사|행정사|변호사|세무사))*\s*입니다[.!]?\s*/g, '')
+    .replace(/(안녕하세요|반갑습니다)[.,!]?\s*/g, '')
+    .replace(/(감사합니다|도움이 되셨길 바랍니다|도움이 되었으면 합니다)[.!]?\s*$/g, '')
+    .replace(/\s+/g, ' ').trim();
+}
+
 // 리얼타임 음성상담의 search_cases 도구가 사용하는 경량 검색 엔드포인트
 // 상담 세션 토큰 필요 — 외부에서 사례 DB를 대량으로 긁어가는 것 차단 (세션당 80회)
 app.post('/api/rag-search', ipLimit('rs', 120), requireSession('search'), dailyCap('search'), async (req, res) => {
@@ -783,7 +792,7 @@ app.post('/api/rag-search', ipLimit('rs', 120), requireSession('search'), dailyC
     const persp = ['노동자', '사업주'].includes(req.body?.perspective) ? req.body.perspective : '';
     const found = (await ragSearch(q, 3, ns, persp)).filter(c => c.score >= 0.35);
     if (!found.length) return res.json({ result: '유사한 상담사례를 찾지 못했습니다. 일반 기준으로 안내하고 공인노무사 상담을 권하세요.' });
-    const result = found.map((c, i) => `사례${i + 1}(${c.type}): ${String(c.answer || '').slice(0, 600)}`).join('\n');
+    const result = found.map((c, i) => `사례${i + 1}(${c.type}): ${cleanAnswer(c.answer).slice(0, 600)}`).join('\n');
     res.json({ result });
   } catch (e) {
     console.error('[/api/rag-search]', e.message);
