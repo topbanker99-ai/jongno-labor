@@ -293,6 +293,27 @@ a.hv-card{display:block;cursor:pointer;color:inherit}
 .s-docs li{font-size:11.5px;color:var(--ink-soft);background:rgba(16,21,31,.5);border:1px solid var(--line-soft);border-radius:6px;padding:5px 10px}
 .s-cta{margin-top:20px;display:flex;flex-direction:column;gap:10px}
 .s-none{text-align:center;color:var(--ink-soft);padding:20px 0}
+.scard .snm{flex-wrap:wrap;row-gap:6px}
+.scard .sbadge{white-space:normal;max-width:100%;word-break:keep-all}
+.scard .snotice{font-size:12.5px;color:var(--gold-3);background:rgba(220,189,118,.08);border-left:2px solid var(--gold-2);border-radius:4px;padding:7px 10px;margin-top:8px;line-height:1.6;word-break:keep-all}
+.scard .sreq{margin-top:10px;border-top:1px dashed var(--line-soft);padding-top:8px}
+.scard .sreq summary{font-size:12px;color:var(--gold-2);font-weight:600;cursor:pointer;list-style:none;user-select:none}
+.scard .sreq summary::-webkit-details-marker{display:none}
+.scard .sreq summary::before{content:'▸ ';display:inline-block;transition:transform .15s}
+.scard .sreq[open] summary::before{content:'▾ '}
+.scard .sreq ul{margin:8px 0 0;padding-left:16px}
+.scard .sreq li{font-size:12px;color:var(--ink-soft);line-height:1.65;margin-bottom:4px;word-break:keep-all}
+.s-sec{font-size:13.5px;color:var(--ink);font-weight:700;margin:18px 0 4px}
+.s-sec-sub{font-size:12px;color:var(--ink-faint);margin-bottom:10px}
+.scard.related{border-style:dashed}
+.s-info{margin-top:18px;padding-top:16px;border-top:1px solid var(--line-soft)}
+.s-info .sih{font-size:13px;color:var(--ink);font-weight:600;margin-bottom:8px}
+.s-info details{background:rgba(16,21,31,.5);border:1px solid var(--line-soft);border-radius:8px;padding:9px 12px;margin-bottom:6px}
+.s-info summary{font-size:12.5px;color:var(--ink-soft);font-weight:600;cursor:pointer;word-break:keep-all}
+.s-info .siamt{font-size:12px;color:var(--gold-2);font-weight:600;margin-top:6px;line-height:1.6;word-break:keep-all}
+.s-info .sirsn{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.6;word-break:keep-all}
+.s-info .siorg{font-size:11px;color:var(--ink-dim);margin-top:4px}
+.s-budget{font-size:11.5px;color:var(--ink-faint);text-align:center;margin-top:12px;word-break:keep-all}
 .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .calc-panel{background:rgba(8,22,38,.6);border:1px solid var(--line-soft);border-radius:14px;padding:30px}
 .calc-panel.result{display:flex;flex-direction:column}
@@ -2125,8 +2146,13 @@ window.addEventListener('load',()=>{
       parentLeave: sel.parentLeave || 'no',
       workTimeReduce: sel.workTimeReduce || 'no'
     };
-    // 매칭
-    var matched = DB.filter(function(s){ try{return s.match(v);}catch(e){return false;} });
+    var BUDGET = window.SUBSIDY_BUDGET_NOTE || '';
+    // 매칭 (main: 신청 가능성, related: 함께 살펴볼 지원금, info: 늘 아래에 안내)
+    var isMatch = function(s){ try{return s.match(v);}catch(e){return false;} };
+    var kindOf = function(s){ return s.kind || 'main'; };
+    var matched = DB.filter(function(s){ return kindOf(s)==='main' && isMatch(s); });
+    var related = DB.filter(function(s){ return kindOf(s)==='related' && isMatch(s); });
+    var infos = DB.filter(function(s){ return kindOf(s)==='info'; });
     // 중복수급 배제 (충돌 시 앞선 것 우선 — 문서 5.3 간이 적용)
     var kept = [];
     matched.forEach(function(s){
@@ -2142,10 +2168,12 @@ window.addEventListener('load',()=>{
     out.style.display = 'block';
     setTimeout(function(){ panel.scrollIntoView({behavior:'smooth', block:'start'}); }, 60);
 
-    if(kept.length === 0){
+    if(kept.length === 0 && related.length === 0){
       out.innerHTML =
         '<div class="s-none">선택하신 조건에서는 자동 매칭되는 대표 지원금이 없습니다.<br>다른 지원제도가 있을 수 있으니 노무사 상담으로 정확히 확인해 보세요.</div>' +
+        infoBlock(infos) +
         '<div class="s-cta"><a href="#contact" class="btn btn-primary">노무사에게 상담·서류 문의 →</a></div>' +
+        budgetLine(BUDGET) +
         verifyLine(VERIFIED);
       return;
     }
@@ -2159,29 +2187,60 @@ window.addEventListener('load',()=>{
     var html = '';
     html += '<div class="s-count">신청 가능성이 있는 지원금 <b>'+kept.length+'건</b></div>';
     html += '<div class="s-sub">아래는 1차 참고용 안내이며, 실제 수급 여부·금액은 노무사 검토가 필요합니다.</div>';
-    kept.forEach(function(s){
-      html += '<div class="scard">'
-        + '<div class="snm">'+s.name+'<span class="sbadge">'+s.statusBadge+'</span></div>'
-        + '<div class="samt">'+s.maxAmountText+'</div>'
-        + '<div class="srsn">'+s.reason+'</div>'
-        + '<div class="sorg">'+s.org+'</div>'
-        + '</div>';
-    });
+    kept.forEach(function(s){ html += cardHtml(s, ''); });
+    if(related.length){
+      html += '<div class="s-sec">함께 살펴볼 지원금 <b style="color:var(--gold-2)">'+related.length+'건</b></div>';
+      html += '<div class="s-sec-sub">아래 요건에 맞는 회사라면 받을 수 있습니다.</div>';
+      related.forEach(function(s){ html += cardHtml(s, ' related'); });
+    }
     // 필요서류
     html += '<div class="s-docs"><div class="sdh">준비하면 좋은 서류</div><ul>';
     docList.forEach(function(d){ html += '<li>'+d+'</li>'; });
     html += '</ul></div>';
+    // 이런 지원금도 있습니다
+    html += infoBlock(infos);
     // 주의 + CTA
     html += '<div class="s-note">⚠ 본 진단은 입력값 기준 1차 스크리닝입니다. 상시근로자수 산정, 중복수급 판정 등은 개별 사안별 노무사 검토가 필요합니다. 정부지원금 신청대행은 공인노무사만 합법적으로 대리할 수 있습니다.</div>';
     html += '<div class="s-cta">'
       + '<a href="#contact" class="btn btn-primary">이 결과로 노무사 상담·서류 제출 →</a>'
       + '<a href="#consult" class="btn btn-ghost">AI 상담으로 더 물어보기 →</a>'
       + '</div>';
+    html += budgetLine(BUDGET);
     html += verifyLine(VERIFIED);
     out.innerHTML = html;
     out.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+    function cardHtml(s, cls){
+      var amt = (typeof s.amountFor === 'function') ? s.amountFor(v) : s.maxAmountText;
+      var h = '<div class="scard'+cls+'">'
+        + '<div class="snm">'+s.name+(s.statusBadge?'<span class="sbadge">'+s.statusBadge+'</span>':'')+'</div>'
+        + '<div class="samt">'+amt+'</div>'
+        + (s.notice ? '<div class="snotice">'+s.notice+'</div>' : '')
+        + '<div class="srsn">'+s.reason+'</div>'
+        + '<div class="sorg">'+s.org+'</div>';
+      if(s.reqs && s.reqs.length){
+        h += '<details class="sreq"><summary>요건 안내</summary><ul>';
+        s.reqs.forEach(function(r){ h += '<li>'+r+'</li>'; });
+        h += '</ul></details>';
+      }
+      return h + '</div>';
+    }
   });
 
+  function infoBlock(list){
+    if(!list || !list.length) return '';
+    var h = '<div class="s-info"><div class="sih">이런 지원금도 있습니다</div>';
+    list.forEach(function(s){
+      h += '<details><summary>'+s.name+'</summary>'
+        + '<div class="siamt">'+s.maxAmountText+'</div>'
+        + '<div class="sirsn">'+s.reason+'</div>'
+        + '<div class="siorg">'+s.org+'</div></details>';
+    });
+    return h + '</div>';
+  }
+  function budgetLine(t){
+    return t ? '<div class="s-budget">'+t+'</div>' : '';
+  }
   function verifyLine(d){
     return '<div class="s-verify">지원금 정보 최종 검증일 · '+d+' (금액·요건은 매년 개정되므로 상담 시 재확인)</div>';
   }
