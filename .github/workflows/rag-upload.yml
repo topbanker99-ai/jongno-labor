@@ -1,13 +1,15 @@
 # AI 상담 사례 DB v2 올리기 — 수동 실행 전용(Actions 화면의 Run workflow 버튼)
 # - 사례 자료는 암호 건 파일(rag-data 가지의 nomusa_v2.jsonl.gpg)로만 저장소에 있고, 비밀값 RAG_DATA_KEY로 여기서만 푼다.
 # - 공개 저장소라 로그는 누구나 본다. 프로그램은 건수·번호·상태 코드만 출력한다. 입력값에 비밀을 넣지 말 것.
-# - 기존 묶음 nomusa는 건드리지 않는다(프로그램이 nomusa 대상이면 멈춤). 홈페이지 전환은 deploy-main.yml의 RAG_NAMESPACE로 따로 한다.
+# - 올리는 곳은 대표 인덱스(KL_UPSTASH_URL + KL_UPSTASH_WRITE_TOKEN)의 nomusa-v2뿐이다.
+# - 기존(공동 개발자) 인덱스(UPSTASH_VECTOR_URL/TOKEN)는 check 모드 비교에서 읽기만 한다(프로그램이 조회 외 요청을 막고,
+#   쓰기 대상 주소가 기존 주소와 같으면 멈춤). 홈페이지 전환은 deploy-main.yml을 따로 고친다.
 name: RAG data upload (manual)
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "check = 점검만(쓰기 없음) / upload = nomusa-v2에 올리기"
+        description: "check = 점검만(사례 쓰기 없음) / upload = 대표 인덱스 nomusa-v2에 올리기"
         required: true
         default: check
         type: choice
@@ -70,8 +72,13 @@ jobs:
           RAG_TARGET_NAMESPACE: nomusa-v2
           DATA_FILE: ${{ runner.temp }}/nomusa_v2.jsonl
           RESULT_DIR: ${{ runner.temp }}/rag_result
-          UPSTASH_URL: ${{ secrets.UPSTASH_VECTOR_URL }}
-          UPSTASH_TOKEN: ${{ secrets.UPSTASH_VECTOR_WRITE_TOKEN || secrets.UPSTASH_VECTOR_TOKEN }}
+          # 기존(공동 개발자) 인덱스: check 모드 비교용, 읽기만(프로그램이 조회 외 요청을 막음). upload 모드에는 넘기지 않음.
+          UPSTASH_OLD_URL: ${{ secrets.UPSTASH_VECTOR_URL }}
+          UPSTASH_OLD_TOKEN: ${{ inputs.mode == 'check' && secrets.UPSTASH_VECTOR_TOKEN || '' }}
+          # 대표 인덱스: 올리기는 쓰기 토큰, 검색 비교는 읽기 토큰(홈페이지용과 같은 것)
+          KL_URL: ${{ secrets.KL_UPSTASH_URL }}
+          KL_WRITE_TOKEN: ${{ secrets.KL_UPSTASH_WRITE_TOKEN }}
+          KL_READ_TOKEN: ${{ secrets.KL_UPSTASH_READ_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PYTHONIOENCODING: utf-8
         run: python3 app/.github/scripts/rag_upload.py
