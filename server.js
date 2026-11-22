@@ -34,6 +34,10 @@ import cors from 'cors';
 import fetch from 'node-fetch';
 import nodemailer from 'nodemailer';
 
+// [블로그 최신 글] 홈페이지에서 빼고 싶은 네이버 블로그 카테고리 이름 (RSS의 category 값과 똑같이 적기)
+// 예: const BLOG_EXCLUDE_CATEGORIES = ['사는 이야기'];   ← 일상글을 빼고 싶을 때
+const BLOG_EXCLUDE_CATEGORIES = [];
+
 const app = express();
 app.disable('x-powered-by');   // 서버 종류(Express) 노출 차단
 
@@ -815,6 +819,75 @@ app.get('/api/youtube/latest', ipLimit('yt', 60), async (req, res) => {
       console.error('유튜브 조회 실패:', e.message, e2.message);
       res.status(502).json({ error: '유튜브 영상 조회 실패' });
     }
+  }
+});
+
+/* ============================================================
+   5-2) 블로그 최신 글 — 김경동 노무사 네이버 블로그 RSS (프록시, 키 불필요)
+        GET /api/blog-posts?limit=6 → { count, items:[{title, link, date, thumb}] }
+        1시간 메모리 캐시 · RSS 실패 시 마지막 성공 결과, 그것도 없으면 빈 목록(200)
+        제외 카테고리: 파일 맨 위 BLOG_EXCLUDE_CATEGORIES
+   ============================================================ */
+const BLOG_RSS_URL = 'https://rss.blog.naver.com/crydia.xml';
+const BLOG_CACHE_MS = 60 * 60 * 1000;
+let blogCache = { at: 0, items: [] };
+let blogLoading = null;   // 동시에 여러 요청이 와도 RSS는 한 번만 가져옴
+let blogFailAt = 0;       // 실패 뒤 5분은 다시 가져오지 않음 (방문자가 매번 5초씩 기다리지 않게)
+
+const blogText = (s) => String(s ?? '')
+  .replace(/^\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*$/, '$1')
+  .replace(/<[^>]*>/g, ' ')
+  .replace(/&(lt|gt|quot|apos|#39|nbsp|amp);/g, (m, k) => ({ lt: '<', gt: '>', quot: '"', apos: "'", '#39': "'", nbsp: ' ', amp: '&' }[k]))
+  .replace(/&#(\d+);/g, (m, n) => { const c = Number(n); return c > 31 && c < 0x110000 ? String.fromCodePoint(c) : ' '; })
+  .replace(/\s+/g, ' ').trim();
+const blogTag = (xml, tag) => { const m = xml.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`)); return m ? m[1] : ''; };
+
+function parseBlogRss(xml) {
+  const out = [];
+  for (const m of xml.matchAll(/<item>([\s\S]*?)<\/item>/g)) {
+    const it = m[1];
+    const category = blogText(blogTag(it, 'category'));
+    if (BLOG_EXCLUDE_CATEGORIES.includes(category)) continue;
+    const title = blogText(blogTag(it, 'title')).slice(0, 200);
+    // 링크: blog.naver.com 글 주소만 통과, 추적용 꼬리(?fromRss=…)는 떼어냄
+    const rawLink = blogText(blogTag(it, 'link')) || blogText(blogTag(it, 'guid'));
+    const lm = rawLink.match(/^https:\/\/blog\.naver\.com\/[A-Za-z0-9_-]+\/\d+/);
+    if (!title || !lm) continue;
+    // 그림: description 안 첫 <img> (네이버 그림 서버 https 주소만). 16:9 크기(type=w3)로 요청
+    const desc = blogTag(it, 'description');
+    const im = desc.match(/<img\s[^>]*src="(https:\/\/[A-Za-z0-9.-]+\.(?:pstatic|naver)\.net\/[^"\s<>]+)"/i);
+    const thumb = im ? im[1].replace(/&amp;/g, '&').replace(/([?&]type=)[A-Za-z0-9_]+/, '$1w3') : '';
+    // 날짜: 한국 시간 기준 YYYY-MM-DD
+    const t = Date.parse(blogText(blogTag(it, 'pubDate')));
+    const date = Number.isFinite(t) ? new Date(t + 9 * 3600 * 1000).toISOString().slice(0, 10) : '';
+    out.push({ title, link: lm[0], date, thumb });
+  }
+  return out;
+}
+
+async function loadBlogPosts() {
+  const r = await fx(BLOG_RSS_URL, { headers: { 'user-agent': 'Mozilla/5.0 (jongno-labor homepage)' } }, 5000);
+  if (!r.ok) throw new Error(`RSS HTTP ${r.status}`);
+  const xml = await r.text();
+  if (xml.length > 3 * 1024 * 1024) throw new Error('RSS 크기 초과');
+  const items = parseBlogRss(xml);
+  if (!items.length) throw new Error('RSS 글 0건');
+  blogCache = { at: Date.now(), items };
+  return items;
+}
+
+app.get('/api/blog-posts', ipLimit('bp', 300), async (req, res) => {
+  const limit = Math.max(1, Math.min(parseInt(req.query.limit, 10) || 6, 20));
+  const send = (items, extra = {}) => res.json({ count: Math.min(limit, items.length), items: items.slice(0, limit), ...extra });
+  if (blogCache.items.length && Date.now() - blogCache.at < BLOG_CACHE_MS) return send(blogCache.items, { cached: true });
+  if (Date.now() - blogFailAt < 5 * 60 * 1000) return send(blogCache.items, { stale: true });
+  try {
+    if (!blogLoading) blogLoading = loadBlogPosts().finally(() => { blogLoading = null; });
+    send(await blogLoading);
+  } catch (e) {
+    blogFailAt = Date.now();
+    console.error('블로그 RSS 조회 실패:', e.message);
+    send(blogCache.items, { stale: true });   // 마지막 성공 결과(없으면 빈 목록)
   }
 });
 

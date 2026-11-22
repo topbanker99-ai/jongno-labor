@@ -235,6 +235,24 @@ section.block{padding:96px 0;position:relative}
 .vplay svg{width:20px;height:20px;fill:var(--gold-2);margin-left:2px}
 .hv-card:hover .vplay{opacity:1}
 .vmeta{font-size:12px;color:var(--ink-faint);margin-top:9px}
+/* 블로그 최신 글 (히어로 띠 + 블로그 섹션) */
+.vstrip[hidden],.bl-grid[hidden]{display:none}
+.hv-label .hv-more{font-size:12.5px;font-weight:500;color:var(--ink-faint);margin-left:6px}
+.hv-label .hv-more:hover{color:var(--gold-3)}
+a.hv-card{display:block;cursor:pointer;color:inherit}
+.hv-card .vmeta .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;line-height:1.45;color:var(--ink);word-break:keep-all}
+.hv-card .vmeta .d{display:block;margin-top:3px;font-size:11.5px}
+.vthumb.noimg::after,.bl-th.noimg::after{content:"BLOG";position:absolute;inset:0;display:grid;place-items:center;font-size:12px;letter-spacing:.2em;color:var(--gold-2);opacity:.7}
+.bl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:40px}
+.bl-card{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;border:1px solid var(--line-soft);background:#0B1E33;color:inherit;transition:transform .3s,border-color .3s}
+.bl-card:hover{transform:translateY(-4px);border-color:rgba(220,189,118,.45)}
+.bl-th{position:relative;display:block;aspect-ratio:16/9;background:var(--navy-900)}
+.bl-th img{width:100%;height:100%;object-fit:cover;display:block}
+.bl-body{display:block;padding:14px 16px 16px}
+.bl-tt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15px;font-weight:600;line-height:1.5;color:var(--ink);word-break:keep-all}
+.bl-dt{display:block;margin-top:8px;font-size:12.5px;color:var(--ink-faint)}
+.bl-more{text-align:center;margin-top:30px}
+@media(max-width:960px){.bl-grid{grid-template-columns:repeat(2,1fr);gap:12px}.bl-body{padding:10px 11px 12px}.bl-tt{font-size:13.5px;-webkit-line-clamp:3}}
 
 .calc-shell{max-width:1080px;margin:0 auto;background:var(--glass);border:1px solid var(--card-brd);border-radius:18px;padding:10px;backdrop-filter:blur(10px)}
 /* ===== 정부지원금 간이진단 ===== */
@@ -838,7 +856,7 @@ body.no-scroll{overflow:hidden}
       <a href="#subsidy">지원금진단</a>
       <a href="#ai">AI상담</a>
       <a href="#cases">주요업무</a>
-      <a href="#youtube">유튜브</a>
+      <a href="#blog">블로그</a>
       <a href="#location">오시는길</a>
     </nav>
     <div class="nav-right">
@@ -859,7 +877,7 @@ body.no-scroll{overflow:hidden}
   <a href="#subsidy">지원금진단</a>
   <a href="#ai">AI상담</a>
   <a href="#cases">주요업무</a>
-  <a href="#youtube">유튜브</a>
+  <a href="#blog">블로그</a>
   <a href="#location">오시는길</a>
   <div class="mnav-foot">
     <a href="tel:0269529297" class="mnav-tel">02-6952-9297<em>평일 09:00 - 18:00</em></a>
@@ -883,28 +901,11 @@ body.no-scroll{overflow:hidden}
       </div>
     </div>
 </div>
-  <!-- 히어로 하단 영상 띠 (링크 미연동) -->
+  <!-- 히어로 하단 블로그 띠 (네이버 블로그 최신 글 4개, /api/blog-posts) -->
   <div class="hero-videos">
     <div class="wrap">
-      <div class="hv-label"><span class="hv-rule"></span>노무 영상<em>· 곧 공개됩니다</em></div>
-      <div class="vstrip">
-        <article class="hv-card">
-          <div class="vthumb"><img src="/img/yt-1.jpg" alt="7년 다닌 회사, 카톡 한 줄로 해고당한 직원의 결말" loading="lazy">
-            <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
-        </article>
-        <article class="hv-card">
-          <div class="vthumb"><img src="/img/yt-2.jpg" alt="직원 한 명 잘못 자르고 2천만원 물어준 사장님" loading="lazy">
-            <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
-        </article>
-        <article class="hv-card">
-          <div class="vthumb"><img src="/img/yt-3.jpg" alt="부당해고인데 이거 몰라서 3개월 날린 사람들" loading="lazy">
-            <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
-        </article>
-        <article class="hv-card">
-          <div class="vthumb"><img src="/img/yt-4.jpg" alt="사직서 쓰면 끝입니다 — 절대 먼저 쓰지 마세요" loading="lazy">
-            <span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div>
-        </article>
-      </div>
+      <div class="hv-label"><span class="hv-rule"></span>블로그 최신 글<a class="hv-more" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그에서 보기 →</a></div>
+      <div class="vstrip" id="heroBlog" hidden></div>
     </div>
   </div>
 </section>
@@ -1187,33 +1188,16 @@ body.no-scroll{overflow:hidden}
 
 <!-- CTA -->
 
-<!-- 유튜브 -->
-<section class="block" id="youtube" data-view="youtube">
+<!-- 블로그 (네이버 블로그 최신 글 16개, /api/blog-posts) -->
+<section class="block" id="blog" data-view="blog">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow center-eyebrow center">YOUTUBE</span>
-      <h2>노무 이야기, 영상으로 만나보세요</h2>
-      <p>부당해고·임금체불부터 실업급여까지, 김경동 노무사가 쉽게 풀어드립니다.</p>
+      <span class="eyebrow center-eyebrow center">BLOG</span>
+      <h2>최근 블로그 글</h2>
+      <p>김경동 노무사가 네이버 블로그에 쓴 글입니다.</p>
     </div>
-    <div class="yt-grid">
-      <article class="yt-card"><img src="/img/yt-1.jpg" alt="7년 다닌 회사, 카톡 한 줄로 해고" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
-      <article class="yt-card"><img src="/img/yt-2.jpg" alt="직원 한 명 해고하고 2천만원" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
-      <article class="yt-card"><img src="/img/yt-3.jpg" alt="부당해고 맞는데 3개월 지나면 끝" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
-      <article class="yt-card"><img src="/img/yt-4.jpg" alt="사직서 쓰는 순간 되돌릴 수 없다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></article>
-      <article class="yt-card"><img src="/img/yt-base-1.jpg" alt="해고예고수당, 몰라서 못 받는 돈" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">수당 체불</span><span class="yt-tt">해고예고수당<br><span class="u">몰라서 못 받는 돈</span></span><span class="yt-sub">30일 전 통보가 없었다면</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-2.jpg" alt="사직서에 절대 쓰면 안 되는 한 줄" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">사직 전 필독</span><span class="yt-tt">사직서에 절대<br><span class="u">쓰면 안 되는 한 줄</span></span><span class="yt-sub">이 문구면 다툼이 어렵습니다</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-3.jpg" alt="5인 미만 사업장, 되는 것 안 되는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">소규모 사업장</span><span class="yt-tt">5인 미만 사업장<br><span class="u">되는 것 안 되는 것</span></span><span class="yt-sub">연차·해고·수당 총정리</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-1.jpg" alt="포괄임금제 계약서의 함정" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">근로계약 주의</span><span class="yt-tt">포괄임금제<br><span class="u">계약서의 함정</span></span><span class="yt-sub">야근수당이 사라지는 구조</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-2.jpg" alt="주휴수당 계산법 1분 정리" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">임금 상식</span><span class="yt-tt">주휴수당 계산법<br><span class="u">1분 정리</span></span><span class="yt-sub">내 시급에 곱하면 끝</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-3.jpg" alt="노동청 진정, 이 순서로 하세요" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">권리구제 절차</span><span class="yt-tt">노동청 진정<br><span class="u">이 순서로 하세요</span></span><span class="yt-sub">순서 틀리면 길어집니다</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-1.jpg" alt="권고사직 압박받을 때 첫마디" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">권고사직 대응</span><span class="yt-tt">권고사직 압박받을 때<br><span class="u">첫마디가 중요합니다</span></span><span class="yt-sub">이 말부터 하세요</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-2.jpg" alt="퇴직금, 14일 지나면 이자 붙습니다" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">퇴직금 상식</span><span class="yt-tt">퇴직금 14일 지나면<br><span class="u">이자가 붙습니다</span></span><span class="yt-sub">연 20% 지연이자</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-3.jpg" alt="출퇴근 기록이 증거가 되는 순간" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">증거 확보</span><span class="yt-tt">출퇴근 기록이<br><span class="u">증거가 되는 순간</span></span><span class="yt-sub">교통카드도 증거입니다</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-1.jpg" alt="연차수당, 회사가 말 안 해주는 것" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">연차 상식</span><span class="yt-tt">연차수당<br><span class="u">회사가 말 안 해주는 것</span></span><span class="yt-sub">퇴직 전 꼭 확인하세요</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-2.jpg" alt="직장 내 괴롭힘 신고 전 준비물" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">괴롭힘 대응</span><span class="yt-tt">직장 내 괴롭힘<br><span class="u">신고 전 준비물</span></span><span class="yt-sub">녹음과 기록이 먼저입니다</span></span></article>
-      <article class="yt-card"><img src="/img/yt-base-3.jpg" alt="실업급여, 자진퇴사도 되는 경우" loading="lazy"><span class="yt-p" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="yt-info"><span class="yt-brand"><img src="/img/seal.png" alt=""><span><span class="b1">노무법인 종로</span><br><span class="b2">공인노무사 김경동</span></span></span><span class="yt-eb">실업급여</span><span class="yt-tt">실업급여<br><span class="u">자진퇴사도 되는 경우</span></span><span class="yt-sub">이 사유면 가능합니다</span></span></article>
-    </div>
-    <div class="yt-note">채널 공개 준비 중입니다. 영상이 업로드되는 대로 이곳에서 바로 보실 수 있습니다.</div>
+    <div class="bl-grid" id="blogGrid" hidden></div>
+    <div class="bl-more"><a class="btn btn-ghost" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그 전체 보기 <span class="ar">→</span></a></div>
   </div>
 </section>
 
@@ -1285,7 +1269,7 @@ body.no-scroll{overflow:hidden}
       <a href="#subsidy"><span class="tx">지원금진단</span></a>
       <a href="#ai"><span class="tx">AI 상담</span></a>
       <a href="#cases"><span class="tx">주요업무</span></a>
-      <a href="#youtube"><span class="tx">유튜브</span></a>
+      <a href="#blog"><span class="tx">블로그</span></a>
       <a href="#location"><span class="tx">오시는길</span></a>
       <a href="#top" class="back"><span class="tx">맨 위로 ↑</span></a>
     </div>
@@ -2112,10 +2096,10 @@ window.addEventListener('load',()=>{
 /* ===== 탭(SPA) 라우터: 상단 메뉴별 화면 전환 ===== */
 (function(){
   document.body.classList.add('spa');
-  const VIEWS = ['home','about','calc','subsidy','ai','cases','contact','youtube'];
+  const VIEWS = ['home','about','calc','subsidy','ai','cases','contact','blog'];
   const HASH2VIEW = { '':'home', top:'home', about:'about', practice:'cases', calc:'calc',
                       videos:'home',
-                      subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home', youtube:'youtube' };
+                      subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home', blog:'blog', youtube:'blog' };
   const secs = Array.from(document.querySelectorAll('section[data-view]'));
   const menuLinks = Array.from(document.querySelectorAll('.menu a, a[href^="#"]'));
 
@@ -2143,6 +2127,52 @@ window.addEventListener('load',()=>{
   const brand = document.querySelector('.brand, header a[href="#top"]');
   if (brand) brand.addEventListener('click', () => { location.hash = 'top'; });
   route();
+})();
+
+/* ===== 블로그 최신 글: 히어로 띠 4개 + 블로그 섹션 16개 (실패하면 '블로그에서 보기' 링크만 남김) ===== */
+(function(){
+  const heroBox = document.getElementById('heroBlog');
+  const gridBox = document.getElementById('blogGrid');
+  if (!heroBox && !gridBox) return;
+  const el = (tag, cls) => { const e = document.createElement(tag); if (cls) e.className = cls; return e; };
+  const okLink = (u) => /^https:\/\/blog\.naver\.com\//.test(u || '');
+  const dot = (d) => String(d || '').replace(/-/g, '.');
+  function thumb(box, src, alt){
+    if (!/^https:\/\//.test(src || '')) { box.classList.add('noimg'); return; }
+    const img = el('img');
+    img.alt = alt; img.loading = 'lazy'; img.decoding = 'async';
+    img.referrerPolicy = 'no-referrer';            // 네이버 그림은 다른 사이트 주소를 보내면 막힘(403)
+    img.setAttribute('referrerpolicy', 'no-referrer');
+    img.onerror = function(){
+      if (/[?&]type=w3/.test(img.src)) { img.src = img.src.replace(/([?&]type=)w3/, '$1s3'); return; }
+      img.remove(); box.classList.add('noimg');
+    };
+    img.src = src;
+    box.appendChild(img);
+  }
+  function card(p, kind){
+    const a = el('a', kind === 'hero' ? 'hv-card' : 'bl-card');
+    a.href = p.link; a.target = '_blank'; a.rel = 'noopener';
+    const th = el('span', kind === 'hero' ? 'vthumb' : 'bl-th');
+    if (kind === 'hero') th.style.display = 'block';
+    thumb(th, p.thumb, p.title);
+    a.appendChild(th);
+    const body = el('span', kind === 'hero' ? 'vmeta' : 'bl-body');
+    if (kind === 'hero') body.style.display = 'block';
+    const t = el('span', kind === 'hero' ? 't' : 'bl-tt'); t.textContent = p.title;
+    const d = el('span', kind === 'hero' ? 'd' : 'bl-dt'); d.textContent = dot(p.date);
+    body.appendChild(t); body.appendChild(d); a.appendChild(body);
+    return a;
+  }
+  fetch('/api/blog-posts?limit=16', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(j => {
+      const items = (j && Array.isArray(j.items) ? j.items : []).filter(p => p && p.title && okLink(p.link));
+      if (!items.length) return;
+      if (heroBox) { items.slice(0, 4).forEach(p => heroBox.appendChild(card(p, 'hero'))); heroBox.hidden = false; }
+      if (gridBox) { items.slice(0, 16).forEach(p => gridBox.appendChild(card(p, 'grid'))); gridBox.hidden = false; }
+    })
+    .catch(() => {});
 })();
 </script>
 <script>(function(){var v=document.querySelector('.hero-motion');if(!v)return;var on=function(){v.classList.add('on')};if(v.readyState>=2){on()}else{v.addEventListener('loadeddata',on,{once:true});setTimeout(on,4000);}})();</script>
