@@ -194,6 +194,14 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .pcard .ph .picon .ic{width:30px;height:30px}
 .pcard .ph .pt{font-family:var(--serif);font-size:20px;color:var(--ink);font-weight:700;letter-spacing:.03em}
 .pcard .psub{font-size:12.5px;color:var(--ink-faint);line-height:1.6}
+/* 주요 업무 7개 (명함 기준): PC 4+3 가운데 정렬, 아이콘 위·제목 아래 */
+.practice-grid.p7{display:flex;flex-wrap:wrap;justify-content:center}
+.practice-grid.p7 .pcard{flex:0 0 25%;padding:24px 22px}
+.practice-grid.p7 .pcard:nth-child(5){border-left:none}
+.practice-grid.p7 .pcard:nth-child(n+5){border-top:1px solid var(--line-soft)}
+.practice-grid.p7 .pcard .ph{flex-direction:column;gap:9px}
+.practice-grid.p7 .pcard .ph .pt{font-size:18px;line-height:1.4;word-break:keep-all}
+.practice-grid.p7 .pcard .psub{word-break:keep-all}
 
 /* ---------- section shell ---------- */
 section.block{padding:96px 0;position:relative}
@@ -406,6 +414,16 @@ section.block{padding:96px 0;position:relative}
 .about-name{font-family:var(--serif);font-size:20px;color:var(--ink);font-weight:600}
 .about-role{font-size:13px;color:var(--gold-2);margin-top:3px}
 .about-cred{font-size:12px;color:var(--ink-faint);margin-top:8px;line-height:1.5}
+/* 소개 카드: 주요 약력 (명함 뒷면) */
+#about .about-bio{position:relative;z-index:1;margin:-4px 0 16px}
+#about.lcard .desc,#about.lcard .lc-chips{max-width:100%}
+/* PC: 약력이 길어 소개 카드를 왼쪽 큰 칸(두 줄 높이)으로, 나머지 두 카드는 오른쪽에 위아래로 */
+.lower-grid{grid-template-columns:1fr 1fr}
+#about.lcard{grid-row:span 2}
+.about-bio .ab-k{font-size:11.5px;color:var(--gold-2);letter-spacing:.06em;margin-bottom:7px}
+.about-bio ul{list-style:none;display:flex;flex-direction:column;gap:1px}
+.about-bio li{display:flex;gap:8px;font-size:12.5px;color:var(--ink-soft);line-height:1.45;word-break:keep-all}
+.about-bio li::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--gold-2);flex:none;margin-top:8px;opacity:.8}
 .lcard p.desc{font-size:14px;color:var(--ink-soft);line-height:1.75;margin-bottom:20px}
 .lcard .lc-btn{padding:11px 20px;font-size:13.5px}
 /* 주요 성과 */
@@ -511,6 +529,10 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .pcard .psub{font-size:11.5px}
   .pcard:nth-child(3),.pcard:nth-child(4){border-top:1px solid var(--line-soft)}
   .pcard:nth-child(odd){border-left:none}
+  .practice-grid.p7 .pcard{flex:0 0 50%;padding:18px 10px}
+  .practice-grid.p7 .pcard:nth-child(n+3){border-top:1px solid var(--line-soft)}
+  .practice-grid.p7 .pcard .ph{gap:7px}
+  .practice-grid.p7 .pcard .ph .pt{font-size:15.5px;white-space:normal}
   .calc-grid{grid-template-columns:1fr}
   .subsidy-grid{grid-template-columns:1fr}
   .subsidy-panel{padding:20px 16px}
@@ -532,6 +554,7 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .info-row .irt .k{font-size:13px}
   .info-row .irt .v{font-size:12.5px}
   #about .desc,#about .lc-btn,#about .lc-chips{max-width:100%}
+  #about.lcard{grid-row:auto}
   section.block{padding:66px 0}
   .foot-flex{flex-direction:column}
   .foot-copy{white-space:normal}
@@ -548,6 +571,8 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .topbar .tb-extra{display:none}   /* 모바일에서 부가 문구 숨김 */
   /* (가로 스크롤 제거 — 아래 640px 규칙에서 색 막대 방식으로 대체) */
   .pcard .ph .pt{font-size:15px;letter-spacing:0}
+  .practice-grid.p7 .pcard .ph .pt{font-size:14.5px}
+  .practice-grid.p7 .pcard .psub{font-size:11px}
 }
 @media(max-width:520px){
   .nav{height:70px}
@@ -1029,8 +1054,24 @@ body.no-scroll{overflow:hidden}
             <div class="about-cred">노무법인 종로 부대표 · 강남지사</div>
           </div>
         </div>
-        <p class="desc">근로자·사업주 양쪽 실무를 아는 노무사가 사건 초기부터 함께합니다.</p>
-        <div class="lc-chips"><span>부당해고·징계</span><span>임금·퇴직금</span></div>
+        <div class="about-bio">
+          <div class="ab-k">주요 약력</div>
+          <ul>
+            <li>경북대학교 법학 학사</li>
+            <li>고려대학교 노동대학원 석사</li>
+            <li>권익위 청렴교육 전문강사 과정 이수 중</li>
+            <li>직장 내 장애인 인식개선 전문강사</li>
+            <li>직장 내 괴롭힘 전문가 과정 수료</li>
+            <li>공공기관 청렴 옴부즈만 위원</li>
+            <li>직장 내 괴롭힘 조사 수행</li>
+            <li>각종 노동사건 수행</li>
+            <li>청탁금지법, 이해충돌방지법 등 감사 실무</li>
+            <li>기타 각종 비위사건 등 감사 실무</li>
+            <li>前) 한국농어촌공사 감사실, 인재개발원 등</li>
+          </ul>
+        </div>
+        <p class="desc">당신의 이야기를 들려주세요. 해결책은 제가 찾습니다.</p>
+        <div class="lc-chips"><span>부당해고·징계</span><span>임금·퇴직금</span><span>급여·자문</span><span>산업재해</span><span>인사노무컨설팅</span></div>
         <a href="#contact" class="btn btn-ghost lc-btn">자세히 보기 <span class="ar">→</span></a>
       </div>
       <!-- AI 승소가능성 분석 -->
@@ -1071,23 +1112,35 @@ body.no-scroll{overflow:hidden}
       <h2>주요 업무</h2>
       <p class="sec-sub">노무법인 종로가 직접 수행하는 대표 업무입니다.</p>
     </div>
-    <!-- 업무분야 요약 (4개 핵심 영역) -->
-    <div class="practice-grid" style="margin-bottom:48px">
+    <!-- 업무분야 요약 (명함 주요 업무 7개) -->
+    <div class="practice-grid p7" style="margin-bottom:48px">
       <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 7v11a1 1 0 001 1h14a1 1 0 001-1V7M9 7V5a1.5 1.5 0 011.5-1.5h3A1.5 1.5 0 0115 5v2M9.5 12.5l1.8 1.8 3.4-3.6"/></svg></span><span class="pt">부당해고·징계</span></div>
-        <div class="psub">구제신청 · 징계 대응 · 권고사직</div>
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="11.5" rx="1"/><path d="M8.5 20l3.5-4.5 3.5 4.5M7.5 8.5h6M7.5 11.5h4"/></svg></span><span class="pt">기업인사노무자문 및 교육</span></div>
+        <div class="psub">노동관련 법률자문 · 근로감독 대비 · 산업안전(산재&nbsp;등)</div>
       </div>
       <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.2v9.6M9.2 14.4c.5 1 1.6 1.6 2.8 1.6 1.7 0 3-.9 3-2.2 0-2.9-5.6-1.5-5.6-4.2 0-1.3 1.2-2.2 2.6-2.2 1.1 0 2.1.5 2.6 1.4"/></svg></span><span class="pt">임금체불·퇴직금</span></div>
-        <div class="psub">체불 진정 · 퇴직금 · 대지급금</div>
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="2.5"/><circle cx="15.5" cy="8" r="2.5"/><path d="M3.5 19c.5-3 2.4-4.8 5-4.8 1.4 0 2.6.5 3.5 1.4.9-.9 2.1-1.4 3.5-1.4 2.6 0 4.5 1.8 5 4.8"/></svg></span><span class="pt">노동조합 등 노사관계 관련 업무</span></div>
+        <div class="psub">단체교섭 수행 · 노사관계 대응</div>
       </div>
       <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="7" r="2.4"/><path d="M12 9.4v3.6M4.5 17.5c2.2-2.6 4.7-3.9 7.5-3.9s5.3 1.3 7.5 3.9M4 20h16"/></svg></span><span class="pt">괴롭힘·산재</span></div>
-        <div class="psub">괴롭힘 신고 · 산재신청 · 보상</div>
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M12 4v16M8 20h8M5.5 7h13M5.5 7l-2.5 6h5l-2.5-6zM18.5 7l-2.5 6h5l-2.5-6zM3 13a2.5 2.5 0 005 0M16 13a2.5 2.5 0 005 0"/></svg></span><span class="pt">노동사건 대리</span></div>
+        <div class="psub">임금체불 · 대지급금 · 부당해고 · 부당징계 · 부당노동행위</div>
       </div>
       <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M4 20V8l5-3.5L14 8v12M4 20h16M14 20V11h6v9M7.5 11h2M7.5 14.5h2M16.8 14h.9"/></svg></span><span class="pt">기업 인사노무</span></div>
-        <div class="psub">취업규칙 · 인사제도 · 노동청 대응</div>
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M9 3.5h6v3H9zM9 5H6.5A1.5 1.5 0 005 6.5v12A1.5 1.5 0 006.5 20h11a1.5 1.5 0 001.5-1.5v-12A1.5 1.5 0 0017.5 5H15M8.5 11h7M8.5 14h7M8.5 17h4"/></svg></span><span class="pt">HR컨설팅</span></div>
+        <div class="psub">인사규정 정비(근로계약서·취업규칙·단체협약·노사협의회) · 비정규직·사내하도급 진단 및 개선</div>
+      </div>
+      <div class="pcard">
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.2v9.6M9.2 14.4c.5 1 1.6 1.6 2.8 1.6 1.7 0 3-.9 3-2.2 0-2.9-5.6-1.5-5.6-4.2 0-1.3 1.2-2.2 2.6-2.2 1.1 0 2.1.5 2.6 1.4"/></svg></span><span class="pt">정부지원금</span></div>
+        <div class="psub">고용노동부 지원금 청구 대행</div>
+      </div>
+      <div class="pcard">
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M8 7.5h8v2.5H8zM8.5 13.5h1M11.5 13.5h1M14.5 13.5h1M8.5 16.5h1M11.5 16.5h1M14.5 16.5h1"/></svg></span><span class="pt">HR아웃소싱</span></div>
+        <div class="psub">급여관리 · 4대보험 · 보험료 과오납금 환급신청</div>
+      </div>
+      <div class="pcard">
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M3.5 17.5h17M5 17.5V15a7 7 0 0114 0v2.5M10 8.3V6h4v2.3M12 9.5v3.5"/></svg></span><span class="pt">산업재해</span></div>
+        <div class="psub">산재보상 · 장해보상 · 유족급여</div>
       </div>
     </div>
     <!-- 근로자/사업주 탭 (모바일에서 한 번에 보이는 카드 수 축소) -->
