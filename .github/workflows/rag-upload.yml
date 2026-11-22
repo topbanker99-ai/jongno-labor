@@ -1,0 +1,92 @@
+# AI 상담 사례 DB v2 올리기 — 수동 실행 전용(Actions 화면의 Run workflow 버튼)
+# - 사례 자료는 암호 건 파일(rag-data 가지의 nomusa_v2.jsonl.gpg)로만 저장소에 있고, 비밀값 RAG_DATA_KEY로 여기서만 푼다.
+# - 공개 저장소라 로그는 누구나 본다. 프로그램은 건수·번호·상태 코드만 출력한다. 입력값에 비밀을 넣지 말 것.
+# - 기존 묶음 nomusa는 건드리지 않는다(프로그램이 nomusa 대상이면 멈춤). 홈페이지 전환은 deploy-main.yml의 RAG_NAMESPACE로 따로 한다.
+name: RAG data upload (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "check = 점검만(쓰기 없음) / upload = nomusa-v2에 올리기"
+        required: true
+        default: check
+        type: choice
+        options: [check, upload]
+      max_upsert:
+        description: "이번 실행에 올릴 최대 개수(무료 요금제 하루 한도 고려). 0이면 주제 점검 결과만 보고 올리지 않음"
+        required: false
+        default: "9000"
+      mismatch_floor:
+        description: "주제 불일치 하한(질문·답변 첫 부분 닮은 정도). 이보다 낮으면 올리지 않음"
+        required: false
+        default: "0.25"
+      mismatch_max_ratio:
+        description: "주제 점검으로 뺄 수 있는 최대 비율(점검 대상 중)"
+        required: false
+        default: "0.03"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rag-upload
+  cancel-in-progress: false
+
+jobs:
+  rag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout scripts (main)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+          path: app
+
+      - name: Checkout encrypted data (rag-data branch)
+        uses: actions/checkout@v4
+        with:
+          ref: rag-data
+          path: ragdata
+
+      - name: Decrypt data
+        env:
+          RAG_DATA_KEY: ${{ secrets.RAG_DATA_KEY }}
+        run: |
+          set -euo pipefail
+          umask 077
+          if [ -z "${RAG_DATA_KEY}" ]; then echo "RAG_DATA_KEY 비밀값이 없습니다."; exit 1; fi
+          printf '%s' "${RAG_DATA_KEY}" | tr -d '\r\n ' | gpg --batch --quiet --yes --pinentry-mode loopback \
+            --passphrase-fd 0 -o "${RUNNER_TEMP}/nomusa_v2.jsonl" -d ragdata/nomusa_v2.jsonl.gpg
+          echo "풀린 파일 줄 수: $(wc -l < "${RUNNER_TEMP}/nomusa_v2.jsonl")"
+          sha256sum "${RUNNER_TEMP}/nomusa_v2.jsonl" | cut -c1-16
+
+      - name: Run (${{ inputs.mode }})
+        env:
+          MODE: ${{ inputs.mode }}
+          MAX_UPSERT: ${{ inputs.max_upsert }}
+          MISMATCH_FLOOR: ${{ inputs.mismatch_floor }}
+          MISMATCH_MAX_RATIO: ${{ inputs.mismatch_max_ratio }}
+          RAG_TARGET_NAMESPACE: nomusa-v2
+          DATA_FILE: ${{ runner.temp }}/nomusa_v2.jsonl
+          RESULT_DIR: ${{ runner.temp }}/rag_result
+          UPSTASH_URL: ${{ secrets.UPSTASH_VECTOR_URL }}
+          UPSTASH_TOKEN: ${{ secrets.UPSTASH_VECTOR_WRITE_TOKEN || secrets.UPSTASH_VECTOR_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PYTHONIOENCODING: utf-8
+        run: python3 app/.github/scripts/rag_upload.py
+
+      - name: Save excluded id list (ids and scores only)
+        if: ${{ inputs.mode == 'upload' && always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: rag-topic-check
+          path: ${{ runner.temp }}/rag_result/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Remove decrypted data
+        if: always()
+        run: |
+          rm -f "${RUNNER_TEMP}/nomusa_v2.jsonl"
+          rm -rf ragdata
