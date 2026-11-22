@@ -371,6 +371,9 @@ a.hv-card{display:block;cursor:pointer;color:inherit}
 .orb{position:relative;width:200px;height:200px;display:grid;place-items:center;margin-bottom:24px}
 .orb-core{position:relative;width:150px;height:150px;border-radius:50%;overflow:hidden;z-index:2;box-shadow:0 12px 34px rgba(220,189,118,.4);border:2px solid rgba(220,189,118,.55);background:radial-gradient(circle at 50% 35%,#283650,#151C2B 72%)}
 .orb-core .avatar{width:100%;height:100%;object-fit:contain;padding:24px;display:block}
+/* 대표 일러스트(상담원 그림): 원을 꽉 채우고, 얼굴 위 입 장식은 숨김(말할 때는 테두리 맥동만) */
+.orb-core .avatar.illust{object-fit:cover;object-position:50% 40%;padding:0;border-radius:50%}
+.orb-core .avatar.illust~.mouth{display:none!important}
 /* AI 발화 시 입 모양 오버레이 (오디오 크기에 따라 JS가 scaleY 조절) */
 .orb-core .mouth{display:none;position:absolute;left:49.5%;top:64%;width:24px;height:13px;background:#6e3730;border-radius:45% 45% 50% 50%/30% 30% 70% 70%;transform:translate(-50%,-50%) scaleY(.12);transform-origin:center;opacity:0;transition:opacity .25s;box-shadow:inset 0 -3px 4px rgba(0,0,0,.28)}
 .orb.speaking .mouth{opacity:1}
@@ -1305,7 +1308,7 @@ body.no-scroll{overflow:hidden}
         <div class="orb" id="orb">
           <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
           <div class="orb-core" id="orbCore">
-            <img class="avatar" src="/img/cpla-mark-gold@4x.png" alt="공인노무사 마크 AI 상담원">
+            <img class="avatar illust" src="/img/ai-avatar-kkd.webp" width="420" height="420" alt="김경동 공인노무사 일러스트 (AI 상담원)">
             <span class="mouth" id="aiMouth"></span>
           </div>
         </div>
