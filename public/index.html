@@ -1734,7 +1734,9 @@ async function startRealtime(){
   const fail=(m)=>{const e=new Error(m);e.userMsg=m;return e;};
   // 1) 이용 가능 여부(하루 횟수 등)를 먼저 확인한 뒤에 마이크 권한을 묻는다
   const _h={}; const _ts=await getTsToken(); if(_ts)_h['x-turnstile-token']=_ts;
-  const tr=await fetch(TOKEN_ENDPOINT+'?perspective='+encodeURIComponent(PERSP),{headers:_h,cache:'no-store'});
+  /* 목소리 비교 듣기: 주소 뒤 ?voice=ash 등 (서버가 허용한 남성 목소리만 적용) */
+  const _vp=(new URLSearchParams(location.search).get('voice')||'').replace(/[^a-z]/g,'').slice(0,12);
+  const tr=await fetch(TOKEN_ENDPOINT+'?perspective='+encodeURIComponent(PERSP)+(_vp?'&voice='+_vp:''),{headers:_h,cache:'no-store'});
   const tok=await safeJson(tr);
   if(!tr.ok)throw fail(consultErrorMsg(tr.status,tok));
   const EK=tok.value||(tok.client_secret&&tok.client_secret.value);

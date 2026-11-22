@@ -271,7 +271,13 @@ const VOICE_PROMPT = `너는 노무법인 종로(서울 종로 본사 · 안산�
 [차례 지키기] 의뢰인님이 말하는 도중 잠시 멈추거나 더듬어도(음…, 어…, 그…, 짧은 침묵) 절대 끼어들지 마라. 의뢰인님이 한 문장을 분명히 끝맺은 뒤에만 응답한다. 아직 생각 중인 것 같으면 한두 박자 더 기다린다.
 [발화 길이] 한 번에 2~4문장으로 짧게 말한 뒤 즉시 멈추고, 의뢰인님이 실제로 말할 때까지 기다린다. 절대 혼자 묻고 스스로 답하며 대화를 이어가지 마라.
 [소음 무시] 들리는 소리가 말이 아닌 소음이거나 내용이 불분명하면 절대 새로운 주제(해고 등)를 꺼내지 말고, 조용히 기다리거나 "죄송합니다, 잘 못 들었어요. 다시 한번 말씀해 주시겠어요?"라고만 짧게 되묻는다. 의뢰인님이 언급하지 않은 상담 유형을 먼저 가정하지 마라.
-[말투·속도] 실제 사람처럼 자연스러운 구어체로 말한다. 너무 빠르지 않게 편안한 속도로, 한 번에 길게 늘어놓지 말고 짧게 주고받는다.
+[목소리·말투] 경험 많은 40~50대 남성 노무 상담 전문가처럼, 신뢰감 있고 따뜻하게 말한다.
+- 낮고 안정된 톤으로 차분하게, 서두르지 않는 편안한 속도로 말한다. 목소리를 높이거나 들뜨지 않는다.
+- 과하게 밝은 톤, 과장된 감탄("와!", "정말요?!"), 기계적인 낭독투, 콜센터식 상투어는 쓰지 않는다.
+- 의뢰인님이 어려운 상황을 말하면 진심이 담긴 짧은 공감("많이 당황스러우셨겠어요", "그동안 마음고생 많으셨겠습니다")을 먼저 건넨 뒤 안내한다. 공감은 매번 반복하지 말고 필요한 때 한 번씩만 한다.
+- 문장 끝은 부드럽게 내려 맺어 안정감을 준다. 확인이 필요한 질문도 다그치지 않고 정중하게 묻는다.
+- 기한·날짜·금액처럼 중요한 정보는 한 박자 쉬고 또박또박 말한다.
+- 실제 사람처럼 자연스러운 구어체로, 한 번에 길게 늘어놓지 말고 짧게 주고받는다.
 [언어] 모든 발화는 한국어로만 한다. 어떤 경우에도 다른 언어로 바꾸지 않는다. (중국어 상담 요청 시에는 위 안내대로 노무사 전화 상담으로 연결한다)
 [숫자 확인] 체불 금액·근속기간·해고일 같은 결과를 좌우하는 숫자와 날짜는 애매하게 들리면 절대 임의로 해석하지 말고 반드시 되물어 확인한다. 예: "3개월이라고 하셨는데, 해고된 지 3개월이 지났다는 말씀인지, 근무기간이 3개월이라는 말씀인지 확인 부탁드립니다." 확인 전에는 그 숫자를 전제로 판단하지 않는다.
 위에 정한 첫 인사로 시작하고, 이후 의뢰인님의 문의사항을 파악하라.
@@ -298,6 +304,10 @@ const RT_MAX_MIN = 30;                     // 1회 상담 최대 시간(분)
 const RT_PERSON_DAY_COUNT = 6;             // 1인(같은 인터넷 주소) 하루 최대 횟수
 const RT_PERSON_DAY_MIN = 40;              // 1인 하루 최대 총 이용 시간(분)
 const RT_MIN_START_SEC = 180;              // 남은 시간이 3분 미만이면 새 상담을 시작하지 않음
+// 상담 목소리 — OpenAI 실시간 음성 중 남성 계열만 허용. 기본값은 환경변수 RT_VOICE(없으면 cedar)
+// 비교 듣기: 홈페이지 주소 뒤에 ?voice=ash 처럼 붙이면 그 목소리로 상담 (목록 밖 값은 무시)
+const RT_VOICES = ['cedar', 'ash', 'ballad', 'echo', 'verse'];
+const RT_VOICE = RT_VOICES.includes((process.env.RT_VOICE || '').trim()) ? process.env.RT_VOICE.trim() : 'cedar';
 
 /* 1인 하루 이용 관리 — 상담 시간은 서버 시계로 잰다(토큰 발급 ~ 마지막 사용 보고).
    진행 중인 상담은 최대 시간을 미리 잡아 두고, 끝나면 실제 사용 시간으로 정산.
@@ -334,7 +344,7 @@ function personGate(req, res, next) {
   next();
 }
 
-function realtimeSession(persp, variant, maxMin = RT_MAX_MIN) {
+function realtimeSession(persp, variant, maxMin = RT_MAX_MIN, voice = RT_VOICE) {
   const modern = variant !== 'legacy';
   const session = {
     type: 'realtime',
@@ -354,7 +364,7 @@ function realtimeSession(persp, variant, maxMin = RT_MAX_MIN) {
       },
       output: {
         format: { type: 'audio/pcm', rate: 24000 },
-        voice: 'cedar',                    // 남성 음성
+        voice,                             // 남성 음성 (기본 cedar — RT_VOICES 참고)
         speed: 0.85,                       // 말 속도 (1=기본, 낮을수록 천천히)
       },
     },
@@ -411,6 +421,8 @@ app.get('/api/realtime/token',
   ipLimit('rtq', 20), requireAI, personGate, turnstileGate, dailyCap('realtime'), async (req, res) => {
   // ?perspective=노동자|사업주 — 관점 선택 게이트에서 전달 (없으면 지침 미주입)
   const persp = ['노동자', '사업주'].includes(req.query.perspective) ? req.query.perspective : '';
+  // ?voice= — 목소리 비교용 (허용 목록 밖이면 기본 목소리)
+  const voice = RT_VOICES.includes(req.query.voice) ? req.query.voice : RT_VOICE;
   try {
     for (let vi = rtStart; vi < RT_VARIANTS.length; vi++) {
       const variant = RT_VARIANTS[vi];
@@ -421,7 +433,7 @@ app.get('/api/realtime/token',
           Authorization: `Bearer ${OPENAI_KEY}`,
           'OpenAI-Safety-Identifier': safetyId(req),   // IP 원문 대신 해시값
         },
-        body: JSON.stringify({ session: realtimeSession(persp, variant, Math.max(1, Math.round(req.rt.maxSec / 60))) }),
+        body: JSON.stringify({ session: realtimeSession(persp, variant, Math.max(1, Math.round(req.rt.maxSec / 60)), voice) }),
       });
       const data = await r.json().catch(() => ({}));
       if (r.ok && data.value) {
@@ -936,7 +948,7 @@ function configReport() {
   console.log(' 판례(LAW_OC)              :', ok(LAW_OC));
   console.log(' 상담요약 메일(SMTP_*)      :', ok(mailReady()));
   console.log(' 봇 차단(TURNSTILE_SECRET) :', process.env.TURNSTILE_SECRET ? '켜짐 (index.html TURNSTILE_SITEKEY도 입력돼 있어야 함)' : '꺼짐');
-  console.log(` 상담 모델: ${RT_MODEL} (음성인식 ${RT_TRANSCRIBE}) · 요약: ${SUMMARY_ATTEMPTS[0].model} · 1회 최대 ${RT_MAX_MIN}분 · 1인 하루 ${RT_PERSON_DAY_COUNT}회·총 ${RT_PERSON_DAY_MIN}분 · 전체 하루 ${DAILY_CAPS.realtime}회`);
+  console.log(` 상담 모델: ${RT_MODEL} (음성인식 ${RT_TRANSCRIBE} · 목소리 ${RT_VOICE}) · 요약: ${SUMMARY_ATTEMPTS[0].model} · 1회 최대 ${RT_MAX_MIN}분 · 1인 하루 ${RT_PERSON_DAY_COUNT}회·총 ${RT_PERSON_DAY_MIN}분 · 전체 하루 ${DAILY_CAPS.realtime}회`);
   if (!process.env.SESSION_SECRET) console.log(' (안내) SESSION_SECRET 미설정 → 재시작마다 자동 생성. 서버 재시작 시 진행 중 상담 세션은 만료됩니다.');
   console.log('──────────────────────────────────');
 }
