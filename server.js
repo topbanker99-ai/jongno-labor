@@ -18,7 +18,7 @@
  * ------------------------------------------------------------
  *  [보안 구조 요약 — 2026-11 강화]
  *   · 실제 방문자 IP 판별: X-Forwarded-For 위조로 사용량 제한을 우회하지 못하도록 오른쪽(프록시가 붙인) 공인 IP 사용
- *   · AI 음성상담: gpt-realtime-2.1 단일 운영 · 비밀번호 없이 공개 · 1회 최대 30분 · 1인(IP) 하루 6회·총 40분 · 전체 하루 10회
+ *   · AI 음성상담: gpt-realtime-2.1 단일 운영 · 비밀번호 없이 공개 · 1회 최대 10분 · 1인(IP) 하루 1회·총 10분 · 전체 하루 5회
  *   · 상담요약: gpt-6-luna (실패 시 gpt-4o-mini 대체) · 회신 연락처는 개인정보 동의 후에만 메일로 전달(서버 저장 없음)
  *   · 상담 세션 토큰(x-consult-session): 상담을 정상 시작한 브라우저만 사례검색·판례검색·메일전송 가능
  *     → 외부 스크립트가 API만 직접 두드려 사례 DB를 긁어가거나 노무사 메일함에 스팸을 보내는 것을 차단
@@ -116,8 +116,8 @@ function ipRefund(name, req) {
   if (arr && arr.length) arr.pop();
 }
 
-// 2층: 하루 총량 제한 (자정 리셋, 한국시간 기준) — AI 음성상담 사이트 전체 하루 10회
-const DAILY_CAPS = { realtime: 10, finish: 20, search: 3000 };
+// 2층: 하루 총량 제한 (자정 리셋, 한국시간 기준) — AI 음성상담 사이트 전체 하루 5회
+const DAILY_CAPS = { realtime: 5, finish: 20, search: 3000 };
 let dailyState = { date: '', counts: {} };
 const kstToday = () => new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 function dailyCap(name) {
@@ -161,7 +161,7 @@ async function turnstileGate(req, res, next) {
 /* 3층: 상담 세션 토큰 — 상담을 정상적으로 시작(리얼타임 토큰 발급 / 절약형 첫인사)한 브라우저에만 발급.
    서버 비밀키로 서명하므로 위조 불가. 세션당 사용 횟수 제한 + 메일 전송은 1회만. */
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
-const SESSION_TTL_MS = 2 * 60 * 60 * 1000;               // 상담 최대 30분 + 요약·연락처 입력·전송 여유
+const SESSION_TTL_MS = 2 * 60 * 60 * 1000;               // 상담 최대 10분 + 요약·연락처 입력·전송 여유
 const SESSION_LIMITS = { search: 80, finish: 1 };
 const sessUse = new Map();                                // nonce → { exp, counts, sending }
 const sign = (body) => crypto.createHmac('sha256', SESSION_SECRET).update(body).digest('base64url');
@@ -315,14 +315,14 @@ function perspectiveNote(persp) {
 /* ============================================================
    1) AI 음성상담 — OpenAI Realtime 임시 접속키(ephemeral client secret) 발급
       GA 엔드포인트: POST /v1/realtime/client_secrets → 브라우저가 value(ek_...)로 WebRTC 연결
-      [운영 기준 2026-11] 비밀번호 없이 공개 · 1회 최대 30분 · 1인(IP) 하루 6회·총 40분 · 사이트 전체 하루 10회
+      [운영 기준 2026-11-22] 비밀번호 없이 공개 · 1회 최대 10분 · 1인(IP) 하루 1회·총 10분 · 사이트 전체 하루 5회
       [모델] gpt-realtime-2.1 (2026-07 출시 신버전). 구버전 gpt-realtime은 2027-01-20 종료 예정
    ============================================================ */
 const RT_MODEL = 'gpt-realtime-2.1';       // 상담 모델
 const RT_TRANSCRIBE = 'gpt-transcribe';    // 상담자 음성 → 글자 (구 gpt-4o-mini-transcribe는 2027-02-26 종료)
-const RT_MAX_MIN = 30;                     // 1회 상담 최대 시간(분)
-const RT_PERSON_DAY_COUNT = 6;             // 1인(같은 인터넷 주소) 하루 최대 횟수
-const RT_PERSON_DAY_MIN = 40;              // 1인 하루 최대 총 이용 시간(분)
+const RT_MAX_MIN = 10;                     // 1회 상담 최대 시간(분)
+const RT_PERSON_DAY_COUNT = 1;             // 1인(같은 인터넷 주소) 하루 최대 횟수 (2026-11-22 대표 지시 "1회로 줄여줘")
+const RT_PERSON_DAY_MIN = 10;              // 1인 하루 최대 총 이용 시간(분) (2026-11-22 대표 지시, 1회 10분과 같음)
 const RT_MIN_START_SEC = 180;              // 남은 시간이 3분 미만이면 새 상담을 시작하지 않음
 // 상담 목소리 — OpenAI 실시간 음성 중 남성 계열만 허용. 기본값은 환경변수 RT_VOICE(없으면 cedar)
 // 비교 듣기: 홈페이지 주소 뒤에 ?voice=ash 처럼 붙이면 그 목소리로 상담 (목록 밖 값은 무시)

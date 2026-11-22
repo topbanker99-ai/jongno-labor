@@ -1017,7 +1017,7 @@ body.no-scroll{overflow:hidden}
       <div class="ai-steps">
         <div class="ai-step"><span class="n">1</span><b>관점 선택</b><small>근로자 / 사업주 중<br>내 입장을 고릅니다</small></div>
         <div class="ai-arrow">→</div>
-        <div class="ai-step"><span class="n">2</span><b>음성 상담</b><small>말하면 AI가 사례·판례를<br>찾아 안내합니다 (1회 최대 30분)</small></div>
+        <div class="ai-step"><span class="n">2</span><b>음성 상담</b><small>말하면 AI가 사례·판례를<br>찾아 안내합니다 (1회 최대 10분)</small></div>
         <div class="ai-arrow">→</div>
         <div class="ai-step"><span class="n">3</span><b>노무사 전달</b><small>상담 요약이 김경동 노무사<br>메일로 전송됩니다</small></div>
       </div>
@@ -1321,7 +1321,7 @@ body.no-scroll{overflow:hidden}
           <button class="vc-end" id="btnEnd" style="display:none">상담 종료 &amp; 노무사에게 전송</button>
           <button class="btn btn-ghost" id="btnReset" style="display:none;margin-top:10px;font-size:13px;padding:9px 18px">↩ 상담 중지 · 처음으로</button>
         </div>
-        <div class="voice-hint" id="voiceHint">마이크 권한이 필요합니다 · 1회 최대 30분 · 1인 하루 6회(총 40분)</div>
+        <div class="voice-hint" id="voiceHint">마이크 권한이 필요합니다 · 1회 최대 10분 · 하루 선착순 5회</div>
       </div>
       <div class="voice-transcript" id="transcript">
         <div class="tr-empty" id="trEmpty">상담을 시작하면 대화 내용이<br>여기에 실시간으로 표시됩니다.</div>
@@ -1631,9 +1631,9 @@ function consultErrorMsg(status,j){
   if(status===403) return '보안 확인에 실패했습니다. 새로고침 후 다시 시도해주세요.';
   return 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도하거나 전화('+CONSULT_PHONE+')로 상담해주세요.';
 }
-let RT_MAX_SEC=30*60;   // 이번 상담 최대 시간(초) — 서버가 1인 하루 남은 시간까지 반영해 내려줌
+let RT_MAX_SEC=10*60;   // 이번 상담 최대 시간(초) — 서버가 1인 하루 남은 시간까지 반영해 내려줌
 let RT_TODAY_LEFT=null; // 오늘 남은 이용 {count, minutes}
-/* 상담 사용 보고 — 1인 하루 총 이용 시간(40분) 정산용. 상담 중 30초마다 + 끝날 때 1번 */
+/* 상담 사용 보고 — 1인 하루 총 이용 시간(10분) 정산용. 상담 중 30초마다 + 끝날 때 1번 */
 let usageTimer=null;
 function reportUsage(extra){ if(!CST) return; try{ fetch('/api/realtime/usage',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json','x-consult-session':CST},body:JSON.stringify(extra||{})}).catch(()=>{}); }catch(_){} }
 function startUsage(){ stopUsage(); reportUsage({}); usageTimer=setInterval(()=>reportUsage({}),30000); }
@@ -1887,7 +1887,7 @@ btnReset.onclick=()=>{
     orb.classList.remove('done'); setOrb(''); setStatus('상담 준비됨');
     vTimer.style.display='none'; vTimer.textContent='00:00'; seconds=0;
     modeTag.style.display='none'; btnMute.style.display='none'; btnEnd.style.display='none'; btnReset.style.display='none';
-    vHint.textContent='마이크 권한이 필요합니다 · 1회 최대 30분 · 1인 하루 6회(총 40분)';
+    vHint.textContent='마이크 권한이 필요합니다 · 1회 최대 10분 · 하루 선착순 5회';
     btnStart.style.display=''; btnStart.disabled=false;
     // 복구 검증: 시작 버튼이 안 보이면 수동 복구 실패로 간주
     if(btnStart.style.display==='none' || btnReset.style.display!=='none') throw new Error('reset incomplete');
