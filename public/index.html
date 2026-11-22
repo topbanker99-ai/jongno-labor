@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>노무법인 종로 강남지사 | 김경동 공인노무사 · 부당해고·임금체불 노무상담</title>
 <meta name="description" content="노무법인 종로 강남지사 김경동 공인노무사(부대표). 부당해고·징계, 임금체불·퇴직금, 급여·자문, 산업재해, 인사노무컨설팅. 선릉역 인근, 매일 10:00~20:00 상담, AI 음성 사전상담.">
-<link rel="icon" type="image/png" href="/img/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-cpla-32.png"><link rel="icon" type="image/png" sizes="180x180" href="/img/favicon-cpla-180.png">
 <meta property="og:title" content="노무법인 종로 강남지사 | 김경동 공인노무사">
 <meta property="og:description" content="부당해고·징계, 임금체불·퇴직금, 급여·자문, 산업재해, 인사노무컨설팅. 선릉역 인근 강남지사, 매일 10:00~20:00 상담, AI 음성 사전상담.">
 <meta property="og:image" content="/img/og-card.png">
@@ -79,9 +79,9 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .brand .emblem{overflow:hidden}
 .foot-brand .emblem{overflow:hidden}
 .brand .bt{line-height:1.05}
-.brand .bt .big{font-family:var(--serif);font-weight:700;font-size:23px;color:var(--ink);letter-spacing:.06em}
+.brand .bt .big{font-family:var(--serif);font-weight:700;font-size:23px;color:var(--ink);letter-spacing:.06em;margin-right:-.07em}
 .brand .bt .sub{font-size:10.5px;letter-spacing:.34em;color:var(--gold-2);margin-top:3px;display:flex;align-items:center;gap:8px}
-.brand .bt .sub::after{content:"";width:20px;height:1px;background:var(--gold)}
+.brand .bt .sub::after{content:"";flex:1 1 auto;min-width:20px;height:1px;background:var(--gold)} .brand .bt .big,.brand .bt .sub{white-space:nowrap} @media(max-width:380px){.brand{gap:10px}header .brand .bt .big{font-size:18px;letter-spacing:.03em;margin-right:-.04em}.brand .bt .sub{font-size:10px;letter-spacing:.2em}}
 .menu{display:flex;gap:36px;font-size:15.5px;font-weight:500}
 .menu a{color:var(--ink-soft);transition:color .3s;position:relative;padding:6px 0;white-space:nowrap}
 .menu a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--gold-2);transition:width .3s}
@@ -756,6 +756,10 @@ body.no-scroll{overflow:hidden}
 .co-bt{line-height:1.2}
 .co-bt b{display:block;font-family:var(--serif);color:var(--ink);font-size:16.5px;letter-spacing:.04em}
 .co-bt span{font-size:10.5px;letter-spacing:.22em;color:var(--gold-2)}
+/* 로고 글자 "공인노무사 김경동" — 첫 화면 제목(.hero h1 .g)과 같은 금색 그라데이션 (2026-11-22) */
+.brand .bt .big,.foot-brand .fb-t .fb-name,.co-bt b{color:var(--gold-2)}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){.brand .bt .big,.foot-brand .fb-t .fb-name,.co-bt b{background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}}
+.co-bt b{width:fit-content}
 .co-right{display:flex;align-items:center;gap:10px}
 .co-persp-badge{font-size:12px;font-weight:700;color:#241708;background:var(--gold-grad);padding:6px 13px;border-radius:99px;letter-spacing:.02em}
 .co-change{font-size:12px;color:var(--ink-faint);border:1px solid var(--line-soft);border-radius:8px;padding:6px 11px;transition:all .2s}
@@ -806,9 +810,9 @@ body.no-scroll{overflow:hidden}
   <div class="wrap nav">
     <a class="brand" href="#top">
       <span class="emblem">
-        <img src="/img/seal.png" alt="노무법인 종로 인장 로고">
+        <img src="/img/cpla-mark-gold.png" alt="공인노무사 마크">
       </span>
-      <span class="bt"><span class="big">종로</span><span class="sub">노무법인</span></span>
+      <span class="bt"><span class="big">공인노무사 김경동</span><span class="sub">노무법인 종로 강남지사</span></span>
     </a>
     <nav class="menu">
       <a href="#about">소개</a>
@@ -1214,8 +1218,8 @@ body.no-scroll{overflow:hidden}
 <footer>
   <div class="wrap foot-flex">
     <div class="foot-brand">
-      <span class="emblem"><img src="/img/seal.png" alt="노무법인 종로 인장 로고"></span>
-      <span class="fb-t">노무법인 종로<br><small style="font-size:11px;letter-spacing:.12em;color:var(--ink-faint)">JONGNO LABOR LAW FIRM</small></span>
+      <span class="emblem"><img src="/img/cpla-mark-gold.png" alt="공인노무사 마크"></span>
+      <span class="fb-t"><span class="fb-name">공인노무사 김경동</span><br><small style="font-size:11px;letter-spacing:.12em;color:var(--ink-faint)">노무법인 종로 강남지사</small></span>
     </div>
     <div class="foot-info">
       <b>강남지사</b> (06158) 서울시 강남구 테헤란로 441, 송암빌딩 5층 &nbsp;·&nbsp; <b>DL</b> 02-6952-9297 &nbsp;·&nbsp; <b>F</b> 02-6919-4056<br>
@@ -1241,8 +1245,8 @@ body.no-scroll{overflow:hidden}
 <div class="consult-overlay" id="consultOverlay" aria-hidden="true">
   <div class="co-bar">
     <div class="co-brand">
-      <img src="/img/seal.png" alt="노무법인 종로">
-      <div class="co-bt"><b>노무법인 종로</b><span>AI 음성 사전상담</span></div>
+      <img src="/img/cpla-mark-gold.png" alt="공인노무사 마크">
+      <div class="co-bt"><b>공인노무사 김경동</b><span>AI 음성 사전상담</span></div>
     </div>
     <div class="co-right">
       <span class="co-persp-badge" id="coPerspBadge" style="display:none"></span>
@@ -1280,7 +1284,7 @@ body.no-scroll{overflow:hidden}
         <div class="orb" id="orb">
           <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span>
           <div class="orb-core" id="orbCore">
-            <img class="avatar" src="/img/seal.png" alt="노무법인 종로 AI 상담원">
+            <img class="avatar" src="/img/cpla-mark-gold@4x.png" alt="공인노무사 마크 AI 상담원">
             <span class="mouth" id="aiMouth"></span>
           </div>
         </div>
