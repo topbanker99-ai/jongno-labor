@@ -36,7 +36,7 @@ import nodemailer from 'nodemailer';
 
 // [블로그 최신 글] 홈페이지에서 빼고 싶은 네이버 블로그 카테고리 이름 (RSS의 category 값과 똑같이 적기)
 // 예: const BLOG_EXCLUDE_CATEGORIES = ['사는 이야기'];   ← 일상글을 빼고 싶을 때
-const BLOG_EXCLUDE_CATEGORIES = [];
+const BLOG_EXCLUDE_CATEGORIES = ['사는 이야기'];
 
 const app = express();
 app.disable('x-powered-by');   // 서버 종류(Express) 노출 차단
@@ -126,7 +126,7 @@ function dailyCap(name) {
     if (dailyState.date !== today) dailyState = { date: today, counts: {} };
     const used = dailyState.counts[name] || 0;
     if (used >= DAILY_CAPS[name]) {
-      return res.status(429).json({ error: '오늘 상담 서비스 이용량이 모두 소진되었습니다. 전화(02-6929-4540)로 상담해주세요.', code: 'daily' });
+      return res.status(429).json({ error: '오늘 상담 서비스 이용량이 모두 소진되었습니다. 전화(02-6952-9297)로 상담해주세요.', code: 'daily' });
     }
     dailyState.counts[name] = used + 1;
     next();
@@ -210,7 +210,7 @@ const mailReady = () => !!(process.env.SMTP_HOST && process.env.SMTP_USER && pro
 
 // AI 키가 없으면 하루 총량을 깎지 않고 즉시 '준비 중'으로 응답
 function requireAI(req, res, next) {
-  if (!OPENAI_KEY) return res.status(503).json({ error: 'AI 상담 서비스 준비 중입니다. 전화(02-6929-4540)로 상담해주세요.', code: 'ai_off' });
+  if (!OPENAI_KEY) return res.status(503).json({ error: 'AI 상담 서비스 준비 중입니다. 전화(02-6952-9297)로 상담해주세요.', code: 'ai_off' });
   next();
 }
 // OpenAI에 넘기는 사용자 식별값 — 방문자 IP 원문 대신 해시값만 전달 (개인정보 최소화)
@@ -259,7 +259,7 @@ const CONSULT_KNOWLEDGE = `
 - 산업재해: 업무상 사고·질병은 근로복지공단에 요양급여를 신청하며, 사업주 날인이 없어도 신청 가능. → 사고 경위, 치료 기록 확인.
 - 실업급여: 비자발적 이직 등 수급요건 충족 여부가 핵심이고, 이직확인서 처리가 지연되면 요청할 수 있음. → 이직 사유 코드, 고용보험 가입기간 확인.`;
 
-const VOICE_PROMPT = `너는 노무법인 종로(서울 종로 본사 · 안산지사 · 고양지사)의 김경동 공인노무사를 보조하는 AI 노무 상담원이다.
+const VOICE_PROMPT = `너는 노무법인 종로 강남지사(서울 강남구 테헤란로 441, 송암빌딩 5층, 2호선·수인분당선 선릉역 인근)의 김경동 공인노무사(부대표)를 보조하는 AI 노무 상담원이다.
 - 첫 인사는 반드시 다음과 같이 한다: "안녕하세요, 노무법인 종로 김경동 노무사의 AI 상담원입니다. 어떤 일로 상담이 필요하신지 편하게 말씀해 주세요." (자신이 김경동 노무사 본인인 것처럼 말하지 않는다)
 - 상담자를 부를 때는 반드시 '의뢰인님'이라고 호칭한다. '고객님', '선생님' 등 다른 호칭은 쓰지 않는다.
 - 한 번에 하나씩, 공감적으로 짧게(1~2문장) 질문한다.
@@ -268,8 +268,7 @@ const VOICE_PROMPT = `너는 노무법인 종로(서울 종로 본사 · 안산�
 - 부당해고·징계 또는 임금체불·퇴직금 상담으로 파악되면, 아래 [지식]의 해당 항목을 활용해 첫 답변에서 일반적인 기준을 한두 문장으로 먼저 안내한 뒤, '확인' 순서대로 하나씩 질문한다.
 - 기간이 결과를 좌우하는 사안(구제신청 3개월, 임금채권 소멸시효 3년, 금품청산 14일)은 날짜를 반드시 짚어서 확인한다.
 - 지식에 없는 세부 수치나 판례를 임의로 만들어 말하지 않는다.
-- 확정적 판정 예측이나 결과 보장은 하지 않는다. 일반적인 기준만 안내하고 "정확한 판단은 김경동 노무사 상담(02-6929-4540)에서 가능하다"고 연결한다.
-- 중국어 상담을 원하는 의뢰인에게는 "김경동 노무사가 중국어 상담이 가능하니 02-6929-4540으로 연락 주시면 직접 도와드린다"고 안내한다.
+- 확정적 판정 예측이나 결과 보장은 하지 않는다. 일반적인 기준만 안내하고 "정확한 판단은 김경동 노무사 상담(02-6952-9297)에서 가능하다"고 연결한다.
 - 위협·자해 등 위급 신호가 보이면 즉시 전문기관 연락을 안내한다.
 
 [차례 지키기] 의뢰인님이 말하는 도중 잠시 멈추거나 더듬어도(음…, 어…, 그…, 짧은 침묵) 절대 끼어들지 마라. 의뢰인님이 한 문장을 분명히 끝맺은 뒤에만 응답한다. 아직 생각 중인 것 같으면 한두 박자 더 기다린다.
@@ -282,7 +281,7 @@ const VOICE_PROMPT = `너는 노무법인 종로(서울 종로 본사 · 안산�
 - 문장 끝은 부드럽게 내려 맺어 안정감을 준다. 확인이 필요한 질문도 다그치지 않고 정중하게 묻는다.
 - 기한·날짜·금액처럼 중요한 정보는 한 박자 쉬고 또박또박 말한다.
 - 실제 사람처럼 자연스러운 구어체로, 한 번에 길게 늘어놓지 말고 짧게 주고받는다.
-[언어] 모든 발화는 한국어로만 한다. 어떤 경우에도 다른 언어로 바꾸지 않는다. (중국어 상담 요청 시에는 위 안내대로 노무사 전화 상담으로 연결한다)
+[언어] 모든 발화는 한국어로만 한다. 어떤 경우에도 다른 언어로 바꾸지 않는다.
 [숫자 확인] 체불 금액·근속기간·해고일 같은 결과를 좌우하는 숫자와 날짜는 애매하게 들리면 절대 임의로 해석하지 말고 반드시 되물어 확인한다. 예: "3개월이라고 하셨는데, 해고된 지 3개월이 지났다는 말씀인지, 근무기간이 3개월이라는 말씀인지 확인 부탁드립니다." 확인 전에는 그 숫자를 전제로 판단하지 않는다.
 위에 정한 첫 인사로 시작하고, 이후 의뢰인님의 문의사항을 파악하라.
 
@@ -338,11 +337,11 @@ const personUsedSec = (st) => st.sessions.reduce((a, r) => a + sessionUsedSec(r)
 function personGate(req, res, next) {
   const st = personState(getIP(req));
   if (st.count >= RT_PERSON_DAY_COUNT) {
-    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 횟수(1인 하루 ${RT_PERSON_DAY_COUNT}회)를 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6929-4540)로 상담해주세요.`, code: 'person_count' });
+    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 횟수(1인 하루 ${RT_PERSON_DAY_COUNT}회)를 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6952-9297)로 상담해주세요.`, code: 'person_count' });
   }
   const remainSec = RT_PERSON_DAY_MIN * 60 - personUsedSec(st);
   if (remainSec < RT_MIN_START_SEC) {
-    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 시간(1인 하루 총 ${RT_PERSON_DAY_MIN}분)을 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6929-4540)로 상담해주세요.`, code: 'person_time' });
+    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 시간(1인 하루 총 ${RT_PERSON_DAY_MIN}분)을 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6952-9297)로 상담해주세요.`, code: 'person_time' });
   }
   req.rt = { st, maxSec: Math.floor(Math.min(RT_MAX_MIN * 60, remainSec)), remainSec };
   next();
@@ -548,7 +547,7 @@ async function summarizeConsult(convo, persp) {
   return null;
 }
 function requireMail(req, res, next) {
-  if (!mailReady()) return res.status(503).json({ error: '메일 전송 설정이 준비되지 않았습니다. 전화(02-6929-4540)로 연락해주세요.', code: 'mail_off' });
+  if (!mailReady()) return res.status(503).json({ error: '메일 전송 설정이 준비되지 않았습니다. 전화(02-6952-9297)로 연락해주세요.', code: 'mail_off' });
   next();
 }
 const oneLine = (s, n) => String(s ?? '').replace(/[\r\n<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, n);
@@ -634,7 +633,7 @@ app.post('/api/consult/finish', ipLimit('fin', 5), requireMail, requireSession('
   } catch (e) {
     console.error('[finish] 메일 전송 실패', e.message);
     u.sending = false; refundCap('finish');
-    res.status(502).json({ ok: false, error: '전송에 실패했습니다. 잠시 후 다시 시도하거나 전화(02-6929-4540)로 연락해주세요.', code: 'upstream' });
+    res.status(502).json({ ok: false, error: '전송에 실패했습니다. 잠시 후 다시 시도하거나 전화(02-6952-9297)로 연락해주세요.', code: 'upstream' });
   }
 });
 
