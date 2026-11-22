@@ -9,7 +9,7 @@
  *    OPENAI_API_KEY=sk-...            // [필수] AI 음성상담·요약. 없으면 AI 기능 전부 꺼짐
  *    LAW_OC=your_open_law_key         // open.law.go.kr 판례 인증키
  *    UPSTASH_VECTOR_URL / UPSTASH_VECTOR_TOKEN   // 상담사례 19,718건 검색(RAG). 읽기전용 토큰 권장
- *    SMTP_HOST=smtp.naver.com  SMTP_USER=...  SMTP_PASS=앱비밀번호  (SMTP_PORT=465 기본)
+ *    SMTP_HOST=smtp.gmail.com  SMTP_USER=...  SMTP_PASS=앱비밀번호  (SMTP_PORT=465 기본)
  *    LAWYER_EMAIL=kkd@jnhrm.co.kr     // 상담요약 수신 노무사 메일
  *    TURNSTILE_SECRET=...             // (선택) 봇 차단. 설정 시 index.html의 TURNSTILE_SITEKEY도 함께 입력
  *    SESSION_SECRET=임의의 긴 문자열   // (선택) 상담 세션 서명키. 미설정 시 서버 재시작마다 자동 생성
@@ -206,7 +206,24 @@ app.use(express.static('public', { dotfiles: 'ignore' }));   // 프론트(public
 const OPENAI_KEY = String(process.env.OPENAI_API_KEY || '').trim().replace(/^["']|["']$/g, '');
 const OPENAI_BASE = String(process.env.OPENAI_BASE_URL || 'https://api.openai.com').replace(/\/+$/, '');
 const LAW_OC = String(process.env.LAW_OC || '').trim();
-const mailReady = () => !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && process.env.LAWYER_EMAIL);
+// 메일 설정값 — 붙여넣을 때 섞인 앞뒤 공백·따옴표 제거 (OPENAI 키와 같은 방식)
+const envClean = (v) => String(v || '').trim().replace(/^["']|["']$/g, '');
+const SMTP_HOST = envClean(process.env.SMTP_HOST);
+const SMTP_USER = envClean(process.env.SMTP_USER);
+const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
+// 구글 앱 비밀번호는 영문 16자리이고 화면에 4자리씩 띄어 보여 준다(값 자체에는 공백이 없음).
+// 그래서 Gmail일 때만 가운데 공백까지 지운다. 다른 메일 서버는 앞뒤 공백·따옴표만 지운다.
+const SMTP_PASS = /(^|\.)(gmail|googlemail)\.com$/i.test(SMTP_HOST)
+  ? envClean(process.env.SMTP_PASS).replace(/\s+/g, '')
+  : envClean(process.env.SMTP_PASS);
+const mailReady = () => !!(SMTP_HOST && SMTP_USER && SMTP_PASS && process.env.LAWYER_EMAIL);
+const makeMailer = () => nodemailer.createTransport({
+  host: SMTP_HOST, port: SMTP_PORT, secure: SMTP_PORT === 465,
+  auth: { user: SMTP_USER, pass: SMTP_PASS },
+  connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000, // 무한대기 방지
+});
+// 메일 오류 요약 — 오류 코드·응답 코드·단계만 (비밀번호는 오류 객체에 없음)
+const mailErrInfo = (e) => [e?.code, e?.responseCode, e?.command].filter(Boolean).join(' ') || '코드 없음';
 
 // AI 키가 없으면 하루 총량을 깎지 않고 즉시 '준비 중'으로 응답
 function requireAI(req, res, next) {
@@ -593,12 +610,7 @@ app.post('/api/consult/finish', ipLimit('fin', 5), requireMail, requireSession('
     const urgent = /^높음/.test(summary?.urgency || '');
 
     // (b) 메일 발송 — 모든 값 HTML 이스케이프 (대화 내용으로 메일 본문을 조작할 수 없게)
-    const port = Number(process.env.SMTP_PORT) || 465;
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST, port, secure: port === 465,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-      connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000, // 무한대기 방지
-    });
+    const transporter = makeMailer();
     const kst = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 16).replace('T', ' ');
     const td = 'padding:7px 12px;border-bottom:1px solid #eee;vertical-align:top';
     const row = (k, v) => `<tr><td style="${td};color:#777;white-space:nowrap;width:120px">${esc(k)}</td><td style="${td};white-space:pre-wrap">${v ? esc(v) : '<span style="color:#aaa">-</span>'}</td></tr>`;
@@ -606,7 +618,7 @@ app.post('/api/consult/finish', ipLimit('fin', 5), requireMail, requireSession('
       ? SUMMARY_FIELDS.map(([k, label]) => row(label, summary[k])).join('')
       : row('요약', 'AI 요약을 만들지 못했습니다. 아래 전체 대화 기록을 확인해주세요.');
     await transporter.sendMail({
-      from: `"노무법인 종로 AI 음성상담" <${process.env.SMTP_USER}>`,
+      from: `"노무법인 종로 AI 음성상담" <${SMTP_USER}>`,   // Gmail은 로그인 계정과 다른 From을 바꿔 쓰므로 SMTP_USER와 같게
       to: process.env.LAWYER_EMAIL,
       subject: `[AI상담${persp ? '·' + persp : ''}${urgent ? '·긴급' : ''}] ${caseType} — ${name || '이름 미기재'} ${phone}`,
       html: `
@@ -631,7 +643,7 @@ app.post('/api/consult/finish', ipLimit('fin', 5), requireMail, requireSession('
     u.sending = false;
     res.json({ ok: true });
   } catch (e) {
-    console.error('[finish] 메일 전송 실패', e.message);
+    console.error('[finish] 메일 전송 실패', `[${mailErrInfo(e)}]`, e.message);
     u.sending = false; refundCap('finish');
     res.status(502).json({ ok: false, error: '전송에 실패했습니다. 잠시 후 다시 시도하거나 전화(02-6952-9297)로 연락해주세요.', code: 'upstream' });
   }
@@ -1012,6 +1024,21 @@ async function checkRagStore() {
   } catch (e) { ragStatus = 'error'; console.log(' ⚠️ 사례 저장소 점검 실패:', e.message); }
 }
 
+/* 메일 로그인 시험 — 서버 시작 때 메일 서버에 로그인만 해 보고 결과를 한 줄 남김 (메일은 보내지 않음, 비밀번호는 출력하지 않음).
+   실패해도 서버는 그대로 뜬다. */
+async function verifyMail() {
+  if (!mailReady()) return;
+  try {
+    await makeMailer().verify();
+    console.log(` 메일 로그인 시험: 성공 (${SMTP_HOST}:${SMTP_PORT}) — 상담요약 메일 보낼 준비 완료`);
+  } catch (e) {
+    const hint = e?.code === 'EAUTH' ? '계정·앱 비밀번호(SMTP_USER·SMTP_PASS)를 메일 서버가 거절'
+      : ['ETIMEDOUT', 'ECONNECTION', 'ESOCKET', 'EDNS'].includes(e?.code) ? '메일 서버 연결 실패(주소·포트·네트워크)'
+      : '기타 오류';
+    console.log(` ⚠️ 메일 로그인 시험: 실패 [${mailErrInfo(e)}] ${hint} — ${String(e?.message || '').replace(/\s+/g, ' ').slice(0, 200)}`);
+  }
+}
+
 function configReport() {
   const ok = (b) => (b ? '켜짐' : '꺼짐 ⚠️');
   console.log('──── 노무법인 종로 서버 설정 점검 ────');
@@ -1028,5 +1055,5 @@ function configReport() {
 const PORT = process.env.PORT || 3000;
 // Vercel(서버리스)에서는 플랫폼이 요청을 전달하므로 직접 listen하지 않음. 로컬/일반 서버에서만 listen.
 if (!process.env.VERCEL) {
-  app.listen(PORT, () => { console.log(`▶ server on http://localhost:${PORT}`); configReport(); checkRagStore(); });
+  app.listen(PORT, () => { console.log(`▶ server on http://localhost:${PORT}`); configReport(); checkRagStore(); verifyMail(); });
 }

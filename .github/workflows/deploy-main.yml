@@ -35,9 +35,9 @@ jobs:
                 - name: LAW_OC
                   value: dlthf87
                 - name: SMTP_HOST
-                  value: smtp.naver.com
+                  value: smtp.gmail.com
                 - name: SMTP_USER
-                  value: topbanker99@naver.com
+                  value: crydia1@gmail.com
                 - name: SMTP_PASS
                   value: ${{ secrets.SMTP_PASS }}
                 - name: LAWYER_EMAIL
