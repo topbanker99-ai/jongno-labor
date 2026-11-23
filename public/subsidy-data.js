@@ -179,7 +179,7 @@ const SUBSIDY_DB = [
   {
     id: "disabled_improve",
     kind: "related",
-    name: "장애인고용개선장려금 (2026년 신설)",
+    name: "장애인고용개선장려금(2026년 신설)",
     org: "한국장애인고용공단(KEAD)",
     maxAmountText: "중증 남성 월 35만원·중증 여성 월 45만원, 최대 12개월",
     match: (v) => v.workers === "over10" && v.target.includes("disabled"),
@@ -197,7 +197,7 @@ const SUBSIDY_DB = [
   {
     id: "worklife_45",
     kind: "related",
-    name: "워라밸일자리장려금(워라밸+4.5 프로젝트)",
+    name: "워라밸+4.5 프로젝트(노사 합의 주 4.5일제 지원)",
     org: "고용노동부 · 노사발전재단",
     maxAmountText: "근로자 1인당 월 20만~50만원(규모·단축폭별, 비수도권 등 월 10만원 가산), 그 뒤 신규 채용 시 1인당 월 60만~80만원, 최대 1년",
     match: (v) => v.size === "우선지원" && v.workers === "over10" && v.workTimeReduce === "yes",
@@ -245,7 +245,7 @@ const SUBSIDY_DB = [
     org: "고용노동부",
     maxAmountText: "휴업·휴직수당의 일부(우선지원대상기업 2/3, 1일 상한 68,100원, 연 180일)",
     match: () => false,
-    reason: "매출 15% 이상 감소 등으로 고용조정이 불가피한 사업주가 휴업·휴직으로 고용을 유지한 경우. 요건·서류가 복잡해 상담을 권합니다",
+    reason: "매출 15% 이상 감소 등으로 고용조정이 불가피한 사업주가 휴업·휴직으로 고용을 유지한 경우. 요건과 제출 서류가 복잡한 제도입니다",
     reqs: [],
     exclusions: [],
     docs: []

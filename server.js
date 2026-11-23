@@ -18,7 +18,7 @@
  * ------------------------------------------------------------
  *  [보안 구조 요약 — 2026-11 강화]
  *   · 실제 방문자 IP 판별: X-Forwarded-For 위조로 사용량 제한을 우회하지 못하도록 오른쪽(프록시가 붙인) 공인 IP 사용
- *   · AI 음성상담: gpt-realtime-2.1 단일 운영 · 비밀번호 없이 공개 · 1회 최대 10분 · 1인(IP) 하루 1회·총 10분 · 전체 하루 5회
+ *   · AI 음성상담: gpt-realtime-2.1 단일 운영 · 비밀번호 없이 공개 · 1회 최대 5분 · 1인(IP) 하루 1회·총 5분 · 전체 하루 10회
  *   · 상담요약: gpt-6-luna (실패 시 gpt-4o-mini 대체) · 회신 연락처는 개인정보 동의 후에만 메일로 전달(서버 저장 없음)
  *   · 상담 세션 토큰(x-consult-session): 상담을 정상 시작한 브라우저만 사례검색·판례검색·메일전송 가능
  *     → 외부 스크립트가 API만 직접 두드려 사례 DB를 긁어가거나 노무사 메일함에 스팸을 보내는 것을 차단
@@ -119,7 +119,7 @@ const INJECTION_GUARD = `
 
 // 1층: IP당 제한 (슬라이딩 윈도우)
 const ipHits = new Map();
-function ipLimit(name, max, windowMs = 60 * 60 * 1000, message = '요청이 너무 많습니다. 잠시 후 다시 시도해주세요.') {
+function ipLimit(name, max, windowMs = 60 * 60 * 1000, message = '요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.') {
   return (req, res, next) => {
     const key = `${name}:${getIP(req)}`;
     const now = Date.now();
@@ -141,8 +141,8 @@ function ipRefund(name, req) {
   if (arr && arr.length) arr.pop();
 }
 
-// 2층: 하루 총량 제한 (자정 리셋, 한국시간 기준) — AI 음성상담 사이트 전체 하루 5회
-const DAILY_CAPS = { realtime: 5, finish: 20, search: 3000 };
+// 2층: 하루 총량 제한 (자정 리셋, 한국시간 기준) — AI 음성상담 사이트 전체 하루 10회 (2026-11-23 대표 지시 5회→10회)
+const DAILY_CAPS = { realtime: 10, finish: 20, search: 3000 };
 let dailyState = { date: '', counts: {} };
 const kstToday = () => new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
 function dailyCap(name) {
@@ -151,7 +151,7 @@ function dailyCap(name) {
     if (dailyState.date !== today) dailyState = { date: today, counts: {} };
     const used = dailyState.counts[name] || 0;
     if (used >= DAILY_CAPS[name]) {
-      return res.status(429).json({ error: '오늘 상담 서비스 이용량이 모두 소진되었습니다. 전화(02-6952-9297)로 상담해주세요.', code: 'daily' });
+      return res.status(429).json({ error: '오늘 상담 서비스 이용량이 모두 소진되었습니다. 전화(02-6952-9297)로 상담해 주세요.', code: 'daily' });
     }
     dailyState.counts[name] = used + 1;
     next();
@@ -170,7 +170,7 @@ async function turnstileGate(req, res, next) {
   const secret = process.env.TURNSTILE_SECRET;
   if (!secret) return next();
   const token = String(req.query.ts || req.headers['x-turnstile-token'] || '').slice(0, 2048);
-  if (!token) return res.status(403).json({ error: '보안 확인이 필요합니다. 새로고침 후 다시 시도해주세요.', code: 'bot' });
+  if (!token) return res.status(403).json({ error: '보안 확인이 필요합니다. 새로고침 후 다시 시도해 주세요.', code: 'bot' });
   try {
     const vr = await fx('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
@@ -178,15 +178,15 @@ async function turnstileGate(req, res, next) {
       body: JSON.stringify({ secret, response: token, remoteip: getIP(req) }),
     }, 10000);
     const v = await vr.json();
-    if (!v.success) return res.status(403).json({ error: '보안 확인에 실패했습니다. 새로고침 후 다시 시도해주세요.', code: 'bot' });
+    if (!v.success) return res.status(403).json({ error: '보안 확인에 실패했습니다. 새로고침 후 다시 시도해 주세요.', code: 'bot' });
     next();
-  } catch { return res.status(403).json({ error: '보안 확인 오류. 잠시 후 다시 시도해주세요.', code: 'bot' }); }
+  } catch { return res.status(403).json({ error: '보안 확인 오류. 잠시 후 다시 시도해 주세요.', code: 'bot' }); }
 }
 
 /* 3층: 상담 세션 토큰 — 상담을 정상적으로 시작(리얼타임 토큰 발급 / 절약형 첫인사)한 브라우저에만 발급.
    서버 비밀키로 서명하므로 위조 불가. 세션당 사용 횟수 제한 + 메일 전송은 1회만. */
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
-const SESSION_TTL_MS = 2 * 60 * 60 * 1000;               // 상담 최대 10분 + 요약·연락처 입력·전송 여유
+const SESSION_TTL_MS = 2 * 60 * 60 * 1000;               // 상담 최대 5분 + 요약·연락처 입력·전송 여유
 const SESSION_LIMITS = { search: 80, finish: 1 };
 const sessUse = new Map();                                // nonce → { exp, counts, sending }
 const sign = (body) => crypto.createHmac('sha256', SESSION_SECRET).update(body).digest('base64url');
@@ -208,14 +208,14 @@ function verifySession(tok) {
 function requireSession(kind) {
   return (req, res, next) => {
     const p = verifySession(req.headers['x-consult-session']);
-    if (!p) return res.status(401).json({ error: '상담 세션이 만료되었습니다. 새로고침 후 상담을 다시 시작해주세요.', code: 'session' });
+    if (!p) return res.status(401).json({ error: '상담 세션이 만료되었습니다. 새로고침 후 상담을 다시 시작해 주세요.', code: 'session' });
     const now = Date.now();
     if (sessUse.size > 5000) for (const [k, v] of sessUse) if (v.exp < now) sessUse.delete(k);
     let u = sessUse.get(p.n);
     if (!u) { u = { exp: p.exp, counts: {}, sending: false }; sessUse.set(p.n, u); }
     if ((u.counts[kind] || 0) >= SESSION_LIMITS[kind]) {
       return res.status(429).json({
-        error: kind === 'finish' ? '이 상담의 요약은 이미 전송되었습니다.' : '한 번의 상담에서 사용할 수 있는 횟수를 넘었습니다. 새 상담을 시작해주세요.',
+        error: kind === 'finish' ? '이 상담의 요약은 이미 전송되었습니다.' : '한 번의 상담에서 사용할 수 있는 횟수를 넘었습니다. 새 상담을 시작해 주세요.',
         code: kind === 'finish' ? 'already_sent' : 'session_limit',
       });
     }
@@ -252,7 +252,7 @@ const mailErrInfo = (e) => [e?.code, e?.responseCode, e?.command].filter(Boolean
 
 // AI 키가 없으면 하루 총량을 깎지 않고 즉시 '준비 중'으로 응답
 function requireAI(req, res, next) {
-  if (!OPENAI_KEY) return res.status(503).json({ error: 'AI 상담 서비스 준비 중입니다. 전화(02-6952-9297)로 상담해주세요.', code: 'ai_off' });
+  if (!OPENAI_KEY) return res.status(503).json({ error: 'AI 상담 서비스 준비 중입니다. 전화(02-6952-9297)로 상담해 주세요.', code: 'ai_off' });
   next();
 }
 // OpenAI에 넘기는 사용자 식별값 — 방문자 IP 원문 대신 해시값만 전달 (개인정보 최소화)
@@ -340,14 +340,14 @@ function perspectiveNote(persp) {
 /* ============================================================
    1) AI 음성상담 — OpenAI Realtime 임시 접속키(ephemeral client secret) 발급
       GA 엔드포인트: POST /v1/realtime/client_secrets → 브라우저가 value(ek_...)로 WebRTC 연결
-      [운영 기준 2026-11-22] 비밀번호 없이 공개 · 1회 최대 10분 · 1인(IP) 하루 1회·총 10분 · 사이트 전체 하루 5회
+      [운영 기준 2026-11-23] 비밀번호 없이 공개 · 1회 최대 5분 · 1인(IP) 하루 1회·총 5분 · 사이트 전체 하루 10회
       [모델] gpt-realtime-2.1 (2026-07 출시 신버전). 구버전 gpt-realtime은 2027-01-20 종료 예정
    ============================================================ */
 const RT_MODEL = 'gpt-realtime-2.1';       // 상담 모델
 const RT_TRANSCRIBE = 'gpt-transcribe';    // 상담자 음성 → 글자 (구 gpt-4o-mini-transcribe는 2027-02-26 종료)
-const RT_MAX_MIN = 10;                     // 1회 상담 최대 시간(분)
+const RT_MAX_MIN = 5;                      // 1회 상담 최대 시간(분) (2026-11-23 대표 지시 10분→5분)
 const RT_PERSON_DAY_COUNT = 1;             // 1인(같은 인터넷 주소) 하루 최대 횟수 (2026-11-22 대표 지시 "1회로 줄여줘")
-const RT_PERSON_DAY_MIN = 10;              // 1인 하루 최대 총 이용 시간(분) (2026-11-22 대표 지시, 1회 10분과 같음)
+const RT_PERSON_DAY_MIN = 5;               // 1인 하루 최대 총 이용 시간(분) (1회 5분과 같게 맞춤, 2026-11-23)
 const RT_MIN_START_SEC = 180;              // 남은 시간이 3분 미만이면 새 상담을 시작하지 않음
 // 상담 목소리 — OpenAI 실시간 음성 중 남성 계열만 허용. 기본값은 환경변수 RT_VOICE(없으면 cedar)
 // 비교 듣기: 홈페이지 주소 뒤에 ?voice=ash 처럼 붙이면 그 목소리로 상담 (목록 밖 값은 무시)
@@ -379,11 +379,11 @@ const personUsedSec = (st) => st.sessions.reduce((a, r) => a + sessionUsedSec(r)
 function personGate(req, res, next) {
   const st = personState(getIP(req));
   if (st.count >= RT_PERSON_DAY_COUNT) {
-    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 횟수(1인 하루 ${RT_PERSON_DAY_COUNT}회)를 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6952-9297)로 상담해주세요.`, code: 'person_count' });
+    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 횟수(1인 하루 ${RT_PERSON_DAY_COUNT}회)를 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6952-9297)로 상담해 주세요.`, code: 'person_count' });
   }
   const remainSec = RT_PERSON_DAY_MIN * 60 - personUsedSec(st);
   if (remainSec < RT_MIN_START_SEC) {
-    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 시간(1인 하루 총 ${RT_PERSON_DAY_MIN}분)을 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6952-9297)로 상담해주세요.`, code: 'person_time' });
+    return res.status(429).json({ error: `오늘 이용 가능한 AI 상담 시간(1인 하루 총 ${RT_PERSON_DAY_MIN}분)을 모두 사용하셨습니다. 내일 다시 이용하시거나 전화(02-6952-9297)로 상담해 주세요.`, code: 'person_time' });
   }
   req.rt = { st, maxSec: Math.floor(Math.min(RT_MAX_MIN * 60, remainSec)), remainSec };
   next();
@@ -501,11 +501,11 @@ app.get('/api/realtime/token',
       if (r.status !== 400) break;   // 설정 문제(400)일 때만 다음 단계로, 키·한도 문제는 즉시 중단
     }
     refundCap('realtime');
-    return res.status(502).json({ error: 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', code: 'upstream' });
+    return res.status(502).json({ error: 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.', code: 'upstream' });
   } catch (e) {
     console.error('[realtime/token]', e.message);
     refundCap('realtime');
-    res.status(502).json({ error: 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도해주세요.', code: 'upstream' });
+    res.status(502).json({ error: 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도해 주세요.', code: 'upstream' });
   }
 });
 
@@ -589,7 +589,7 @@ async function summarizeConsult(convo, persp) {
   return null;
 }
 function requireMail(req, res, next) {
-  if (!mailReady()) return res.status(503).json({ error: '메일 전송 설정이 준비되지 않았습니다. 전화(02-6952-9297)로 연락해주세요.', code: 'mail_off' });
+  if (!mailReady()) return res.status(503).json({ error: '메일 전송 설정이 준비되지 않았습니다. 전화(02-6952-9297)로 연락해 주세요.', code: 'mail_off' });
   next();
 }
 const oneLine = (s, n) => String(s ?? '').replace(/[\r\n<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, n);
@@ -606,10 +606,10 @@ app.post('/api/consult/finish', ipLimit('fin', 5), requireMail, requireSession('
 
   // 회신 연락처 — 개인정보 수집·이용 동의가 있어야만 전송
   const c = (req.body?.contact && typeof req.body.contact === 'object') ? req.body.contact : {};
-  if (c.consent !== true) return fail400('개인정보 수집·이용에 동의해주셔야 노무사에게 전달할 수 있습니다.', 'consent');
+  if (c.consent !== true) return fail400('개인정보 수집·이용에 동의해 주셔야 노무사에게 전달할 수 있습니다.', 'consent');
   const phoneRaw = String(c.phone ?? '').trim().slice(0, 30);
   const digits = phoneRaw.replace(/\D/g, '');
-  if (!/^[0-9+\-\s().]+$/.test(phoneRaw) || digits.length < 9 || digits.length > 12) return fail400('연락처(전화번호)를 정확히 입력해주세요.', 'phone');
+  if (!/^[0-9+\-\s().]+$/.test(phoneRaw) || digits.length < 9 || digits.length > 12) return fail400('연락처(전화번호)를 정확히 입력해 주세요.', 'phone');
   const name = oneLine(c.name, 30);
   const callTime = oneLine(c.time, 60);
   const phone = fmtPhone(digits);
@@ -670,7 +670,7 @@ app.post('/api/consult/finish', ipLimit('fin', 5), requireMail, requireSession('
   } catch (e) {
     console.error('[finish] 메일 전송 실패', `[${mailErrInfo(e)}]`, e.message);
     u.sending = false; refundCap('finish');
-    res.status(502).json({ ok: false, error: '전송에 실패했습니다. 잠시 후 다시 시도하거나 전화(02-6952-9297)로 연락해주세요.', code: 'upstream' });
+    res.status(502).json({ ok: false, error: '전송에 실패했습니다. 잠시 후 다시 시도하거나 전화(02-6952-9297)로 연락해 주세요.', code: 'upstream' });
   }
 });
 

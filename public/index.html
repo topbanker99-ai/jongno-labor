@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>공인노무사 김경동</title>
-<meta name="description" content="노무법인 종로 강남지사 김경동 공인노무사(부대표). 부당해고·징계, 임금체불·퇴직금, 급여·자문, 산업재해, 인사노무컨설팅. 선릉역 인근, 매일 10:00~20:00 상담, AI 음성 사전상담.">
+<meta name="description" content="노무법인 종로 강남지사 김경동 공인노무사(부대표). 부당해고·징계, 임금체불·퇴직금, 산업재해 등 노동 문제 상담. 선릉역 인근, 매일 10:00~20:00.">
 <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-cpla-32.png"><link rel="icon" type="image/png" sizes="180x180" href="/img/favicon-cpla-180.png">
 <meta property="og:title" content="노무법인 종로 강남지사 | 김경동 공인노무사">
-<meta property="og:description" content="부당해고·징계, 임금체불·퇴직금, 급여·자문, 산업재해, 인사노무컨설팅. 선릉역 인근 강남지사, 매일 10:00~20:00 상담, AI 음성 사전상담.">
+<meta property="og:description" content="당신의 이야기를 들려주세요. 해결책은 김경동 노무사가 찾습니다. 선릉역 인근 강남지사, 매일 10:00~20:00.">
 <link rel="canonical" href="https://kimlabor.kr/">
 <meta property="og:url" content="https://kimlabor.kr/">
 <meta property="og:image" content="https://kimlabor.kr/img/og-card-kkd.png">
@@ -414,6 +414,10 @@ a.hv-card{display:block;cursor:pointer;color:inherit}
 .vc-end:hover{background:rgba(220,189,118,.1);border-color:var(--gold-2)}
 .vc-mute{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:19px;transition:all .3s}
 .vc-mute.on{background:rgba(220,189,118,.12);border-color:var(--gold-2)}
+/* AI 목소리 소리 끄기/켜기 (2026-11-23 대표 요청: 휴대폰은 볼륨을 내려도 소리가 남음) */
+.vc-sound{min-height:46px;padding:10px 20px;border-radius:999px;border:1px solid var(--line);background:transparent;color:inherit;font-size:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .3s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.vc-sound .ic{font-size:19px;line-height:1}
+.vc-sound.on{background:rgba(220,189,118,.12);border-color:var(--gold-2);color:var(--gold-3)}
 .voice-hint{margin-top:16px;font-size:12px;color:var(--ink-faint);max-width:240px;line-height:1.5;word-break:keep-all}
 .voice-transcript{padding:24px;height:442px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:rgba(16,21,31,.3)}
 .tr-empty{margin:auto;text-align:center;color:var(--ink-faint);font-size:14px;max-width:220px;line-height:1.7}
@@ -865,15 +869,15 @@ body.no-scroll{overflow:hidden}
       <a href="#about">소개</a>
       <a href="#calc">사전진단</a>
       <a href="#subsidy">지원금진단</a>
-      <a href="#ai">AI상담</a>
+      <a href="#ai">AI 상담</a>
       <a href="#cases">주요업무</a>
       <a href="#blog">블로그</a>
-      <a href="#location">오시는길</a>
+      <a href="#location">오시는 길</a>
     </nav>
     <div class="nav-right">
       <div class="nav-phone">
         <span class="pic"><svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15a2 2 0 002-2v-2.5a1 1 0 00-.8-1l-3.3-.7a1 1 0 00-1 .4l-.9 1.2A12 12 0 018.9 11l1.2-.9a1 1 0 00.4-1l-.7-3.3a1 1 0 00-1-.8H6a2 2 0 00-2 2z"/></svg></span>
-        <span class="pt"><span class="num">02-6952-9297</span><span class="hrs">매일 10:00 - 20:00</span></span>
+        <span class="pt"><span class="num">02-6952-9297</span><span class="hrs">매일 10:00~20:00</span></span>
       </div>
       <button class="hamburger" id="hamburger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav"><span></span><span></span><span></span></button>
     </div>
@@ -887,13 +891,13 @@ body.no-scroll{overflow:hidden}
   <a href="#about">소개</a>
   <a href="#calc">사전진단</a>
   <a href="#subsidy">지원금진단</a>
-  <a href="#ai">AI상담</a>
+  <a href="#ai">AI 상담</a>
   <a href="#cases">주요업무</a>
   <a href="#blog">블로그</a>
-  <a href="#location">오시는길</a>
+  <a href="#location">오시는 길</a>
   <div class="mnav-foot">
-    <a href="tel:0269529297" class="mnav-tel">02-6952-9297<em>매일 10:00 - 20:00</em></a>
-    <a href="#consult" class="btn btn-primary mnav-cta">AI 상담 시작</a>
+    <a href="tel:0269529297" class="mnav-tel">02-6952-9297<em>매일 10:00~20:00</em></a>
+    <a href="#consult" class="btn btn-primary mnav-cta">AI 음성 상담 시작</a>
   </div>
 </nav>
 
@@ -905,7 +909,7 @@ body.no-scroll{overflow:hidden}
     <div class="hero-copy">
       <div class="hero-emblem" aria-hidden="true"><span>종로</span></div>
       <div class="hero-emblem-sub">노무법인 종로</div>
-      <span class="eyebrow kicker">노무법인 종로 부대표 노무사 | 강남지사</span>
+      <span class="eyebrow kicker">노무법인 종로 부대표 · 강남지사</span>
       <h1>당신의 이야기를 들려주세요.<span class="g">해결책은 김경동 노무사가 찾습니다.</span></h1>
       <div class="hero-actions">
         <a href="#consult" class="btn btn-primary">AI 음성 상담 시작 <span class="ar">→</span></a>
@@ -916,7 +920,7 @@ body.no-scroll{overflow:hidden}
   <!-- 히어로 하단 블로그 띠 (네이버 블로그 최신 글 4개, /api/blog-posts) -->
   <div class="hero-videos">
     <div class="wrap">
-      <div class="hv-label"><span class="hv-rule"></span>블로그 최신 글<a class="hv-more" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그에서 보기 →</a></div>
+      <div class="hv-label"><span class="hv-rule"></span>최근 블로그 글<a class="hv-more" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그에서 보기 →</a></div>
       <div class="vstrip" id="heroBlog" hidden></div>
     </div>
   </div>
@@ -947,7 +951,7 @@ body.no-scroll{overflow:hidden}
         <div class="calc-panel result" id="resultPanel">
           <div class="r-empty" id="rEmpty">
             <div class="ic-big">⚖</div>
-            <div style="font-weight:600;color:var(--ink-soft)">왼쪽에서 사건 정보를 입력한 뒤<br>분석 버튼을 눌러주세요.</div>
+            <div style="font-weight:600;color:var(--ink-soft)">질문마다 해당하는 상황을 고른 뒤<br>‘이 내용으로 사전진단’을 눌러 주세요.</div>
           </div>
           <div id="rResult" style="display:none"></div>
         </div>
@@ -961,9 +965,9 @@ body.no-scroll{overflow:hidden}
   <div class="wrap">
     <div class="sec-head">
       <div class="center-eyebrow"><span class="eyebrow center">사업주 지원금 진단</span></div>
-      <h2>정부지원금, 1분 진단</h2>
-      <p class="sec-sub">기업 규모·근로자 수 등 6가지를 고르면 <br>신청 가능한 고용장려금을 안내합니다.</p>
-      <div class="sec-foot">신청대행은 <b>공인노무사만 합법적으로 대리</b>할 수 있습니다. <em>· 결과는 참고용입니다</em></div>
+      <h2>정부지원금 간이 점검</h2>
+      <p class="sec-sub">기업 규모·근로자 수 등 6가지를 고르면 <br>신청 가능성이 있는 고용장려금을 안내합니다.</p>
+      <div class="sec-foot">고용노동부 지원금 신청 대행은 공인노무사법이 정한 공인노무사의 업무입니다. 결과는 참고용입니다.</div>
     </div>
     <div class="subsidy-shell">
       <div class="subsidy-grid">
@@ -1014,7 +1018,7 @@ body.no-scroll{overflow:hidden}
               <button class="schip" data-val="no">아니오</button>
             </div>
           </div>
-          <button class="btn btn-primary subsidy-run" id="runSubsidy">받을 수 있는 지원금 진단하기 →</button>
+          <button class="btn btn-primary subsidy-run" id="runSubsidy">신청 가능성 있는 지원금 확인하기 →</button>
           <p class="s-need" id="sNeed" role="status" hidden>위 항목을 골라 주세요.</p>
         </div>
         <!-- 결과 패널 -->
@@ -1036,18 +1040,18 @@ body.no-scroll{overflow:hidden}
     <div class="sec-head">
       <div class="center-eyebrow"><span class="eyebrow center">AI 음성 상담</span></div>
       <h2>말로 상담하면, AI가 정리해 노무사에게 전달합니다</h2>
-      <p>전화하듯 편하게 말씀하세요. 관점(근로자/사업주)에 맞춰 상담사례 1만 5천여 건과 김경동 노무사의 블로그 글을 찾아 안내하고, 대화를 요약해 김경동 노무사에게 전달합니다.</p>
+      <p>근로자 또는 사업주 입장을 고른 뒤 말로 상담하면, 비슷한 상담사례와 김경동 노무사의 글을 찾아 안내합니다. 대화 내용은 요약해 김경동 노무사에게 전달됩니다.</p>
     </div>
     <div class="ai-teaser">
       <div class="ai-steps">
         <div class="ai-step"><span class="n">1</span><b>관점 선택</b><small>근로자 / 사업주 중<br>내 입장을 고릅니다</small></div>
         <div class="ai-arrow">→</div>
-        <div class="ai-step"><span class="n">2</span><b>음성 상담</b><small>말하면 AI가 사례·판례를<br>찾아 안내합니다 (1회 최대 10분)</small></div>
+        <div class="ai-step"><span class="n">2</span><b>음성 상담</b><small>말하면 AI가 사례·판례를<br>찾아 안내합니다 (1회 최대 5분)</small></div>
         <div class="ai-arrow">→</div>
         <div class="ai-step"><span class="n">3</span><b>노무사 전달</b><small>상담 요약이 김경동 노무사<br>메일로 전송됩니다</small></div>
       </div>
       <div class="ai-launch">
-        <a href="#consult" class="btn btn-primary" style="font-size:17px;padding:16px 34px">🎙 전체화면 AI 상담 시작 <span class="ar">→</span></a>
+        <a href="#consult" class="btn btn-primary" style="font-size:17px;padding:16px 34px">🎙 AI 음성 상담 시작 <span class="ar">→</span></a>
       </div>
     </div>
   </div>
@@ -1084,7 +1088,7 @@ body.no-scroll{overflow:hidden}
           </ul>
         </div>
         <p class="desc">당신의 이야기를 들려주세요. 해결책은 제가 찾습니다.</p>
-        <div class="lc-chips"><span>부당해고·징계</span><span>임금·퇴직금</span><span>급여·자문</span><span>산업재해</span><span>인사노무컨설팅</span></div>
+        <div class="lc-chips"><span>부당해고·징계</span><span>임금·퇴직금</span><span>급여·4대보험 관리</span><span>산업재해</span><span>인사노무 자문·컨설팅</span></div>
         <a href="#contact" class="btn btn-ghost lc-btn">상담·오시는 길 보기 <span class="ar">→</span></a>
       </div>
       <!-- AI 사전진단 (점검표) -->
@@ -1093,11 +1097,11 @@ body.no-scroll{overflow:hidden}
         <p class="desc">상황만 고르면 법령 기준으로 유리·불리 요소와 준비할 자료를 점검표로 정리해 드립니다.</p>
         <ul class="ach-list">
           <li>부당해고 · 임금체불 · 괴롭힘 · 산재</li>
-          <li>유리·불리 요소 투명 공개</li>
+          <li>유리하거나 불리할 수 있는 점 정리</li>
           <li>결과는 점검표로 정리 (예측 아님)</li>
         </ul>
         <a href="#calc" class="btn btn-ghost lc-btn">사전진단 해보기 <span class="ar">→</span></a>
-        <div class="lc-foot">참고용입니다. 정확한 판단은 공인노무사 상담으로 확인하세요.</div>
+        <div class="lc-foot">정확한 판단은 공인노무사 상담에서 확인할 수 있습니다.</div>
       </div>
       <!-- 상담 안내 -->
       <div class="lcard glass">
@@ -1105,13 +1109,13 @@ body.no-scroll{overflow:hidden}
         <p class="desc">강남지사(선릉역 인근)에서 상담합니다.</p>
         <div class="info-row">
           <span class="iri"><svg class="ic ic-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>
-          <div class="irt"><div class="k">매일 10:00 - 20:00</div><div class="v">네이버 예약 또는 전화 예약 후 방문</div></div>
+          <div class="irt"><div class="k">매일 10:00~20:00</div><div class="v">네이버 예약 또는 전화 예약 후 방문</div></div>
         </div>
         <div class="info-row">
           <span class="iri"><svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5z"/></svg></span>
-          <div class="irt"><div class="k">상담 방법</div><div class="lc-chips sm"><span>전화</span><span>방문</span><span>온라인</span></div></div>
+          <div class="irt"><div class="k">상담 방법</div><div class="lc-chips sm"><span>전화</span><span>방문</span></div></div>
         </div>
-        <a href="https://map.naver.com/p/entry/place/2008178814?placePath=%2Fticket" target="_blank" rel="noopener" class="btn btn-primary info-cta">상담 예약하기 <span class="ar">→</span></a>
+        <a href="https://map.naver.com/p/entry/place/2008178814?placePath=%2Fticket" target="_blank" rel="noopener" class="btn btn-primary info-cta">네이버 예약 <span class="ar">→</span></a>
       </div>
     </div>
   </div>
@@ -1123,7 +1127,7 @@ body.no-scroll{overflow:hidden}
     <div class="sec-head">
       <span class="eyebrow">OUR SERVICES</span>
       <h2>주요 업무</h2>
-      <p class="sec-sub">노무법인 종로가 직접 수행하는 대표 업무입니다.</p>
+      <p class="sec-sub">노무법인 종로 김경동 노무사의 주요 업무입니다.</p>
     </div>
     <!-- 업무분야 요약 (명함 주요 업무 7개) -->
     <div class="practice-grid p7" style="margin-bottom:48px">
@@ -1140,7 +1144,7 @@ body.no-scroll{overflow:hidden}
         <div class="psub">임금체불 · 대지급금 · 부당해고 · 부당징계 · 부당노동행위</div>
       </div>
       <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M9 3.5h6v3H9zM9 5H6.5A1.5 1.5 0 005 6.5v12A1.5 1.5 0 006.5 20h11a1.5 1.5 0 001.5-1.5v-12A1.5 1.5 0 0017.5 5H15M8.5 11h7M8.5 14h7M8.5 17h4"/></svg></span><span class="pt">HR컨설팅</span></div>
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><path d="M9 3.5h6v3H9zM9 5H6.5A1.5 1.5 0 005 6.5v12A1.5 1.5 0 006.5 20h11a1.5 1.5 0 001.5-1.5v-12A1.5 1.5 0 0017.5 5H15M8.5 11h7M8.5 14h7M8.5 17h4"/></svg></span><span class="pt">인사노무 자문·컨설팅</span></div>
         <div class="psub">인사규정 정비(근로계약서·취업규칙·단체협약·노사협의회) · 비정규직·사내하도급 진단 및 개선</div>
       </div>
       <div class="pcard">
@@ -1148,7 +1152,7 @@ body.no-scroll{overflow:hidden}
         <div class="psub">고용노동부 지원금 청구 대행</div>
       </div>
       <div class="pcard">
-        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M8 7.5h8v2.5H8zM8.5 13.5h1M11.5 13.5h1M14.5 13.5h1M8.5 16.5h1M11.5 16.5h1M14.5 16.5h1"/></svg></span><span class="pt">HR아웃소싱</span></div>
+        <div class="ph"><span class="picon"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M8 7.5h8v2.5H8zM8.5 13.5h1M11.5 13.5h1M14.5 13.5h1M8.5 16.5h1M11.5 16.5h1M14.5 16.5h1"/></svg></span><span class="pt">급여·4대보험 관리</span></div>
         <div class="psub">급여관리 · 4대보험 · 보험료 과오납금 환급신청</div>
       </div>
       <div class="pcard">
@@ -1159,7 +1163,7 @@ body.no-scroll{overflow:hidden}
     <!-- 근로자/사업주 탭 (모바일에서 한 번에 보이는 카드 수 축소) -->
     <div class="cases-tabs" role="tablist">
       <button class="ctab on" data-t="worker" role="tab" aria-selected="true">근로자 <span>4</span></button>
-      <button class="ctab" data-t="employer" role="tab" aria-selected="false">사업주 <span>2</span></button>
+      <button class="ctab" data-t="employer" role="tab" aria-selected="false">사업주 <span>3</span></button>
     </div>
     <div class="cases-grid">
       <a class="ccard" data-r="worker" href="#consult">
@@ -1188,9 +1192,14 @@ body.no-scroll{overflow:hidden}
         <p class="csum">답변서 작성, 출석조사 동행, 화해 절차 대리.</p>
       </a>
       <a class="ccard" data-r="employer" href="#consult">
-        <div class="cmeta"><span class="creg">사업주</span><span class="ccat">인사노무 자문</span></div>
+        <div class="cmeta"><span class="creg">사업주</span><span class="ccat">인사노무 자문·컨설팅</span></div>
         <div class="ctitle">취업규칙·인사제도 정비</div>
         <p class="csum">취업규칙 제·개정, 근로계약서·임금체계 점검, 해고 절차 설계.</p>
+      </a>
+      <a class="ccard" data-r="employer" href="#consult">
+        <div class="cmeta"><span class="creg">사업주</span><span class="ccat">괴롭힘 조사</span></div>
+        <div class="ctitle">직장 내 괴롭힘 조사 지원</div>
+        <p class="csum">신고 접수 후 조사 절차 설계와 조사 수행, 결과 보고서 작성.</p>
       </a>
     </div>
     <div class="cases-more"><a class="btn btn-primary" href="#consult">AI 상담으로 이어가기 <span class="ar">→</span></a></div>
@@ -1232,7 +1241,7 @@ body.no-scroll{overflow:hidden}
     <div class="sec-head">
       <span class="eyebrow">LOCATION</span>
       <h2>오시는 길</h2>
-      <p class="sec-sub">지하철 2호선·수인분당선 선릉역 인근, 방문 전 전화로 예약해 주세요.</p>
+      <p class="sec-sub">지하철 2호선·수인분당선 선릉역 인근, 방문 전 네이버 또는 전화(02-6952-9297)로 예약해 주세요.</p>
     </div>
     <div class="map-wrap">
       <div class="map-frame">
@@ -1243,7 +1252,7 @@ body.no-scroll{overflow:hidden}
         <a href="https://map.naver.com/p/entry/place/2008178814" target="_blank" rel="noopener">
           <span class="bdot" style="background:#03C75A"></span>네이버지도에서 보기</a>
       </div>
-      <div class="map-note">강남지사 (06158) 서울시 강남구 테헤란로 441, 송암빌딩 5층 · 지하철 2호선·수인분당선 선릉역 인근</div>
+      <div class="map-note">강남지사 (06158) 서울시 강남구 테헤란로 441, 송암빌딩 5층</div>
     </div>
   </div>
 </section>
@@ -1259,7 +1268,7 @@ body.no-scroll{overflow:hidden}
       <a href="#ai"><span class="tx">AI 상담</span></a>
       <a href="#cases"><span class="tx">주요업무</span></a>
       <a href="#blog"><span class="tx">블로그</span></a>
-      <a href="#location"><span class="tx">오시는길</span></a>
+      <a href="#location"><span class="tx">오시는 길</span></a>
       <a href="#top" class="back"><span class="tx">맨 위로 ↑</span></a>
     </div>
   </div>
@@ -1272,10 +1281,10 @@ body.no-scroll{overflow:hidden}
       <span class="fb-t"><span class="fb-name">공인노무사 김경동</span><br><small style="font-size:11px;letter-spacing:.12em;color:var(--ink-faint)">노무법인 종로 강남지사</small></span>
     </div>
     <div class="foot-info">
-      <b>강남지사</b> (06158) 서울시 강남구 테헤란로 441, 송암빌딩 5층 &nbsp;·&nbsp; <b>DL</b> 02-6952-9297 &nbsp;·&nbsp; <b>F</b> 02-6919-4056<br>
-      <b>부대표 공인노무사</b> 김경동 (강남지사) &nbsp;·&nbsp; <b>E</b> kkd@jnhrm.co.kr
+      <b>강남지사</b> (06158) 서울시 강남구 테헤란로 441, 송암빌딩 5층 &nbsp;·&nbsp; <b>전화</b> 02-6952-9297 &nbsp;·&nbsp; <b>팩스</b> 02-6919-4056<br>
+      <b>부대표 공인노무사</b> 김경동 (강남지사) &nbsp;·&nbsp; <b>이메일</b> kkd@jnhrm.co.kr
     </div>
-    <div class="foot-copy">© 2026 노무법인 종로 (Jongno Labor Law Firm). All rights reserved.</div>
+    <div class="foot-copy">© 2026 공인노무사 김경동. All rights reserved.</div>
   </div>
 </footer>
 
@@ -1316,15 +1325,15 @@ body.no-scroll{overflow:hidden}
       <button class="co-choice" data-persp="노동자">
         <span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM5 20a7 7 0 0114 0"/></svg></span>
         <b>근로자입니다</b>
-        <small>해고·징계 · 임금·퇴직금 · 괴롭힘 · 산재 등<br>일하는 사람의 권리 구제</small>
+        <small>해고·징계, 임금·퇴직금, 괴롭힘, 산재 등</small>
       </button>
       <button class="co-choice" data-persp="사업주">
         <span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V8l5-3.5L14 8v12M4 20h16M14 20V11h6v9M7.5 11h2M7.5 14.5h2"/></svg></span>
         <b>사업주입니다</b>
-        <small>해고·징계 절차 · 노동청 대응 · 임금·인사제도 등<br>회사의 리스크 예방과 대응</small>
+        <small>해고·징계 절차, 노동청 대응, 임금·인사제도 등</small>
       </button>
     </div>
-    <p class="co-gate-note">관점을 선택하면 상담이 시작됩니다 · 상담 중에도 상단에서 변경할 수 있습니다</p>
+    <p class="co-gate-note">입장을 고르면 안내할 사례와 상담 방향이 맞춰집니다. 상담을 시작하기 전에는 입장을 바꿀 수 있습니다.</p>
   </div>
 
   <!-- STEP 2: 상담 (관점 선택 후 표시) -->
@@ -1344,10 +1353,11 @@ body.no-scroll{overflow:hidden}
         <div class="voice-controls">
           <button class="btn btn-primary vc-start" id="btnStart">🎙 AI 음성 상담 시작</button>
           <button class="vc-mute" id="btnMute" style="display:none" title="마이크 음소거">🎤</button>
-          <button class="vc-end" id="btnEnd" style="display:none">상담 종료 &amp; 노무사에게 전송</button>
+          <button type="button" class="vc-sound" id="btnSound" title="AI 목소리 끄기" aria-label="AI 목소리 끄기" aria-pressed="false"><span class="ic">🔈</span><span class="tx">AI 소리 끄기</span></button>
+          <button class="vc-end" id="btnEnd" style="display:none">상담 종료 · 노무사에게 전송</button>
           <button class="btn btn-ghost" id="btnReset" style="display:none;margin-top:10px;font-size:13px;padding:9px 18px">↩ 상담 중지 · 처음으로</button>
         </div>
-        <div class="voice-hint" id="voiceHint">마이크 권한이 필요합니다 · 1회 최대 10분 · 하루 선착순 5회</div>
+        <div class="voice-hint" id="voiceHint">마이크 사용 허용이 필요합니다 · 1회 최대 5분 · 하루 10회까지(선착순)</div>
       </div>
       <div class="voice-transcript" id="transcript">
         <div class="tr-empty" id="trEmpty">상담을 시작하면 대화 내용이<br>여기에 실시간으로 표시됩니다.</div>
@@ -1369,29 +1379,29 @@ const CASE_DATA = {
     resultLabel:'부당해고·징계 사건 점검 결과',
     factors:[
       {id:'written', q:'해고를 어떻게 통보받으셨나요?', opts:[
-        {t:'구두·문자·카톡으로만', v:14, kind:'fav', note:'서면통지 의무 위반 소지'},
-        {t:'서면(해고통지서)으로', v:-6, kind:'unf', note:'형식 요건 충족'},
-        {t:'아직 통보 전(예고 단계)', v:2, kind:'fav', note:'대응 여지 있음'} ]},
+        {t:'구두·문자·카톡으로만', v:14, kind:'fav', note:'서면 통지가 없으면 해고가 효력이 없을 수 있음(문자·카톡은 내용 확인)'},
+        {t:'서면(해고통지서)으로', v:-6, kind:'unf', note:'서면 통지는 있었음(사유·시기가 구체적인지 확인)'},
+        {t:'아직 통보 전(예고 단계)', v:2, kind:'fav', note:'해고 전이라 대응을 준비할 시간이 있음'} ]},
       {id:'reason', q:'회사가 밝힌 해고·징계 사유는?', opts:[
-        {t:'사유가 모호·불분명', v:12, kind:'fav', note:'정당한 이유 다툼 유리'},
-        {t:'사유는 있으나 다툼 여지', v:4, kind:'fav', note:'사실관계 정리 필요'},
-        {t:'명확한 중대 사유 존재', v:-10, kind:'unf', note:'사유 정당성 인정 소지'} ]},
+        {t:'사유가 모호·불분명', v:12, kind:'fav', note:'사유가 불분명하면 정당한 이유를 다툴 여지가 있음'},
+        {t:'사유는 있으나 다툼 여지', v:4, kind:'fav', note:'사실관계를 시간 순서로 정리해 두면 좋음'},
+        {t:'명확한 중대 사유 존재', v:-10, kind:'unf', note:'사유가 인정될 수 있음. 처분이 지나친지는 따져 볼 수 있음'} ]},
       {id:'procedure', q:'소명(진술) 기회가 있었나요?', opts:[
-        {t:'소명 기회 없이 통보', v:10, kind:'fav', note:'절차 하자 다툼'},
-        {t:'징계위원회 등 절차 진행', v:-4, kind:'unf', note:'절차 요건 충족'},
-        {t:'취업규칙을 모름', v:0, kind:'chk', note:'규정 확인 필요'} ]},
+        {t:'소명 기회 없이 통보', v:10, kind:'fav', note:'취업규칙에 소명 절차가 있다면 절차 위반을 다툴 수 있음'},
+        {t:'징계위원회 등 절차 진행', v:-4, kind:'unf', note:'절차는 거쳤음(규정대로 진행됐는지 확인)'},
+        {t:'취업규칙을 모름', v:0, kind:'chk', note:'취업규칙의 징계 절차를 확인해 봐야 함'} ]},
       {id:'size', q:'사업장 상시 근로자 수는?', opts:[
-        {t:'5인 이상', v:6, kind:'fav', note:'구제신청 가능'},
-        {t:'5인 미만', v:-14, kind:'unf', note:'구제신청 적용 제외'} ]},
+        {t:'5인 이상', v:6, kind:'fav', note:'노동위원회 부당해고 구제신청을 할 수 있음'},
+        {t:'5인 미만', v:-14, kind:'unf', note:'노동위원회 구제신청은 어려울 수 있음(인원 계산 확인)'} ]},
       {id:'period', q:'해고일로부터 얼마나 지났나요?', opts:[
-        {t:'3개월 이내', v:8, kind:'fav', note:'구제신청 기간 내'},
-        {t:'3개월 경과', v:-20, kind:'unf', note:'구제신청 기간 도과'} ]},
+        {t:'3개월 이내', v:8, kind:'fav', note:'구제신청 기간(3개월) 안에 있음'},
+        {t:'3개월 경과', v:-20, kind:'unf', note:'구제신청 기간(3개월)이 지났을 수 있음(법원 소송은 따로 검토)'} ]},
     ],
     guides:[
       {law:'근로기준법 제23조', point:'회사는 정당한 이유 없이 해고, 휴직, 정직, 전직, 감봉 등을 할 수 없습니다.'},
       {law:'근로기준법 제27조', point:'해고 사유와 시기는 서면으로 통지해야 하며, 서면통지가 없으면 해고는 효력이 없습니다.'},
       {law:'근로기준법 제28조', point:'부당해고 구제신청은 해고가 있었던 날부터 3개월 이내에 노동위원회에 해야 합니다.'},
-      {law:'근로기준법 제11조', point:'해고 제한(제23조)과 구제신청(제28조)은 상시 5명 이상 사업장에 적용됩니다.'},
+      {law:'근로기준법 제11조', point:'해고 제한(제23조), 서면통지(제27조), 구제신청(제28조)은 상시 5명 이상 사업장에 적용됩니다.'},
     ],
     docs:[
       '근로계약서',
@@ -1408,24 +1418,24 @@ const CASE_DATA = {
     resultLabel:'임금체불·퇴직금 사건 점검 결과',
     factors:[
       {id:'proof', q:'근로관계 입증 자료는?', opts:[
-        {t:'근로계약서·4대보험 있음', v:12, kind:'fav', note:'근로관계 입증 용이'},
-        {t:'급여 이체 기록만 있음', v:6, kind:'fav', note:'이체내역으로 입증 가능'},
-        {t:'현금 지급·기록 없음', v:-8, kind:'unf', note:'입증자료 보강 필요'} ]},
+        {t:'근로계약서·4대보험 있음', v:12, kind:'fav', note:'근로자였다는 점을 보여 주기 쉬움'},
+        {t:'급여 이체 기록만 있음', v:6, kind:'fav', note:'이체 내역으로 근로관계를 보여 줄 수 있음'},
+        {t:'현금 지급·기록 없음', v:-8, kind:'unf', note:'문자·출근 기록 등 다른 자료를 모아 두면 좋음'} ]},
       {id:'record', q:'체불 항목을 증명할 자료는?', opts:[
-        {t:'급여명세·출퇴근 기록 확보', v:10, kind:'fav', note:'체불액 산정 용이'},
-        {t:'일부만 있음', v:2, kind:'fav', note:'보완 필요'},
-        {t:'거의 없음', v:-8, kind:'unf', note:'산정 근거 부족'} ]},
+        {t:'급여명세·출퇴근 기록 확보', v:10, kind:'fav', note:'못 받은 금액을 계산하기 쉬움'},
+        {t:'일부만 있음', v:2, kind:'fav', note:'빠진 기간의 자료를 보완하면 좋음'},
+        {t:'거의 없음', v:-8, kind:'unf', note:'금액 계산 근거를 다른 자료로 채워야 함'} ]},
       {id:'time', q:'체불이 시작된 시점은?', opts:[
-        {t:'3년 이내', v:6, kind:'fav', note:'소멸시효 내'},
-        {t:'일부는 3년 경과', v:-6, kind:'unf', note:'일부 시효 소멸 소지'},
-        {t:'대부분 3년 경과', v:-16, kind:'unf', note:'소멸시효 경과 위험'} ]},
+        {t:'3년 이내', v:6, kind:'fav', note:'3년 시효 안에 있음(급여일마다 따로 계산)'},
+        {t:'일부는 3년 경과', v:-6, kind:'unf', note:'3년이 지난 달의 임금은 청구가 어려울 수 있음'},
+        {t:'대부분 3년 경과', v:-16, kind:'unf', note:'대부분 시효가 지났을 수 있음(퇴직금은 퇴직일부터 계산)'} ]},
       {id:'biz', q:'사업장 상태는?', opts:[
-        {t:'정상 영업 중', v:8, kind:'fav', note:'사업주에게 직접 청구'},
-        {t:'폐업·도산', v:-4, kind:'unf', note:'대지급금 제도 검토'},
-        {t:'사업주 연락 두절', v:-8, kind:'unf', note:'진정으로 소재 확인'} ]},
+        {t:'정상 영업 중', v:8, kind:'fav', note:'회사에 청구하거나 노동청에 진정할 수 있음'},
+        {t:'폐업·도산', v:-4, kind:'unf', note:'국가가 대신 주는 대지급금을 받을 수 있는지 확인'},
+        {t:'사업주 연락 두절', v:-8, kind:'unf', note:'연락이 안 돼도 노동청 진정은 할 수 있음'} ]},
       {id:'status', q:'현재 재직 상태는?', opts:[
-        {t:'퇴직 (14일 경과)', v:6, kind:'fav', note:'금품청산 의무 발생'},
-        {t:'재직 중', v:2, kind:'fav', note:'재직 중에도 진정 가능'} ]},
+        {t:'퇴직 (14일 경과)', v:6, kind:'fav', note:'14일 안에 못 받았다면 지연이자(연 20%)가 붙을 수 있음'},
+        {t:'재직 중', v:2, kind:'fav', note:'재직 중에도 노동청 진정을 할 수 있음'} ]},
     ],
     guides:[
       {law:'근로기준법 제36조', point:'퇴직하면 임금·보상금 등 모든 금품을 14일 이내에 줘야 합니다(특별한 사정이 있으면 합의로 연장 가능).'},
@@ -1449,19 +1459,19 @@ const CASE_DATA = {
     resultLabel:'직장 내 괴롭힘 사건 점검 결과',
     factors:[
       {id:'repeat', q:'행위의 반복성·지속성은?', opts:[
-        {t:'반복적·지속적', v:10, kind:'fav', note:'괴롭힘 판단 요소 충족'},
-        {t:'1~2회 단발성', v:-6, kind:'unf', note:'지속성 입증 필요'} ]},
+        {t:'반복적·지속적', v:10, kind:'fav', note:'반복되면 괴롭힘으로 볼 가능성이 커질 수 있음'},
+        {t:'1~2회 단발성', v:-6, kind:'unf', note:'한두 번이라도 폭행·심한 폭언이면 해당될 수 있음'} ]},
       {id:'proof', q:'증거 확보 상황은?', opts:[
-        {t:'녹취·메시지 확보', v:12, kind:'fav', note:'객관 증거 확보'},
-        {t:'목격자 진술만', v:4, kind:'fav', note:'진술 확보 필요'},
-        {t:'증거 없음', v:-10, kind:'unf', note:'지금부터 기록 시작'} ]},
+        {t:'녹취·메시지 확보', v:12, kind:'fav', note:'객관적인 증거가 있음'},
+        {t:'목격자 진술만', v:4, kind:'fav', note:'목격자 진술을 글로 받아 두면 좋음'},
+        {t:'증거 없음', v:-10, kind:'unf', note:'날짜·내용을 지금부터 기록해 두면 좋음'} ]},
       {id:'report', q:'회사에 신고했나요?', opts:[
-        {t:'신고 후 조사 진행 중', v:6, kind:'fav', note:'회사 조사 의무 이행'},
-        {t:'신고 예정', v:0, kind:'chk', note:'신고 전 증거 정리'},
-        {t:'신고 후 불이익 받음', v:8, kind:'fav', note:'불리한 처우 금지 위반'} ]},
+        {t:'신고 후 조사 진행 중', v:6, kind:'fav', note:'회사가 법에 따른 조사를 하고 있음'},
+        {t:'신고 예정', v:0, kind:'chk', note:'신고 전에 증거를 정리해 두면 좋음'},
+        {t:'신고 후 불이익 받음', v:8, kind:'fav', note:'신고 때문에 받은 불이익이면 법 위반(처벌 대상)일 수 있음'} ]},
       {id:'actor', q:'행위자는 누구인가요?', opts:[
-        {t:'상사·대표(사용자 측)', v:6, kind:'fav', note:'지위 우위 명확'},
-        {t:'동료', v:2, kind:'fav', note:'관계 우위 검토'} ]},
+        {t:'상사·대표(사용자 측)', v:6, kind:'fav', note:'지위의 우위가 인정되기 쉬움'},
+        {t:'동료', v:2, kind:'fav', note:'동료라도 관계의 우위(인원·경력 등)가 있으면 해당될 수 있음'} ]},
     ],
     guides:[
       {law:'근로기준법 제76조의2', point:'직장에서의 지위나 관계의 우위를 이용해 업무상 적정범위를 넘어 신체적·정신적 고통을 주거나 근무환경을 악화시키는 행위는 금지됩니다. 상시 5명 이상 사업장에 적용됩니다.'},
@@ -1482,18 +1492,18 @@ const CASE_DATA = {
     resultLabel:'산업재해 사건 점검 결과',
     factors:[
       {id:'relation', q:'업무와의 관련성은?', opts:[
-        {t:'업무 중 사고로 명확', v:12, kind:'fav', note:'업무상 사고'},
-        {t:'출퇴근 중 사고', v:6, kind:'fav', note:'출퇴근 재해 인정 대상'},
-        {t:'업무 관련 질병(다툼)', v:0, kind:'chk', note:'인과관계 입증 필요'} ]},
+        {t:'업무 중 사고로 명확', v:12, kind:'fav', note:'업무상 사고로 인정될 가능성이 있음'},
+        {t:'출퇴근 중 사고', v:6, kind:'fav', note:'통상 경로로 출퇴근하다 다쳤다면 산재일 수 있음(경로 이탈 시 예외)'},
+        {t:'업무 관련 질병(다툼)', v:0, kind:'chk', note:'업무와 질병의 관련성을 자료로 보여야 함'} ]},
       {id:'record', q:'치료·진료 기록은?', opts:[
-        {t:'사고 직후 진료 기록 있음', v:10, kind:'fav', note:'재해 시점 입증 용이'},
-        {t:'며칠 뒤 진료', v:-4, kind:'unf', note:'경위 설명 필요'} ]},
+        {t:'사고 직후 진료 기록 있음', v:10, kind:'fav', note:'사고 시점을 보여 주기 쉬움'},
+        {t:'며칠 뒤 진료', v:-4, kind:'unf', note:'진료가 늦어진 사정을 설명할 자료가 필요할 수 있음'} ]},
       {id:'witness', q:'목격자·현장 기록은?', opts:[
-        {t:'목격자·CCTV 등 있음', v:8, kind:'fav', note:'사고 경위 입증'},
-        {t:'없음', v:-4, kind:'unf', note:'정황 자료 보강'} ]},
+        {t:'목격자·CCTV 등 있음', v:8, kind:'fav', note:'사고 경위를 보여 주기 쉬움'},
+        {t:'없음', v:-4, kind:'unf', note:'동료 진술·메시지 등 정황 자료를 모아 두면 좋음'} ]},
       {id:'employer', q:'사업주의 태도는?', opts:[
-        {t:'협조적', v:4, kind:'fav', note:'절차 원활'},
-        {t:'공상 처리 요구·비협조', v:0, kind:'chk', note:'회사 확인 없이 공단에 직접 신청 가능, 공상 처리 제안 내용은 기록해 둘 것'} ]},
+        {t:'협조적', v:4, kind:'fav', note:'회사가 협조하면 자료 준비가 쉬울 수 있음'},
+        {t:'공상 처리 요구·비협조', v:0, kind:'chk', note:'회사 확인 없이 공단에 직접 신청할 수 있음(공상 제안 내용은 기록)'} ]},
     ],
     guides:[
       {law:'산업재해보상보험법 제37조', point:'업무상 사고·업무상 질병·출퇴근 재해는 업무상 재해로 봅니다. 다만 업무와 재해 사이에 상당인과관계가 없으면 인정되지 않습니다.'},
@@ -1602,11 +1612,11 @@ document.getElementById('runCalc').onclick=()=>{
     </div>
     <div class="disclaimer">
       <span class="di">⚠️</span>
-      <div>이 점검표는 고르신 항목을 정리한 것으로, 결과(승소·회수 가능성)를 예측하지 않습니다. <b>정확한 판단은 노무사 상담으로 확인하세요.</b></div>
+      <div>이 점검표는 고르신 항목을 정리한 것으로, 결과(승소·회수 가능성)를 예측하지 않습니다. <b>정확한 판단은 공인노무사 상담에서 확인할 수 있습니다.</b></div>
     </div>
     <div class="result-cta">
       <a href="#consult" class="btn btn-primary">이 내용으로 AI 상담 이어가기</a>
-      <a href="https://map.naver.com/p/entry/place/2008178814?placePath=%2Fticket" target="_blank" rel="noopener" class="btn btn-ghost">노무사 상담 예약</a>
+      <a href="https://map.naver.com/p/entry/place/2008178814?placePath=%2Fticket" target="_blank" rel="noopener" class="btn btn-ghost">네이버 예약</a>
     </div>`;
   if(evText){
     const mine=document.getElementById('ckMine');
@@ -1672,14 +1682,14 @@ async function serverFeatures(){
 /* 응답 코드별 안내 문구 (Cloudtype은 5xx 응답 본문을 자체 오류 페이지로 바꾸므로 코드로 판단) */
 function consultErrorMsg(status,j){
   if(j&&j.error) return j.error;
-  if(status===429) return '이용량이 많아 잠시 후 다시 시도해주세요. 급하시면 전화('+CONSULT_PHONE+')로 상담해주세요.';
-  if(status===503) return 'AI 상담 서비스 준비 중입니다. 전화('+CONSULT_PHONE+')로 상담해주세요.';
-  if(status===403) return '보안 확인에 실패했습니다. 새로고침 후 다시 시도해주세요.';
-  return 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도하거나 전화('+CONSULT_PHONE+')로 상담해주세요.';
+  if(status===429) return '이용량이 많아 잠시 후 다시 시도해 주세요. 급하시면 전화('+CONSULT_PHONE+')로 상담해 주세요.';
+  if(status===503) return 'AI 상담 서비스 준비 중입니다. 전화('+CONSULT_PHONE+')로 상담해 주세요.';
+  if(status===403) return '보안 확인에 실패했습니다. 새로고침 후 다시 시도해 주세요.';
+  return 'AI 상담 연결에 실패했습니다. 잠시 후 다시 시도하거나 전화('+CONSULT_PHONE+')로 상담해 주세요.';
 }
-let RT_MAX_SEC=10*60;   // 이번 상담 최대 시간(초) — 서버가 1인 하루 남은 시간까지 반영해 내려줌
+let RT_MAX_SEC=5*60;    // 이번 상담 최대 시간(초) — 서버가 1인 하루 남은 시간까지 반영해 내려줌 (2026-11-23 10분→5분)
 let RT_TODAY_LEFT=null; // 오늘 남은 이용 {count, minutes}
-/* 상담 사용 보고 — 1인 하루 총 이용 시간(10분) 정산용. 상담 중 30초마다 + 끝날 때 1번 */
+/* 상담 사용 보고 — 1인 하루 총 이용 시간(5분) 정산용. 상담 중 30초마다 + 끝날 때 1번 */
 let usageTimer=null;
 function reportUsage(extra){ if(!CST) return; try{ fetch('/api/realtime/usage',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json','x-consult-session':CST},body:JSON.stringify(extra||{})}).catch(()=>{}); }catch(_){} }
 function startUsage(){ stopUsage(); reportUsage({}); usageTimer=setInterval(()=>reportUsage({}),30000); }
@@ -1704,6 +1714,53 @@ const trEmpty=document.getElementById('trEmpty');
 const summaryMount=document.getElementById('voiceSummaryMount');
 
 let pc,dc,micStream,timerId,seconds=0,turns=[],demoMode=false,muted=false,curAiEl=null,demoTimers=[];
+
+/* AI 목소리 소리 끄기/켜기 (2026-11-23 대표 요청: 휴대폰은 볼륨을 끝까지 내려도 소리가 남음)
+   AI 목소리는 오디오 요소(aiAudio) 또는 2.3배 증폭 경로(aiGain)로 나오므로 둘 다 함께 끈다.
+   한 번 끄면 다시 켤 때까지 유지(상담 전에 미리 꺼 둘 수도 있음). 마이크 음소거(🎤)와는 별개. */
+const AI_GAIN=2.3;
+const aiAudio=document.createElement('audio');
+aiAudio.id='aiAudio'; aiAudio.autoplay=true; aiAudio.setAttribute('playsinline',''); aiAudio.hidden=true;
+document.body.appendChild(aiAudio);
+let aiSoundOff=false, aiGain=null;
+function applyAiSound(){
+  aiAudio.muted = aiSoundOff || !!aiGain;          // 증폭 경로가 있으면 원래 소리는 늘 꺼 둠(두 번 들리지 않게)
+  aiAudio.dataset.soundOff = aiSoundOff ? '1' : '0';
+  if(aiGain) aiGain.gain.value = aiSoundOff ? 0 : AI_GAIN;
+  const b=document.getElementById('btnSound'); if(!b) return;
+  b.classList.toggle('on',aiSoundOff);
+  b.setAttribute('aria-pressed',aiSoundOff?'true':'false');
+  b.title = aiSoundOff ? 'AI 목소리 켜기' : 'AI 목소리 끄기';
+  b.setAttribute('aria-label',b.title);
+  b.querySelector('.ic').textContent = aiSoundOff ? '🔇' : '🔈';
+  b.querySelector('.tx').textContent = aiSoundOff ? 'AI 소리 켜기' : 'AI 소리 끄기';
+}
+document.getElementById('btnSound').onclick=()=>{ aiSoundOff=!aiSoundOff; applyAiSound(); };
+/* AI 음성 연결: 소리 재생 + 입 모양 분석기 + 볼륨 증폭 */
+function connectAiAudio(stream){
+  aiAudio.srcObject=stream;
+  try{
+    const actx=new (window.AudioContext||window.webkitAudioContext)();
+    const srcNode=actx.createMediaStreamSource(stream);
+    // 볼륨 증폭: 원래 소리(aiAudio)는 끄고 2.3배 증폭된 소리를 재생
+    const gain=actx.createGain();
+    srcNode.connect(gain); gain.connect(actx.destination);
+    aiGain=gain; applyAiSound();
+    if(actx.state==='suspended') actx.resume();
+    const an=actx.createAnalyser(); an.fftSize=512; srcNode.connect(an);
+    const buf=new Uint8Array(an.frequencyBinCount);
+    orb.classList.remove('fallback');   // 실제 오디오 기반 구동으로 전환
+    const mouth=document.getElementById('aiMouth');
+    (function lip(){
+      an.getByteFrequencyData(buf);
+      let s=0; for(let i=2;i<42;i++) s+=buf[i];
+      const v=Math.min(1,(s/40)/135);
+      if(mouth) mouth.style.transform=`translate(-50%,-50%) scaleY(${(0.12+v*0.85).toFixed(3)}) scaleX(${(1+v*0.12).toFixed(3)})`;
+      requestAnimationFrame(lip);
+    })();
+  }catch(err){ aiGain=null; applyAiSound(); orb.classList.add('fallback'); }
+}
+applyAiSound();
 
 /* ===== 관점 선택 게이트 + 전체화면 상담 오버레이 =====
    PERSP: '노동자' | '사업주' — 기본값 없음. 선택 전에는 상담 시작 불가.
@@ -1786,12 +1843,12 @@ async function beginRealtime(label){
   if(!PERSP){ showGate(); return; }   // 관점 선택 없이는 시작 불가
   if(DEMO_ALLOWED){ hideStartBtns(); startDemo(); return; }   // ?demo=1 시연 전용
   const f=await serverFeatures();
-  if(!f.ai){ consultFail('AI 음성상담 서비스 준비 중입니다. 전화('+CONSULT_PHONE+')로 상담해주세요.','상담 준비 중'); return; }
+  if(!f.ai){ consultFail('AI 음성상담 서비스 준비 중입니다. 전화('+CONSULT_PHONE+')로 상담해 주세요.','상담 준비 중'); return; }
   hideStartBtns(); setStatus('연결 중…');
   try{ await startRealtime(); if(modeTag){modeTag.style.display='';modeTag.textContent=label+' · 이번 상담 최대 '+Math.round(RT_MAX_SEC/60)+'분';} }
   catch(err){
     console.warn('실시간 연결 실패',err);
-    const msg=err&&err.name==='NotAllowedError'?'마이크 권한이 필요합니다. 브라우저 주소창의 마이크 권한을 허용한 뒤 다시 시도해주세요.':(err&&err.userMsg);
+    const msg=err&&err.name==='NotAllowedError'?'마이크 권한이 필요합니다. 브라우저 주소창의 마이크 권한을 허용한 뒤 다시 시도해 주세요.':(err&&err.userMsg);
     consultFail(msg);
   }
 }
@@ -1817,45 +1874,22 @@ async function startRealtime(){
   micStream.getAudioTracks().forEach(tr=>tr.enabled=false);   // 시작은 마이크 OFF — 첫 인사가 끝난 뒤에만 켠다
 
   pc=new RTCPeerConnection();
-  const audioEl=document.createElement('audio');audioEl.autoplay=true;
-  pc.ontrack=e=>{
-    audioEl.srcObject=e.streams[0];
-    // AI 음성 크기에 맞춰 입이 자연스럽게 움직이도록 분석기 연결 + 볼륨 증폭
-    try{
-      const actx=new (window.AudioContext||window.webkitAudioContext)();
-      const srcNode=actx.createMediaStreamSource(e.streams[0]);
-      // 볼륨 증폭: 원래 소리는 음소거하고 2.3배 증폭된 소리를 재생
-      audioEl.muted=true;
-      const gain=actx.createGain(); gain.gain.value=2.3;
-      srcNode.connect(gain); gain.connect(actx.destination);
-      if(actx.state==='suspended') actx.resume();
-      const an=actx.createAnalyser(); an.fftSize=512; srcNode.connect(an);
-      const buf=new Uint8Array(an.frequencyBinCount);
-      orb.classList.remove('fallback');   // 실제 오디오 기반 구동으로 전환
-      const mouth=document.getElementById('aiMouth');
-      (function lip(){
-        an.getByteFrequencyData(buf);
-        let s=0; for(let i=2;i<42;i++) s+=buf[i];
-        const v=Math.min(1,(s/40)/135);
-        if(mouth) mouth.style.transform=`translate(-50%,-50%) scaleY(${(0.12+v*0.85).toFixed(3)}) scaleX(${(1+v*0.12).toFixed(3)})`;
-        requestAnimationFrame(lip);
-      })();
-    }catch(err){ orb.classList.add('fallback'); }
-  };
+  pc.ontrack=e=>connectAiAudio(e.streams[0]);
   pc.addTrack(micStream.getTracks()[0]);
   dc=pc.createDataChannel('oai-events');
   dc.onopen=()=>{
     /* 지침은 서버(/api/realtime/token)가 도구 정의와 함께 설정 — 여기서 덮어쓰지 않음 */
     if(!window.__greeted){ window.__greeted=true;
       setTimeout(()=>{ try{ dc.send(JSON.stringify({type:'response.create'})); }catch(e){} }, 400); }  // 인사는 딱 1회
-    /* [상담 시간 관리] 종료 5분 전: 마무리 안내 지령 → 1분 전: 마지막 인사 지령 → 최대 시간(기본 25분): 자동 종료 */
+    /* [상담 시간 관리] 종료 2분 전: 마무리 안내 지령 → 1분 전: 마지막 인사 지령 → 최대 시간(기본 5분): 자동 종료
+       (2026-11-23 상담 시간 10분→5분. 예전 '5분 전 안내'는 5분 상담에서 시작하자마자 나오므로 2분 전으로 옮김) */
     const inject=(txt)=>{ try{ dc.send(JSON.stringify({type:'conversation.item.create',item:{type:'message',role:'system',content:[{type:'input_text',text:txt}]}})); }catch(_){ } };
-    if(RT_MAX_SEC>=480) demoTimers.push(setTimeout(()=>{
-      inject('상담 시간이 5분 남았다. 의뢰인님의 현재 이야기가 일단락되면, 진행 중인 답변을 마친 뒤 자연스럽게 다음 안내를 하라: "의뢰인님, 안내드린 상담 시간이 이제 5분 정도 남았습니다. 혹시 아직 말씀 못 하신 중요한 내용이 있으시면 지금 편하게 말씀해 주세요." 이후 남은 시간 동안은 새 주제를 확장하지 말고 마무리에 집중하라.');
-      setStatus('상담 마무리 단계 (약 5분 남음)');
-    }, Math.max(0,RT_MAX_SEC-300)*1000));
+    if(RT_MAX_SEC>=240) demoTimers.push(setTimeout(()=>{
+      inject('상담 시간이 약 2분 남았다. 상담자의 현재 이야기가 일단락되면, 진행 중인 답변을 마친 뒤 자연스럽게 다음 안내를 하라: "안내드린 상담 시간이 2분쯤 남았습니다. 아직 말씀하지 못한 내용이 있으시면 지금 말씀해 주세요." 이후 남은 시간 동안은 새 주제를 확장하지 말고 마무리에 집중하라.');
+      setStatus('상담 마무리 단계 (약 2분 남음)');
+    }, Math.max(0,RT_MAX_SEC-120)*1000));
     if(RT_MAX_SEC>=120) demoTimers.push(setTimeout(()=>{
-      inject('상담 시간이 약 1분 남았다. 의뢰인님의 발언이 끝나는 대로 다음 마무리 인사를 하고 상담을 끝맺으라: "오늘 말씀해 주신 내용은 정리해서 김경동 노무사님께 전달해 드리겠습니다. 더 자세한 상담은 지금까지의 상담 내용을 바탕으로 김경동 노무사님께서 직접 안내해 주실 예정입니다. 필요하시면 02-6952-9297로 연락 주세요. 시간 내주셔서 감사합니다." 이 인사 후에는 새 질문을 하지 마라.');
+      inject('상담 시간이 약 1분 남았다. 상담자의 발언이 끝나는 대로 다음 마무리 인사를 하고 상담을 끝맺으라: "오늘 말씀해 주신 내용은 정리해서 김경동 노무사에게 전달하겠습니다. 더 자세한 상담이 필요하시면 02-6952-9297로 연락해 주세요. 시간 내 주셔서 감사합니다." 이 인사 후에는 새 질문을 하지 마라.');
       setStatus('상담 종료 임박 (약 1분)');
     }, Math.max(0,RT_MAX_SEC-60)*1000));
     demoTimers.push(setTimeout(()=>{ try{ endVoice(); }catch(_){ } }, RT_MAX_SEC*1000));
@@ -1955,7 +1989,7 @@ btnReset.onclick=()=>{
     orb.classList.remove('done'); setOrb(''); setStatus('상담 준비됨');
     vTimer.style.display='none'; vTimer.textContent='00:00'; seconds=0;
     modeTag.style.display='none'; btnMute.style.display='none'; btnEnd.style.display='none'; btnReset.style.display='none';
-    vHint.textContent='마이크 권한이 필요합니다 · 1회 최대 10분 · 하루 선착순 5회';
+    vHint.textContent='마이크 사용 허용이 필요합니다 · 1회 최대 5분 · 하루 10회까지(선착순)';
     btnStart.style.display=''; btnStart.disabled=false;
     // 복구 검증: 시작 버튼이 안 보이면 수동 복구 실패로 간주
     if(btnStart.style.display==='none' || btnReset.style.display!=='none') throw new Error('reset incomplete');
@@ -2023,8 +2057,8 @@ function renderSummary(){
     };
     if(!demoMode){
       const d=contact.phone.replace(/\D/g,'');
-      if(d.length<9||d.length>12||!/^[0-9+\-\s().]+$/.test(contact.phone)){ showFail('회신 받을 연락처(전화번호)를 정확히 입력해주세요.'); card.querySelector('#vcPhone').focus(); return; }
-      if(!contact.consent){ showFail('개인정보 수집·이용 동의에 체크해주셔야 노무사에게 전달할 수 있습니다.'); return; }
+      if(d.length<9||d.length>12||!/^[0-9+\-\s().]+$/.test(contact.phone)){ showFail('회신 받을 연락처(전화번호)를 정확히 입력해 주세요.'); card.querySelector('#vcPhone').focus(); return; }
+      if(!contact.consent){ showFail('개인정보 수집·이용 동의에 체크해 주셔야 노무사에게 전달할 수 있습니다.'); return; }
     }
     btn.disabled=true; btn.textContent='전송 중…';
     let ok=false,msg='';
@@ -2036,14 +2070,14 @@ function renderSummary(){
           body:JSON.stringify({type:guess,transcript:turns,durationSec:seconds,perspective:PERSP,contact})});
         const j=await safeJson(r);
         ok=(r.ok&&j.ok)||(r.status===429&&j.code==='already_sent');
-        if(!ok) msg=(r.status>=500&&!j.error)?'전송에 실패했습니다. 잠시 후 다시 시도하거나 전화('+CONSULT_PHONE+')로 연락해주세요.':consultErrorMsg(r.status,j);
-      }catch(e){ console.warn(e); msg='네트워크 오류로 전송하지 못했습니다. 다시 시도해주세요.'; }
+        if(!ok) msg=(r.status>=500&&!j.error)?'전송에 실패했습니다. 잠시 후 다시 시도하거나 전화('+CONSULT_PHONE+')로 연락해 주세요.':consultErrorMsg(r.status,j);
+      }catch(e){ console.warn(e); msg='네트워크 오류로 전송하지 못했습니다. 다시 시도해 주세요.'; }
     }
     if(ok){
       const sc=card.querySelector('.sc-send');if(sc)sc.remove();
       card.querySelectorAll('.sc-contact input').forEach(i=>i.disabled=true);
       const done=document.createElement('div');done.className='sent-ok';
-      done.textContent='✅ 전송 완료 — 김경동 노무사에게 상담 요약과 연락처가 전달되었습니다. 확인 후 남겨주신 번호로 연락드리겠습니다.';
+      done.textContent='✅ 전송 완료 — 상담 요약과 연락처가 김경동 노무사에게 전달되었습니다. 확인 후 남겨 주신 번호로 연락드립니다.';
       card.appendChild(done);
     }else{
       showFail(msg);
@@ -2275,6 +2309,7 @@ window.addEventListener('load',()=>{
     var DB = window.SUBSIDY_DB || [];
     var COMMON = window.SUBSIDY_COMMON_DOCS || [];
     var VERIFIED = window.SUBSIDY_LAST_VERIFIED || '';
+    var NAVER_BOOK = 'https://map.naver.com/p/entry/place/2008178814?placePath=%2Fticket';   // 네이버 예약(다른 예약 버튼과 같은 주소)
     var v = {
       size: sel.size,
       workers: sel.workers,
@@ -2307,9 +2342,9 @@ window.addEventListener('load',()=>{
 
     if(kept.length === 0 && related.length === 0){
       out.innerHTML =
-        '<div class="s-none">선택하신 조건에서는 자동 매칭되는 대표 지원금이 없습니다.<br>다른 지원제도가 있을 수 있으니 노무사 상담으로 정확히 확인해 보세요.</div>' +
+        '<div class="s-none">고르신 조건으로는 대표적인 지원금이 나오지 않았습니다.<br>다른 지원제도가 있을 수 있으니 상담에서 함께 확인할 수 있습니다.</div>' +
         infoBlock(infos) +
-        '<div class="s-cta"><a href="#contact" class="btn btn-primary">노무사에게 상담·서류 문의 →</a></div>' +
+        '<div class="s-cta"><a href="'+NAVER_BOOK+'" target="_blank" rel="noopener" class="btn btn-primary">네이버 예약</a></div>' +
         budgetLine(BUDGET) +
         verifyLine(VERIFIED);
       return;
@@ -2323,7 +2358,6 @@ window.addEventListener('load',()=>{
 
     var html = '';
     html += '<div class="s-count">신청 가능성이 있는 지원금 <b>'+kept.length+'건</b></div>';
-    html += '<div class="s-sub">아래는 1차 참고용 안내이며, 실제 수급 여부·금액은 노무사 검토가 필요합니다.</div>';
     kept.forEach(function(s){ html += cardHtml(s, ''); });
     if(related.length){
       html += '<div class="s-sec">함께 살펴볼 지원금 <b style="color:var(--gold-2)">'+related.length+'건</b></div>';
@@ -2337,10 +2371,10 @@ window.addEventListener('load',()=>{
     // 이런 지원금도 있습니다
     html += infoBlock(infos);
     // 주의 + CTA
-    html += '<div class="s-note">⚠ 본 진단은 입력값 기준 1차 스크리닝입니다. 상시근로자수 산정, 중복수급 판정 등은 개별 사안별 노무사 검토가 필요합니다. 정부지원금 신청대행은 공인노무사만 합법적으로 대리할 수 있습니다.</div>';
+    html += '<div class="s-note">⚠ 본 진단은 입력값 기준 1차 스크리닝입니다. 상시근로자수 산정, 중복수급 판정 등은 개별 사안별 노무사 검토가 필요합니다.</div>';
     html += '<div class="s-cta">'
-      + '<a href="#contact" class="btn btn-primary">이 결과로 노무사 상담·서류 제출 →</a>'
-      + '<a href="#consult" class="btn btn-ghost">AI 상담으로 더 물어보기 →</a>'
+      + '<a href="'+NAVER_BOOK+'" target="_blank" rel="noopener" class="btn btn-primary">네이버 예약</a>'
+      + '<a href="#consult" class="btn btn-ghost">AI 상담으로 이어가기 →</a>'
       + '</div>';
     html += budgetLine(BUDGET);
     html += verifyLine(VERIFIED);
@@ -2379,7 +2413,7 @@ window.addEventListener('load',()=>{
     return t ? '<div class="s-budget">'+t+'</div>' : '';
   }
   function verifyLine(d){
-    return '<div class="s-verify">지원금 정보 최종 검증일 · '+d+' (금액·요건은 매년 개정되므로 상담 시 재확인)</div>';
+    return '<div class="s-verify">지원금 정보 확인 기준일 '+String(d).replace(/-/g,'.')+'. 금액·요건은 해마다 바뀌므로 신청 전에 다시 확인해야 합니다.</div>';
   }
 })();
 </script>
