@@ -214,7 +214,7 @@ section.block{padding:96px 0;position:relative}
 .glass{background:var(--glass);border:1px solid var(--card-brd);border-radius:12px;backdrop-filter:blur(10px);transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease}
 .glass:hover{transform:translateY(-4px);border-color:rgba(220,189,118,.4);box-shadow:var(--shadow)}
 
-/* ============ 승소가능성 계산기 ============ */
+/* ============ AI 사전진단 (점검표) ============ */
 .calc{background:linear-gradient(180deg,var(--navy-900),var(--navy-850))}
 .calc::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(700px 400px at 12% 0%,rgba(220,189,118,.08),transparent 60%)}
 /* ===== 히어로 하단 영상 띠 ===== */
@@ -342,6 +342,14 @@ a.hv-card{display:block;cursor:pointer;color:inherit}
 .grange{font-family:var(--serif);font-size:40px;font-weight:700;line-height:1;margin:2px 0;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .grange small{font-size:18px;color:var(--ink-faint);font-weight:500;-webkit-text-fill-color:var(--ink-faint)}
 .gcaption{font-size:12px;color:var(--ink-faint);margin-top:4px}
+.ck-head{text-align:center;padding:4px 0 2px}
+.ck-head .ck-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--gold-3);word-break:keep-all}
+.ck-head .ck-sub{font-size:12px;color:var(--ink-faint);margin-top:6px}
+.ck .frow{align-items:flex-start}
+.ck .frow .dot{margin-top:6px}
+.ck .frow.chk .dot{background:var(--gold-2)}
+.ck .frow .fn{display:block;font-size:12px;color:var(--ink-faint);margin-top:2px}
+.ck .ck-mine{white-space:pre-wrap;word-break:break-word;font-size:13px;color:var(--ink-soft);background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:8px;padding:10px 12px;margin-bottom:10px}
 .rbreak{margin-top:22px;border-top:1px solid var(--line-soft);padding-top:20px}
 .rbreak h4{font-size:12.5px;font-weight:700;letter-spacing:.02em;margin-bottom:12px;color:var(--ink-soft)}
 .frow{display:flex;align-items:center;gap:9px;font-size:13px;margin-bottom:8px}
@@ -901,13 +909,13 @@ body.no-scroll{overflow:hidden}
 <!-- 업무분야 -->
 <!-- 업무분야는 주요업무 섹션으로 통합됨 -->
 
-<!-- 승소가능성 계산기 -->
+<!-- AI 사전진단 (점검표) -->
 <section class="calc block" id="calc" data-view="calc">
   <div class="wrap">
     <div class="sec-head">
       <div class="center-eyebrow"><span class="eyebrow center">AI 사전진단</span></div>
       <h2>내 상황, 법 기준으로 미리 짚어보기</h2>
-      <p>상황을 선택하면 근로기준법 등 법령 기준에 따라 유리·불리 요소와 참고 지표를 보여드립니다. (근로자 관점 기준)</p>
+      <p>상황을 선택하면 근로기준법 등 법령 기준에 따라 유리·불리 요소와 준비할 자료를 점검표로 정리해 드립니다. (근로자 관점 기준)</p>
     </div>
     <div class="calc-shell">
       <div class="calc-grid">
@@ -1063,14 +1071,14 @@ body.no-scroll{overflow:hidden}
         <div class="lc-chips"><span>부당해고·징계</span><span>임금·퇴직금</span><span>급여·자문</span><span>산업재해</span><span>인사노무컨설팅</span></div>
         <a href="#contact" class="btn btn-ghost lc-btn">자세히 보기 <span class="ar">→</span></a>
       </div>
-      <!-- AI 승소가능성 분석 -->
+      <!-- AI 사전진단 (점검표) -->
       <div class="lcard glass" id="results">
         <div class="lc-title"><span class="licon"><svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M21 20H3M16 8l3-3m0 0h-2.4M19 5v2.4"/></svg></span>AI 사전진단</div>
-        <p class="desc">상황만 고르면 법령 기준으로 유리·불리 요소를 짚어 참고 지표를 밴드로 보여드립니다.</p>
+        <p class="desc">상황만 고르면 법령 기준으로 유리·불리 요소와 준비할 자료를 점검표로 정리해 드립니다.</p>
         <ul class="ach-list">
           <li>부당해고 · 임금체불 · 괴롭힘 · 산재</li>
           <li>유리·불리 요소 투명 공개</li>
-          <li>결과는 낮음·보통·높음 밴드로 표시</li>
+          <li>결과는 점검표로 정리 (예측 아님)</li>
         </ul>
         <a href="#calc" class="btn btn-ghost lc-btn">사전진단 해보기 <span class="ar">→</span></a>
         <div class="lc-foot">참고용입니다. 정확한 판단은 공인노무사 상담으로 확인하세요.</div>
@@ -1340,8 +1348,7 @@ body.no-scroll{overflow:hidden}
 const CASE_DATA = {
   dismissal: {
     label:'부당해고·징계',
-    resultLabel:'부당해고 인정 가능성 (근로자 관점 · 참고)',
-    winWord:'구제 인정',
+    resultLabel:'부당해고·징계 사건 점검 결과',
     factors:[
       {id:'written', q:'해고를 어떻게 통보받으셨나요?', opts:[
         {t:'구두·문자·카톡으로만', v:14, kind:'fav', note:'서면통지 의무 위반 소지'},
@@ -1354,7 +1361,7 @@ const CASE_DATA = {
       {id:'procedure', q:'소명(진술) 기회가 있었나요?', opts:[
         {t:'소명 기회 없이 통보', v:10, kind:'fav', note:'절차 하자 다툼'},
         {t:'징계위원회 등 절차 진행', v:-4, kind:'unf', note:'절차 요건 충족'},
-        {t:'취업규칙을 모름', v:0, kind:'fav', note:'규정 확인 필요'} ]},
+        {t:'취업규칙을 모름', v:0, kind:'chk', note:'규정 확인 필요'} ]},
       {id:'size', q:'사업장 상시 근로자 수는?', opts:[
         {t:'5인 이상', v:6, kind:'fav', note:'구제신청 가능'},
         {t:'5인 미만', v:-14, kind:'unf', note:'구제신청 적용 제외'} ]},
@@ -1363,15 +1370,24 @@ const CASE_DATA = {
         {t:'3개월 경과', v:-20, kind:'unf', note:'구제신청 기간 도과'} ]},
     ],
     guides:[
-      {law:'근로기준법 제23조', point:'사용자는 정당한 이유 없이 해고·정직·감봉 등 징벌을 하지 못합니다.'},
+      {law:'근로기준법 제23조', point:'회사는 정당한 이유 없이 해고, 휴직, 정직, 전직, 감봉 등을 할 수 없습니다.'},
       {law:'근로기준법 제27조', point:'해고 사유와 시기는 서면으로 통지해야 하며, 서면통지가 없으면 해고는 효력이 없습니다.'},
       {law:'근로기준법 제28조', point:'부당해고 구제신청은 해고가 있었던 날부터 3개월 이내에 노동위원회에 해야 합니다.'},
+      {law:'근로기준법 제11조', point:'해고 제한(제23조)과 구제신청(제28조)은 상시 5명 이상 사업장에 적용됩니다.'},
+    ],
+    docs:[
+      '근로계약서',
+      '해고·징계 통지서, 또는 통보받은 문자·카톡 캡처',
+      '취업규칙·징계 규정(받았거나 볼 수 있는 경우)',
+      '징계위원회 출석 통지서, 내가 낸 소명서',
+      '일이 있었던 순서대로 적은 메모(날짜·장소·한 말)',
+      '급여명세서 또는 통장 입금 내역(최근 3개월)',
+      '직원 수를 알 수 있는 자료(근무표·조직도·단체방 인원 등)',
     ]
   },
   wage:{
     label:'임금체불·퇴직금',
-    resultLabel:'체불임금 회수 가능성 (참고)',
-    winWord:'회수',
+    resultLabel:'임금체불·퇴직금 사건 점검 결과',
     factors:[
       {id:'proof', q:'근로관계 입증 자료는?', opts:[
         {t:'근로계약서·4대보험 있음', v:12, kind:'fav', note:'근로관계 입증 용이'},
@@ -1386,7 +1402,7 @@ const CASE_DATA = {
         {t:'일부는 3년 경과', v:-6, kind:'unf', note:'일부 시효 소멸 소지'},
         {t:'대부분 3년 경과', v:-16, kind:'unf', note:'소멸시효 경과 위험'} ]},
       {id:'biz', q:'사업장 상태는?', opts:[
-        {t:'정상 영업 중', v:8, kind:'fav', note:'직접 회수 가능성'},
+        {t:'정상 영업 중', v:8, kind:'fav', note:'사업주에게 직접 청구'},
         {t:'폐업·도산', v:-4, kind:'unf', note:'대지급금 제도 검토'},
         {t:'사업주 연락 두절', v:-8, kind:'unf', note:'진정으로 소재 확인'} ]},
       {id:'status', q:'현재 재직 상태는?', opts:[
@@ -1394,15 +1410,25 @@ const CASE_DATA = {
         {t:'재직 중', v:2, kind:'fav', note:'재직 중에도 진정 가능'} ]},
     ],
     guides:[
-      {law:'근로기준법 제36조', point:'퇴직 시 임금·보상금 등 모든 금품은 14일 이내에 지급해야 합니다(합의로 연장 가능).'},
-      {law:'근로자퇴직급여 보장법 제9조', point:'퇴직금은 퇴직일부터 14일 이내 지급, 지연 시 연 20% 지연이자가 붙습니다.'},
-      {law:'근로기준법 제49조', point:'임금채권은 3년간 행사하지 않으면 시효로 소멸합니다.'},
+      {law:'근로기준법 제36조', point:'퇴직하면 임금·보상금 등 모든 금품을 14일 이내에 줘야 합니다(특별한 사정이 있으면 합의로 연장 가능).'},
+      {law:'근로자퇴직급여 보장법 제9조', point:'퇴직금은 퇴직한 날부터 14일 이내에 줘야 합니다(특별한 사정이 있으면 합의로 연장 가능).'},
+      {law:'근로기준법 제37조', point:'퇴직 후 14일이 지나도록 주지 않은 임금·퇴직금에는 연 20%의 지연이자가 붙습니다. 재직 중이라도 정해진 지급일에 주지 않은 임금에는 지연이자가 붙습니다(천재지변 등 예외 사유 있음).'},
+      {law:'근로기준법 제49조·근로자퇴직급여 보장법 제10조', point:'임금과 퇴직금은 3년간 청구하지 않으면 시효로 사라집니다.'},
+      {law:'임금채권보장법 제7조', point:'회사가 도산했거나 체불이 확인된 경우 등에는 퇴직한 근로자가 국가에서 못 받은 임금 일부를 대지급금으로 먼저 받을 수 있습니다.'},
+    ],
+    docs:[
+      '근로계약서, 없으면 채용 공고나 채용 때 주고받은 문자',
+      '급여명세서 또는 통장 입금 내역',
+      '출퇴근 기록(근무표, 출퇴근 앱, 교통카드 내역 등)',
+      '못 받은 항목과 기간을 적은 메모',
+      '퇴사일을 알 수 있는 자료(사직서, 퇴사 문자, 4대보험 상실 내역)',
+      '4대보험 가입 내역',
+      '회사 이름·주소·대표자 연락처(사업자등록 정보)',
     ]
   },
   harassment:{
     label:'직장 내 괴롭힘',
-    resultLabel:'괴롭힘 인정·구제 가능성 (참고)',
-    winWord:'인정',
+    resultLabel:'직장 내 괴롭힘 사건 점검 결과',
     factors:[
       {id:'repeat', q:'행위의 반복성·지속성은?', opts:[
         {t:'반복적·지속적', v:10, kind:'fav', note:'괴롭힘 판단 요소 충족'},
@@ -1413,26 +1439,34 @@ const CASE_DATA = {
         {t:'증거 없음', v:-10, kind:'unf', note:'지금부터 기록 시작'} ]},
       {id:'report', q:'회사에 신고했나요?', opts:[
         {t:'신고 후 조사 진행 중', v:6, kind:'fav', note:'회사 조사 의무 이행'},
-        {t:'신고 예정', v:0, kind:'fav', note:'신고 전 증거 정리'},
+        {t:'신고 예정', v:0, kind:'chk', note:'신고 전 증거 정리'},
         {t:'신고 후 불이익 받음', v:8, kind:'fav', note:'불리한 처우 금지 위반'} ]},
       {id:'actor', q:'행위자는 누구인가요?', opts:[
         {t:'상사·대표(사용자 측)', v:6, kind:'fav', note:'지위 우위 명확'},
         {t:'동료', v:2, kind:'fav', note:'관계 우위 검토'} ]},
     ],
     guides:[
-      {law:'근로기준법 제76조의2', point:'직장에서의 지위·관계 우위를 이용해 신체적·정신적 고통을 주는 행위는 금지됩니다.'},
+      {law:'근로기준법 제76조의2', point:'직장에서의 지위나 관계의 우위를 이용해 업무상 적정범위를 넘어 신체적·정신적 고통을 주거나 근무환경을 악화시키는 행위는 금지됩니다. 상시 5명 이상 사업장에 적용됩니다.'},
       {law:'근로기준법 제76조의3', point:'신고를 받은 사용자는 조사 의무가 있고, 신고자에 대한 불리한 처우는 형사처벌 대상입니다.'},
+    ],
+    docs:[
+      '녹음 파일(본인이 참여한 대화만)',
+      '문자·카톡·메일 캡처',
+      '날짜별 피해 기록(언제·어디서·누가·무엇을, 같이 있던 사람)',
+      '목격한 동료의 이름과 연락처',
+      '병원 진료 기록이나 상담 기록(있는 경우)',
+      '회사에 신고한 내용과 회사의 답변',
+      '신고 뒤 달라진 처우를 보여 주는 자료(인사발령, 업무 변경 등)',
     ]
   },
   industrial:{
     label:'산업재해',
-    resultLabel:'산재 승인 가능성 (참고)',
-    winWord:'승인',
+    resultLabel:'산업재해 사건 점검 결과',
     factors:[
       {id:'relation', q:'업무와의 관련성은?', opts:[
         {t:'업무 중 사고로 명확', v:12, kind:'fav', note:'업무상 사고'},
         {t:'출퇴근 중 사고', v:6, kind:'fav', note:'출퇴근 재해 인정 대상'},
-        {t:'업무 관련 질병(다툼)', v:0, kind:'fav', note:'인과관계 입증 필요'} ]},
+        {t:'업무 관련 질병(다툼)', v:0, kind:'chk', note:'인과관계 입증 필요'} ]},
       {id:'record', q:'치료·진료 기록은?', opts:[
         {t:'사고 직후 진료 기록 있음', v:10, kind:'fav', note:'재해 시점 입증 용이'},
         {t:'며칠 뒤 진료', v:-4, kind:'unf', note:'경위 설명 필요'} ]},
@@ -1441,11 +1475,21 @@ const CASE_DATA = {
         {t:'없음', v:-4, kind:'unf', note:'정황 자료 보강'} ]},
       {id:'employer', q:'사업주의 태도는?', opts:[
         {t:'협조적', v:4, kind:'fav', note:'절차 원활'},
-        {t:'공상 처리 요구·비협조', v:-2, kind:'unf', note:'사업주 날인 없이도 신청 가능'} ]},
+        {t:'공상 처리 요구·비협조', v:0, kind:'chk', note:'회사 확인 없이 공단에 직접 신청 가능, 공상 처리 제안 내용은 기록해 둘 것'} ]},
     ],
     guides:[
-      {law:'산업재해보상보험법 제37조', point:'업무상 사고·질병·출퇴근 재해는 업무상 재해로 인정될 수 있습니다.'},
-      {law:'산업재해보상보험법 제41조', point:'요양급여 신청은 근로자가 직접 근로복지공단에 할 수 있으며 사업주 확인이 없어도 가능합니다.'},
+      {law:'산업재해보상보험법 제37조', point:'업무상 사고·업무상 질병·출퇴근 재해는 업무상 재해로 봅니다. 다만 업무와 재해 사이에 상당인과관계가 없으면 인정되지 않습니다.'},
+      {law:'산업재해보상보험법 제41조·같은 법 시행규칙 제20조', point:'요양급여는 근로자가 근로복지공단에 직접 신청합니다. 공단이 회사에 신청 사실을 알리고 의견을 듣는 절차이므로, 회사의 확인이나 날인을 받아 올 필요는 없습니다.'},
+      {law:'산업재해보상보험법 제112조', point:'보험급여는 3년(장해·유족급여 등은 5년) 안에 청구해야 합니다.'},
+    ],
+    docs:[
+      '병원 진료 기록·진단서(처음 진료받은 기록 포함)',
+      '사고 경위 메모(날짜·시간·장소·하던 일)',
+      '현장 사진, CCTV 위치, 목격자 연락처',
+      '근로계약서 또는 급여 입금 내역',
+      '출퇴근 중 사고라면 이동 경로·시간 자료(교통카드 내역, 교통사고 사실 확인 자료 등)',
+      '질병이라면 하던 일과 근무시간 자료(업무 내용 메모, 근무표, 출퇴근 기록)',
+      '회사가 공상 처리를 제안했다면 그 문자·대화 기록',
     ]
   }
 };
@@ -1489,52 +1533,27 @@ function resetResult(){
   document.getElementById('rResult').style.display='none';
 }
 
-/* ---------- 게이지 SVG ---------- */
-function gaugeSVG(score){
-  const start=Math.PI, end=0;                 // 반원 (180° → 0°)
-  const ang=start+(end-start)*(score/100);
-  const cx=150, cy=140, r=118;
-  const nx=cx+Math.cos(ang)*(r-18), ny=cy-Math.sin(ang)*(r-18);
-  // 색 구간 arc path helper
-  function arc(a0,a1,color,w){
-    const x0=cx+Math.cos(a0)*r, y0=cy-Math.sin(a0)*r;
-    const x1=cx+Math.cos(a1)*r, y1=cy-Math.sin(a1)*r;
-    const large=(a0-a1)>Math.PI?1:0;
-    return `<path d="M${x0} ${y0} A${r} ${r} 0 ${large} 1 ${x1} ${y1}" stroke="${color}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
-  }
-  const s=Math.PI, seg=Math.PI/3;
-  return `<svg viewBox="0 0 300 175">
-    ${arc(s, s-seg, '#D06B57', 15)}
-    ${arc(s-seg, s-2*seg, '#DCBD76', 15)}
-    ${arc(s-2*seg, 0, '#5FB98C', 15)}
-    <circle cx="${cx}" cy="${cy}" r="8" fill="#F2E6AF"/>
-    <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#F2E6AF" stroke-width="4" stroke-linecap="round"/>
-    <text x="32" y="168" font-size="11" fill="#8493A8">낮음</text>
-    <text x="248" y="168" font-size="11" fill="#8493A8">높음</text>
-  </svg>`;
-}
-
-/* ---------- 분석 실행 ---------- */
-function bandOf(score){
-  if(score>=68)return['높음','#5FB98C'];
-  if(score>=45)return['보통','#DCBD76'];
-  return['낮음','#E07B5B'];
+/* ---------- 점검표 만들기 (점수·확률 표시 없음) ---------- */
+const CALC_DOCS=['근로계약서','해고통지서(문자·카톡 캡처)','급여명세서','출퇴근 기록','녹취','4대보험 가입내역'];
+function ckEsc(s){const d=document.createElement('div');d.textContent=String(s);return d.innerHTML;}
+function ckRows(list,cls,emptyText){
+  if(!list.length) return `<div class="frow"><span class="ft" style="color:var(--ink-faint)">${emptyText}</span></div>`;
+  return list.map(o=>`<div class="frow ${cls}"><span class="dot"></span><span class="ft">${ckEsc(o.t)}${o.note?`<span class="fn">${ckEsc(o.note)}</span>`:''}</span></div>`).join('');
 }
 document.getElementById('runCalc').onclick=()=>{
   const data=CASE_DATA[currentCase];
   const sel=selections[currentCase]||{};
-  if(Object.keys(sel).length<data.factors.length){
-    alert('모든 항목을 선택하면 더 정확한 참고 지표를 볼 수 있어요.');
-  }
-  let score=50; const favs=[],unfs=[];
+  const favs=[],unfs=[];
+  let picked=0;
   data.factors.forEach(f=>{
     const oi=sel[f.id]; if(oi===undefined)return;
-    const o=f.opts[oi]; score+=o.v;
-    (o.kind==='fav'?favs:unfs).push({t:o.note||o.t, v:o.v});
+    picked++;
+    const o=f.opts[oi];
+    (o.kind==='fav'?favs:unfs).push({t:o.t, note:o.note||''});
   });
-  score=Math.max(8,Math.min(92,score));
-  const lo=Math.max(5,score-9), hi=Math.min(95,score+9);
-  const [band,bc]=bandOf(score);
+  const missing=data.factors.length-picked;
+  const evText=(document.getElementById('evidenceText').value||'').trim();
+  const docs=data.docs||CALC_DOCS;
 
   const precHTML=data.guides.map(p=>`
     <div class="prec">
@@ -1543,32 +1562,41 @@ document.getElementById('runCalc').onclick=()=>{
       <div class="psum">${p.point}</div>
     </div>`).join('');
 
-  const favHTML=favs.length?favs.map(f=>`<div class="frow fav"><span class="dot"></span><span class="ft">${f.t}</span><span class="fw">+${f.v}</span></div>`).join(''):'<div class="frow"><span class="ft" style="color:var(--ink-faint)">해당 없음</span></div>';
-  const unfHTML=unfs.length?unfs.map(f=>`<div class="frow unf"><span class="dot"></span><span class="ft">${f.t}</span><span class="fw">${f.v}</span></div>`).join(''):'<div class="frow"><span class="ft" style="color:var(--ink-faint)">해당 없음</span></div>';
+  const emptyText=picked?'해당 없음':'고른 항목이 없습니다';
+  const docsHTML=docs.map(d=>`<div class="frow chk"><span class="dot"></span><span class="ft">${ckEsc(d)}</span></div>`).join('');
 
   document.getElementById('rResult').innerHTML=`
-    <div class="gauge-wrap">
-      <div style="font-size:12.5px;color:var(--ink-faint);font-weight:600;letter-spacing:.03em">${data.resultLabel}</div>
-      ${gaugeSVG(score)}
-      <div class="gband" style="color:${bc}">${band}</div>
-      <div class="grange">약 ${lo}<small>–${hi}%</small></div>
-      <div class="gcaption">근로기준법 등 법령 기준 · 참고 지표</div>
+    <div class="ck-head">
+      <div class="ck-title">${data.resultLabel}</div>
+      <div class="ck-sub">${picked?`고르신 항목 ${picked}개를 정리했습니다.`:'아직 고른 항목이 없습니다. 질문별로 상황을 골라 주세요.'}${picked&&missing>0?` 고르지 않은 항목 ${missing}개는 넣지 않았습니다.`:''}</div>
     </div>
-    <div class="rbreak">
-      <h4>▲ 유리하게 작용하는 요소</h4>${favHTML}
-      <h4 style="margin-top:16px">▼ 불리하게 작용하는 요소</h4>${unfHTML}
+    <div class="rbreak ck">
+      <h4>▲ 유리한 점</h4>${ckRows(favs,'fav',emptyText)}
+      <h4 style="margin-top:16px">▼ 불리하거나 확인이 필요한 점</h4>${ckRows(unfs,'unf',emptyText)}
+    </div>
+    <div class="rbreak ck">
+      <h4>준비하면 좋은 자료</h4>
+      <div id="ckMine"></div>
+      ${docsHTML}
     </div>
     <div class="precedents">
       <h4>판단 기준 참고 <span>법령 근거</span></h4>${precHTML}
     </div>
     <div class="disclaimer">
       <span class="di">⚠️</span>
-      <div>본 지표는 입력값과 법령상 일반 기준을 바탕으로 한 <b>참고용</b>일 뿐, 실제 판정·회수 결과를 보장하지 않습니다. 결과는 구체적 사실관계와 심리 기관의 판단에 따라 크게 달라질 수 있습니다. <b>반드시 공인노무사 상담을 통해 확인하세요.</b></div>
+      <div>이 점검표는 고르신 항목을 정리한 것으로, 결과(승소·회수 가능성)를 예측하지 않습니다. <b>정확한 판단은 노무사 상담으로 확인하세요.</b></div>
     </div>
     <div class="result-cta">
       <a href="#consult" class="btn btn-primary">이 내용으로 AI 상담 이어가기</a>
       <a href="https://map.naver.com/p/entry/place/2008178814?placePath=%2Fticket" target="_blank" rel="noopener" class="btn btn-ghost">노무사 상담 예약</a>
     </div>`;
+  if(evText){
+    const mine=document.getElementById('ckMine');
+    const lab=document.createElement('div');lab.className='fn';lab.style.cssText='font-size:12px;color:var(--ink-faint);margin-bottom:6px';lab.textContent='적어 주신 자료';
+    const box=document.createElement('div');box.className='ck-mine';box.textContent=evText;
+    const lab2=document.createElement('div');lab2.style.cssText='font-size:12px;color:var(--ink-faint);margin:4px 0 8px';lab2.textContent=data.docs?'이 유형에서 챙기면 좋은 자료':'함께 챙기면 좋은 자료 (일반 목록)';
+    mine.appendChild(lab);mine.appendChild(box);mine.appendChild(lab2);
+  }
   document.getElementById('rEmpty').style.display='none';
   document.getElementById('rResult').style.display='';
   document.getElementById('resultPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
