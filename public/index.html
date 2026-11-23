@@ -113,6 +113,9 @@ header{position:sticky;top:0;z-index:40;background:rgba(16,21,31,.82);backdrop-f
 .mnav-tel{display:block;font-size:19px;font-weight:800;color:var(--ink);margin-bottom:4px}
 .mnav-tel em{display:block;font-style:normal;font-size:12px;font-weight:400;color:var(--ink-faint);margin-top:3px}
 .mnav-cta{width:100%;text-align:center;margin-top:16px;padding:14px}
+/* 모바일 메뉴 닫기 버튼 (메뉴 판이 햄버거를 덮으므로 판 안에 둠, 2026-11-23 M4) */
+.mnav-close{position:absolute;top:22px;right:18px;width:40px;height:40px;border-radius:10px;border:1px solid var(--line-soft);background:none;color:var(--ink-soft);font-size:17px;line-height:1;display:grid;place-items:center;cursor:pointer;transition:all .2s}
+.mnav-close:hover{color:var(--gold-3);border-color:var(--line);background:rgba(220,189,118,.07)}
 
 /* ---------- hero: 풀블리드 씬 모드 (힉스필드 합성 이미지용) ---------- */
 
@@ -268,6 +271,8 @@ a.hv-card{display:block;cursor:pointer;color:inherit}
 #subsidy .sec-head p{word-break:keep-all}
 .subsidy-panel{background:rgba(8,22,38,.6);border:1px solid var(--line-soft);border-radius:14px;padding:30px}
 .subsidy-panel.result{display:flex;flex-direction:column;min-height:420px}
+.s-need{margin-top:10px;text-align:center;font-size:13px;color:var(--gold-3)}
+.s-need[hidden]{display:none}
 .sfield{margin-bottom:20px}
 .sfield label{display:block;font-size:14px;color:var(--ink-soft);margin-bottom:10px;font-weight:600}
 .sfield .smulti{font-size:11px;color:var(--gold-2);font-weight:400;margin-left:6px}
@@ -409,7 +414,7 @@ a.hv-card{display:block;cursor:pointer;color:inherit}
 .vc-end:hover{background:rgba(220,189,118,.1);border-color:var(--gold-2)}
 .vc-mute{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:transparent;font-size:19px;transition:all .3s}
 .vc-mute.on{background:rgba(220,189,118,.12);border-color:var(--gold-2)}
-.voice-hint{margin-top:16px;font-size:12px;color:var(--ink-faint);max-width:240px;line-height:1.5}
+.voice-hint{margin-top:16px;font-size:12px;color:var(--ink-faint);max-width:240px;line-height:1.5;word-break:keep-all}
 .voice-transcript{padding:24px;height:442px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:rgba(16,21,31,.3)}
 .tr-empty{margin:auto;text-align:center;color:var(--ink-faint);font-size:14px;max-width:220px;line-height:1.7}
 .tr-turn{max-width:88%;font-size:14px;line-height:1.6}
@@ -593,6 +598,7 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
   .sec-foot{font-size:11.5px;margin-top:13px}
   #subsidy .sec-head p br{display:none}
   .subsidy-panel.result{min-height:0}
+  .subsidy-panel.result[hidden]{display:none}   /* 한 줄 배치에서는 진단 전 빈 결과 칸을 숨김 (2026-11-23 L6) */
   .voice-frame{grid-template-columns:1fr}
   .voice-stage{border-right:none;border-bottom:1px solid var(--line-soft)}
   .voice-transcript{height:340px}
@@ -684,18 +690,12 @@ footer{background:var(--navy-900);border-top:1px solid var(--line-soft);padding:
 .qn-grid a:hover::after{transform:scaleX(1)}
 .qn-grid a.back .tx{color:var(--ink-faint)}
 .qn-grid a.back:hover .tx{color:var(--gold-3)}
-/* 모바일: 위 3 · 아래 4 (12칼럼 스팬) — '맨 위로'는 숨김 */
+/* 모바일: 위 4 · 아래 4 — '맨 위로'도 보임 (2026-11-23 L4) */
 @media(max-width:640px){
   .quicknav .wrap{padding:22px 14px 20px}
   .qn-eyebrow{margin-bottom:14px}
-  .qn-grid{grid-template-columns:repeat(12,1fr)}
-  .qn-grid a{padding:14px 6px;border-top:1px solid var(--line-soft)}
+  .qn-grid a{padding:14px 4px;white-space:nowrap}
   .qn-grid a .tx{font-size:12.5px}
-  .qn-grid a.back{display:none}
-  .qn-grid a:nth-child(-n+3){grid-column:span 4;border-top:none}
-  .qn-grid a:nth-child(n+4){grid-column:span 3}
-  .qn-grid a{border-right:1px solid var(--line-soft)}
-  .qn-grid a:nth-child(3),.qn-grid a:nth-child(7){border-right:none}
 }
 
 /* ---------- 오시는길 지도 + 길찾기 ---------- */
@@ -834,6 +834,17 @@ body.no-scroll{overflow:hidden}
   .co-gate-note{margin-top:20px;font-size:11.5px;text-align:center}
   .co-bar{padding:10px 14px}
   .co-brand img{width:34px;height:34px}
+  /* 좁은 화면 윗줄: 이름·관점 표시·버튼이 줄바꿈되지 않게 (2026-11-23 M3) */
+  .co-brand{gap:8px;min-width:0}
+  .co-bt b{font-size:14px;letter-spacing:.02em;white-space:nowrap}
+  .co-bt span{font-size:9.5px;letter-spacing:.12em;white-space:nowrap}
+  .co-right{gap:6px;flex-shrink:0}
+  .co-persp-badge{font-size:11px;padding:5px 9px;white-space:nowrap}
+  .co-change{font-size:11px;padding:5px 8px;white-space:nowrap}
+  .co-close{width:34px;height:34px;font-size:15px}
+}
+@media(max-width:400px){
+  .co-brand img{display:none}
 }
 </style>
 </head>
@@ -872,6 +883,7 @@ body.no-scroll{overflow:hidden}
 <!-- 모바일 메뉴 -->
 <div class="mnav-backdrop" id="mnavBack" hidden></div>
 <nav class="mnav" id="mnav" aria-label="모바일 메뉴" aria-hidden="true" hidden>
+  <button type="button" class="mnav-close" id="mnavClose" aria-label="메뉴 닫기">✕</button>
   <a href="#about">소개</a>
   <a href="#calc">사전진단</a>
   <a href="#subsidy">지원금진단</a>
@@ -950,7 +962,7 @@ body.no-scroll{overflow:hidden}
     <div class="sec-head">
       <div class="center-eyebrow"><span class="eyebrow center">사업주 지원금 진단</span></div>
       <h2>정부지원금, 1분 진단</h2>
-      <p class="sec-sub">기업 규모·근로자 수 등 6가지를 고르면<br>신청 가능한 고용장려금을 안내합니다.</p>
+      <p class="sec-sub">기업 규모·근로자 수 등 6가지를 고르면 <br>신청 가능한 고용장려금을 안내합니다.</p>
       <div class="sec-foot">신청대행은 <b>공인노무사만 합법적으로 대리</b>할 수 있습니다. <em>· 결과는 참고용입니다</em></div>
     </div>
     <div class="subsidy-shell">
@@ -1003,6 +1015,7 @@ body.no-scroll{overflow:hidden}
             </div>
           </div>
           <button class="btn btn-primary subsidy-run" id="runSubsidy">받을 수 있는 지원금 진단하기 →</button>
+          <p class="s-need" id="sNeed" role="status" hidden>위 항목을 골라 주세요.</p>
         </div>
         <!-- 결과 패널 -->
         <div class="subsidy-panel result" id="subsidyResult" hidden>
@@ -1035,7 +1048,6 @@ body.no-scroll{overflow:hidden}
       </div>
       <div class="ai-launch">
         <a href="#consult" class="btn btn-primary" style="font-size:17px;padding:16px 34px">🎙 전체화면 AI 상담 시작 <span class="ar">→</span></a>
-        <p class="ai-hint">카카오톡·QR로 바로 연결: 사이트 주소 뒤에 <b>#consult</b>를 붙이면 상담 화면이 즉시 열립니다.</p>
       </div>
     </div>
   </div>
@@ -1073,7 +1085,7 @@ body.no-scroll{overflow:hidden}
         </div>
         <p class="desc">당신의 이야기를 들려주세요. 해결책은 제가 찾습니다.</p>
         <div class="lc-chips"><span>부당해고·징계</span><span>임금·퇴직금</span><span>급여·자문</span><span>산업재해</span><span>인사노무컨설팅</span></div>
-        <a href="#contact" class="btn btn-ghost lc-btn">자세히 보기 <span class="ar">→</span></a>
+        <a href="#contact" class="btn btn-ghost lc-btn">상담·오시는 길 보기 <span class="ar">→</span></a>
       </div>
       <!-- AI 사전진단 (점검표) -->
       <div class="lcard glass" id="results">
@@ -1710,11 +1722,33 @@ function openConsult(){ coOverlay.classList.add('on'); coOverlay.setAttribute('a
   document.body.classList.add('no-scroll');
   if(PERSP) showConsult(); else showGate();
   try{ coOverlay.scrollTop=0; requestAnimationFrame(function(){ coOverlay.scrollTop=0; }); setTimeout(function(){ coOverlay.scrollTop=0; },60); }catch(e){} }
+/* 상담 창을 닫으면 열기 전 화면·주소로 돌아간다 (2026-11-23 H2·L1)
+   CO_STATE.pushed: 사이트 안에서 눌러 #consult가 기록에 쌓였으면 true → 닫을 때 한 칸 뒤로(기록 중복 없음)
+   CO_STATE.keepView: 그 뒤로 가기에서는 화면을 다시 그리지 않음(스크롤·결과 유지)
+   CO_STATE.lastHash: 직접 들어온 경우(#consult로 처음 열림) 닫을 때 바꿔 넣을 주소 */
+const CO_STATE={ pushed:false, keepView:false, lastHash:'#top' };
 function closeConsult(){ coOverlay.classList.remove('on'); coOverlay.setAttribute('aria-hidden','true');
   document.body.classList.remove('no-scroll');
-  if(location.hash==='#consult') history.replaceState(null,'',location.pathname+'#top'); }
+  if(location.hash==='#consult'){
+    if(CO_STATE.pushed){ CO_STATE.pushed=false; CO_STATE.keepView=true; history.back(); }
+    else history.replaceState(null,'',location.pathname+CO_STATE.lastHash);
+  }
+  CO_STATE.pushed=false; }
 document.querySelectorAll('.co-choice').forEach(b=>{
   b.onclick=()=>{ PERSP=b.dataset.persp; showConsult(); };
+});
+/* 주요업무 카드: 카드에 적힌 근로자/사업주를 관점으로 미리 골라 둠 (2026-11-23 L3, 상담 진행 중에는 바꾸지 않음) */
+document.querySelectorAll('.cases-grid .ccard[data-r]').forEach(a=>{
+  a.addEventListener('click',()=>{
+    const live=document.getElementById('btnEnd'); if(live&&live.style.display!=='none') return;
+    PERSP=a.dataset.r==='employer'?'사업주':'노동자';
+  });
+});
+/* Esc로 상담 창 닫기 (2026-11-23 L2) — 음성 상담 진행 중에는 실수로 닫히지 않게 Esc를 듣지 않음(✕는 그대로) */
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape'||!coOverlay.classList.contains('on')) return;
+  const live=document.getElementById('btnEnd'); if(live&&live.style.display!=='none') return;
+  closeConsult();
 });
 coChange.onclick=()=>{
   if(btnEnd.style.display!=='none'){ alert('진행 중인 상담을 종료한 뒤 관점을 변경할 수 있습니다.'); return; }
@@ -1821,7 +1855,7 @@ async function startRealtime(){
       setStatus('상담 마무리 단계 (약 5분 남음)');
     }, Math.max(0,RT_MAX_SEC-300)*1000));
     if(RT_MAX_SEC>=120) demoTimers.push(setTimeout(()=>{
-      inject('상담 시간이 약 1분 남았다. 의뢰인님의 발언이 끝나는 대로 다음 마무리 인사를 하고 상담을 끝맺으라: "오늘 말씀해 주신 내용은 정리해서 김경동 노무사님께 전달해 드리겠습니다. 더 자세한 상담은 지금까지의 상담 내용을 바탕으로 김경동 노무사님께서 직접 안내해 주실 예정입니다. 필요하시면 02-6952-9297으로 연락 주세요. 시간 내주셔서 감사합니다." 이 인사 후에는 새 질문을 하지 마라.');
+      inject('상담 시간이 약 1분 남았다. 의뢰인님의 발언이 끝나는 대로 다음 마무리 인사를 하고 상담을 끝맺으라: "오늘 말씀해 주신 내용은 정리해서 김경동 노무사님께 전달해 드리겠습니다. 더 자세한 상담은 지금까지의 상담 내용을 바탕으로 김경동 노무사님께서 직접 안내해 주실 예정입니다. 필요하시면 02-6952-9297로 연락 주세요. 시간 내주셔서 감사합니다." 이 인사 후에는 새 질문을 하지 마라.');
       setStatus('상담 종료 임박 (약 1분)');
     }, Math.max(0,RT_MAX_SEC-60)*1000));
     demoTimers.push(setTimeout(()=>{ try{ endVoice(); }catch(_){ } }, RT_MAX_SEC*1000));
@@ -2066,31 +2100,92 @@ window.addEventListener('load',()=>{
   document.body.classList.add('spa');
   const VIEWS = ['home','about','calc','subsidy','ai','cases','contact','blog'];
   const HASH2VIEW = { '':'home', top:'home', about:'about', practice:'cases', calc:'calc',
-                      videos:'home',
+                      videos:'home', location:'home',
                       subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home', blog:'blog', youtube:'blog' };
+  // 화면을 켠 뒤 맨 위가 아니라 그 칸으로 내려갈 주소 (2026-11-23 H1: 오시는길 → 지도 칸)
+  const SCROLL_TO = { location:'location' };
   const secs = Array.from(document.querySelectorAll('section[data-view]'));
   const menuLinks = Array.from(document.querySelectorAll('.menu a, a[href^="#"]'));
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';   // 새로고침 때 브라우저가 옛 위치로 내리지 않게 (M2)
+  const INSTANT = 'instant' in window ? 'instant' : 'auto';
+  let curView = '';
 
-  function show(view){
+  // 화면 위치 맞추기: 맨 위(0) 또는 SCROLL_TO 칸의 윗부분(상단 메뉴 높이만큼 띄움)
+  function scrollForKey(key){
+    const id = SCROLL_TO[key];
+    const el = id && document.getElementById(id);
+    if (!el){ window.scrollTo({ top: 0, behavior: INSTANT }); return; }
+    const hd = document.querySelector('header');
+    const off = hd ? hd.getBoundingClientRect().height : 0;
+    window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.scrollY - off), behavior: INSTANT });
+  }
+  // 그림·블로그 띠가 늦게 불러져 칸이 밀리거나 브라우저가 주소의 칸으로 내려 버리는 경우를 위해
+  // 잠깐 동안 몇 번 더 맞춘다. 손님이 직접 스크롤·터치·키를 쓰면 바로 멈춘다. (H1·M2·L7)
+  let settleId = 0, userMoved = false, settleGo = null, settleUntil = 0;
+  ['wheel','touchstart','keydown','mousedown'].forEach(t => window.addEventListener(t, () => { userMoved = true; }, { passive: true }));
+  // 블로그 띠처럼 나중에 나타나는 칸 때문에 페이지 높이가 바뀌면 4초 동안은 다시 맞춘다
+  if ('ResizeObserver' in window) new ResizeObserver(() => { if (settleGo && performance.now() < settleUntil) settleGo(); }).observe(document.body);
+  function settle(key){
+    const my = ++settleId; userMoved = false;
+    const go = () => { if (my === settleId && !userMoved && !coOverlay.classList.contains('on')) scrollForKey(key); };
+    settleGo = go; settleUntil = performance.now() + 4000;
+    go(); requestAnimationFrame(go); [120, 400, 900, 1600].forEach(ms => setTimeout(go, ms));
+    if (document.readyState !== 'complete') window.addEventListener('load', () => { go(); setTimeout(go, 150); }, { once: true });
+  }
+  function markMenu(view, key){
+    // 메뉴 활성 표시: 상단 메뉴와 모바일 메뉴 모두 (M4). 홈에서는 아무 메뉴도 켜지 않음 (M1)
+    document.querySelectorAll('.menu a, .mnav > a').forEach(a => {
+      const k = (a.getAttribute('href')||'').slice(1);
+      const on = SCROLL_TO[k] ? k === key : (!SCROLL_TO[key] && view !== 'home' && HASH2VIEW[k] === view);
+      a.classList.toggle('on', on);
+    });
+  }
+  function show(view, key){
     if (!VIEWS.includes(view)) view = 'home';
+    curView = view;
     secs.forEach(s => {
       const on = s.dataset.view.split(' ').includes(view);
       s.classList.toggle('view-on', on);
       s.classList.remove('view-fade');
       if (on) void s.offsetWidth, s.classList.add('view-fade');
     });
-    document.querySelectorAll('.menu a').forEach(a => {
-      a.classList.toggle('on', (HASH2VIEW[(a.getAttribute('href')||'').slice(1)] || 'home') === view);
-    });
-    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+    markMenu(view, key);
+    settle(key);
   }
+  let first = true;
   function route(){
     const h = location.hash.replace('#','');
-    if (h === 'consult'){ openConsult(); return; }   // 직링크(#consult) → 전체화면 상담
+    const wasFirst = first; first = false;
+    if (h === 'consult'){                              // 직링크(#consult) → 전체화면 상담
+      if (wasFirst || !curView) show('home', 'top');   // 바로 들어온 경우 뒤에 홈 화면을 켜 둠 (H2)
+      CO_STATE.pushed = !wasFirst;
+      if (wasFirst) CO_STATE.lastHash = '#top';
+      openConsult(); return;
+    }
     if (coOverlay.classList.contains('on')) closeConsult();
-    show(HASH2VIEW[h] || 'home');
+    CO_STATE.lastHash = '#' + (h || 'top');
+    const view = HASH2VIEW[h] || 'home';
+    if (CO_STATE.keepView){                            // 상담 창 ✕로 한 칸 뒤로 온 경우: 화면·스크롤 그대로 (L1)
+      CO_STATE.keepView = false;
+      if (view === curView){ markMenu(view, h); return; }
+    }
+    show(view, h);
   }
   window.addEventListener('hashchange', route);
+  // 이미 보고 있는 주소의 메뉴·로고·'맨 위로'를 다시 누르면 주소 변화가 없어 hashchange가 안 생김 → 직접 위치를 맞춤 (L5)
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const k = a.getAttribute('href').slice(1);
+    if (k === 'consult') return;
+    // 사이트맵 '맨 위로': 화면은 그대로 두고 그 화면 맨 위로만 (L4)
+    if (a.matches('.quicknav a.back')){ e.preventDefault(); userMoved = false; settleId++; window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    const cur = location.hash.replace('#','');
+    const same = k === cur || ((k === 'top' || k === '') && (cur === '' || cur === 'top'));
+    if (!same || (HASH2VIEW[k] || 'home') !== curView) return;   // 화면이 바뀌는 경우는 hashchange가 처리
+    e.preventDefault();
+    userMoved = false; settleId++; scrollForKey(k);
+  });
   // 로고 클릭 → 홈
   const brand = document.querySelector('.brand, header a[href="#top"]');
   if (brand) brand.addEventListener('click', () => { location.hash = 'top'; });
@@ -2172,6 +2267,11 @@ window.addEventListener('load',()=>{
   var runBtn = document.getElementById('runSubsidy');
   if(!runBtn) return;
   runBtn.addEventListener('click', function(){
+    // 아무것도 고르지 않았으면 진단하지 않고 안내만 (2026-11-23 L6)
+    var need = document.getElementById('sNeed');
+    var picked = Object.keys(sel).some(function(k){ var x = sel[k]; return Array.isArray(x) ? x.length > 0 : !!x; });
+    if(need) need.hidden = picked;
+    if(!picked) return;
     var DB = window.SUBSIDY_DB || [];
     var COMMON = window.SUBSIDY_COMMON_DOCS || [];
     var VERIFIED = window.SUBSIDY_LAST_VERIFIED || '';
@@ -2309,6 +2409,8 @@ window.addEventListener('load',()=>{
   }
   btn.addEventListener('click',function(e){ e.stopPropagation(); setOpen(!open); });
   back.addEventListener('click',function(){ setOpen(false); });
+  var closeBtn=document.getElementById('mnavClose');   // 메뉴 판 안 닫기 버튼 (2026-11-23 M4)
+  if(closeBtn) closeBtn.addEventListener('click',function(){ setOpen(false); btn.focus(); });
   nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ setOpen(false); }); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&open) setOpen(false); });
   window.addEventListener('resize',function(){ if(window.innerWidth>=960&&open) setOpen(false); });
