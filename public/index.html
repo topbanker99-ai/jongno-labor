@@ -1282,7 +1282,7 @@ body.no-scroll{overflow:hidden}
     </div>
     <div class="foot-info">
       <b>강남지사</b> (06158) 서울시 강남구 테헤란로 441, 송암빌딩 5층 &nbsp;·&nbsp; <b>전화</b> 02-6952-9297 &nbsp;·&nbsp; <b>팩스</b> 02-6919-4056<br>
-      <b>부대표 공인노무사</b> 김경동 (강남지사) &nbsp;·&nbsp; <b>이메일</b> kkd@jnhrm.co.kr
+      <b>공인노무사</b> 김경동 · 노무법인 종로 부대표 · 강남지사 &nbsp;·&nbsp; <b>이메일</b> kkd@jnhrm.co.kr
     </div>
     <div class="foot-copy">© 2026 공인노무사 김경동. All rights reserved.</div>
   </div>
@@ -1460,7 +1460,7 @@ const CASE_DATA = {
     factors:[
       {id:'repeat', q:'행위의 반복성·지속성은?', opts:[
         {t:'반복적·지속적', v:10, kind:'fav', note:'반복되면 괴롭힘으로 볼 가능성이 커질 수 있음'},
-        {t:'1~2회 단발성', v:-6, kind:'unf', note:'한두 번이라도 폭행·심한 폭언이면 해당될 수 있음'} ]},
+        {t:'1~2회 단발성', v:0, kind:'chk', note:'한두 번이라도 폭행·심한 폭언이면 해당될 수 있음'} ]},
       {id:'proof', q:'증거 확보 상황은?', opts:[
         {t:'녹취·메시지 확보', v:12, kind:'fav', note:'객관적인 증거가 있음'},
         {t:'목격자 진술만', v:4, kind:'fav', note:'목격자 진술을 글로 받아 두면 좋음'},
@@ -2097,7 +2097,7 @@ const DEMO_SCRIPT=[
   {who:'user',text:'지난주 금요일이요. 회사는 직원이 열 명쯤 돼요.'},
   {who:'ai',text:'5인 이상 사업장이고 해고일부터 3개월이 지나지 않았다면 노동위원회 구제신청이 가능합니다. 근로계약서나 카톡 통보 내역 같은 자료는 갖고 계신가요?'},
   {who:'user',text:'계약서도 있고 카톡 캡처도 해뒀어요.'},
-  {who:'ai',text:'좋습니다. 말씀해 주신 내용을 정리해 김경동 노무사님께 전달해 드릴게요. 상담 종료 버튼을 눌러 주세요.'}
+  {who:'ai',text:'좋습니다. 말씀해 주신 내용을 정리해 김경동 노무사에게 전달해 드릴게요. 상담 종료 버튼을 눌러 주세요.'}
 ];
 function startDemo(){
   onConnected(true);
