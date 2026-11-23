@@ -53,6 +53,7 @@ app.set('trust proxy', 1); // Cloudtype 프록시 뒤에서 실행
 const DEFAULT_ORIGINS = [
   'https://port-0-jongno-labor-mrp4d0q5a6ba37cc.sel3.cloudtype.app',
   'https://port-0-jongno-labor.sel3.cloudtype.app',
+  'https://kimlabor.kr',                       // 2026-11 새 도메인 (Cloudflare 중계)
 ];
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
@@ -62,8 +63,32 @@ app.use(cors({ origin: (origin, cb) => cb(null, !origin || ALLOWED_ORIGINS.inclu
 /* 실제 방문자 IP — X-Forwarded-For의 맨 왼쪽 값은 방문자가 마음대로 적어 보낼 수 있으므로(위조 가능)
    프록시가 덧붙인 오른쪽부터 거슬러 올라가 첫 번째 '공인 IP'를 방문자 IP로 본다. */
 const PRIVATE_IP = /^(10\.|127\.|0\.|192\.168\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.|100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|::1$|::$|f[cd][0-9a-f]{0,2}:|fe80:)/i;
+
+/* [kimlabor.kr 중계] Cloudflare 중계(Worker)를 거친 요청은 서버에 Cloudflare 주소로 보이므로,
+   Worker가 비밀값(PROXY_SECRET)과 함께 넘긴 방문자 IP(x-kimlabor-client-ip)를 쓴다.
+   비밀값이 맞지 않는 요청(클라우드타입 주소로 직접 들어와 헤더를 꾸민 경우)은 이 헤더를 무시한다.
+   PROXY_SECRET이 비어 있으면 이 기능 전체가 꺼지고 예전과 똑같이 동작한다. */
+const PROXY_SECRET = String(process.env.PROXY_SECRET || '').trim();
+const PROXY_SECRET_HASH = crypto.createHash('sha256').update(PROXY_SECRET).digest();
+const fromProxy = (req) => {
+  if (!PROXY_SECRET) return false;
+  const got = crypto.createHash('sha256').update(String(req.headers['x-kimlabor-proxy'] || '')).digest();
+  return crypto.timingSafeEqual(got, PROXY_SECRET_HASH);
+};
+// IPv6는 한 집·한 휴대폰이 /64 묶음 전체를 받으므로 앞 4칸(/64)으로 센다 (주소만 바꿔 가며 한도를 피하지 못하게)
+const ipKey = (ip) => {
+  if (!ip.includes(':')) return ip;
+  const [head, tail = ''] = ip.toLowerCase().split('::');
+  const h = head ? head.split(':') : [], t = tail ? tail.split(':') : [];
+  const full = [...h, ...Array(Math.max(0, 8 - h.length - t.length)).fill('0'), ...t];
+  return full.slice(0, 4).map(x => x.replace(/^0+(?=.)/, '')).join(':') + '::/64';
+};
 const getIP = (req) => {
   const norm = (ip) => String(ip || '').trim().replace(/^::ffff:/i, '');
+  if (fromProxy(req)) {
+    const v = norm(req.headers['x-kimlabor-client-ip']);
+    if (v && v.length <= 45 && /^[0-9a-f.:]+$/i.test(v)) return ipKey(v);
+  }
   const chain = String(req.headers['x-forwarded-for'] || '').split(',').map(norm).filter(Boolean);
   chain.push(norm(req.socket?.remoteAddress));
   for (let i = chain.length - 1; i >= 0; i--) {
@@ -991,6 +1016,7 @@ app.post('/api/precedent-brief', ipLimit('pb', 120), requireSession('search'), d
 app.get('/api/health', ipLimit('hz', 120), (req, res) => {
   res.json({
     ok: true,
+    via: fromProxy(req) ? 'kimlabor' : 'direct',   // 중계 비밀값이 맞았는지 (설치 확인용, 값 자체는 노출 안 함)
     features: {
       ai: !!OPENAI_KEY,                                   // 리얼타임·절약형 음성상담
       cases: !!(OPENAI_KEY && UPSTASH_URL && UPSTASH_TOKEN) && ragStatus !== 'missing', // 상담사례 15,427건 + 블로그 문답 110개 검색
@@ -1055,6 +1081,7 @@ function configReport() {
   console.log(' 상담요약 메일(SMTP_*)      :', ok(mailReady()));
   console.log(' 봇 차단(TURNSTILE_SECRET) :', process.env.TURNSTILE_SECRET ? '켜짐 (index.html TURNSTILE_SITEKEY도 입력돼 있어야 함)' : '꺼짐');
   console.log(` 상담 모델: ${RT_MODEL} (음성인식 ${RT_TRANSCRIBE} · 목소리 ${RT_VOICE}) · 요약: ${SUMMARY_ATTEMPTS[0].model} · 1회 최대 ${RT_MAX_MIN}분 · 1인 하루 ${RT_PERSON_DAY_COUNT}회·총 ${RT_PERSON_DAY_MIN}분 · 전체 하루 ${DAILY_CAPS.realtime}회`);
+  console.log(' kimlabor.kr 중계(PROXY_SECRET)  :', PROXY_SECRET ? '켜짐 — 중계가 넘긴 방문자 IP 사용' : '꺼짐 (직접 접속 IP만 사용)');
   if (!process.env.SESSION_SECRET) console.log(' (안내) SESSION_SECRET 미설정 → 재시작마다 자동 생성. 서버 재시작 시 진행 중 상담 세션은 만료됩니다.');
   console.log('──────────────────────────────────');
 }

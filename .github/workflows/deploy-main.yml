@@ -50,6 +50,8 @@ jobs:
                   value: ${{ secrets.KL_UPSTASH_READ_TOKEN }}
                 - name: REALTIME_PW
                   value: ${{ secrets.REALTIME_PW }}
+                - name: PROXY_SECRET
+                  value: ${{ secrets.KL_PROXY_SECRET }}
               buildenv: []
             context:
               git:
