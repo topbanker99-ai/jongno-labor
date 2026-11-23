@@ -248,7 +248,7 @@ section.block{padding:96px 0;position:relative}
 a.hv-card{display:block;cursor:pointer;color:inherit}
 .hv-card .vmeta .t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;line-height:1.45;color:var(--ink);word-break:keep-all}
 .hv-card .vmeta .d{display:block;margin-top:3px;font-size:11.5px}
-.vthumb.noimg::after,.bl-th.noimg::after{content:"BLOG";position:absolute;inset:0;display:grid;place-items:center;font-size:12px;letter-spacing:.2em;color:var(--gold-2);opacity:.7}
+.vthumb.noimg::after,.bl-th.noimg::after{content:"COLUMN";position:absolute;inset:0;display:grid;place-items:center;font-size:12px;letter-spacing:.2em;color:var(--gold-2);opacity:.7}
 .bl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:40px}
 .bl-card{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;border:1px solid var(--line-soft);background:#0B1E33;color:inherit;transition:transform .3s,border-color .3s}
 .bl-card:hover{transform:translateY(-4px);border-color:rgba(220,189,118,.45)}
@@ -295,15 +295,17 @@ a.hv-card{display:block;cursor:pointer;color:inherit}
 .bp-body .bp-og span{display:block;font-size:13px;color:var(--ink-faint);margin-top:4px}
 .bp-body .bp-missing{font-size:14px;color:var(--ink-faint)}
 .bp-note{margin-top:30px;font-size:13.5px;line-height:1.75;color:var(--ink-faint)}
-.bp-foot{margin-top:44px;padding:26px 24px;border:1px solid var(--line);border-radius:12px;background:var(--navy-800);text-align:center}
-.bp-foot p{font-size:14.5px;color:var(--ink-faint);margin-bottom:16px}
-.bp-foot .btn{margin:0 6px}
+.bp-foot{margin-top:44px;padding:28px 24px;border:1px solid var(--line);border-radius:12px;background:var(--navy-800);text-align:center}
+.bp-foot p{font-size:16px;color:var(--ink);margin-bottom:18px;word-break:keep-all}
 .bp-foot .bp-acts{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.bp-end{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;margin-top:26px}
+.bp-end .bp-src{font-size:12.5px;color:var(--ink-faint)}
+.bp-end .bp-src:hover{color:var(--gold-2)}
 .bp-loading{padding:60px 0;text-align:center;color:var(--ink-faint)}
 .bp-fail{padding:40px 0 10px;text-align:center}
 .bp-fail h1{font-family:var(--serif);font-size:clamp(22px,2.6vw,28px);color:var(--ink);line-height:1.45;margin-bottom:16px;word-break:keep-all}
 .bp-fail p{color:var(--ink-faint);margin-bottom:26px}
-@media(max-width:620px){.bp-body table{min-width:0;font-size:13.5px}.bp-body th,.bp-body td{padding:8px 7px;min-width:4.6em}.bp-body{font-size:16px;line-height:1.9}.bp-body h3{font-size:19px}.bp-back{margin-bottom:16px}.bp-head{margin-bottom:26px}.bp-foot{padding:22px 16px}}
+@media(max-width:620px){.bp-body table{min-width:0;font-size:13.5px}.bp-body th,.bp-body td{padding:8px 7px;min-width:4.6em}.bp-body{font-size:16px;line-height:1.9}.bp-body h3{font-size:19px}.bp-back{margin-bottom:16px}.bp-head{margin-bottom:26px}.bp-foot{padding:22px 16px}.bp-foot .bp-acts{flex-direction:column;align-items:stretch;gap:10px}.bp-foot p{font-size:15px}}
 
 .calc-shell{max-width:1080px;margin:0 auto;background:var(--glass);border:1px solid var(--card-brd);border-radius:18px;padding:10px;backdrop-filter:blur(10px)}
 /* ===== 정부지원금 간이진단 ===== */
@@ -917,7 +919,7 @@ body.no-scroll{overflow:hidden}
       <a href="#subsidy">지원금진단</a>
       <a href="#ai">AI 상담</a>
       <a href="#cases">주요업무</a>
-      <a href="#blog">블로그</a>
+      <a href="#blog">이슈·칼럼</a>
       <a href="#location">오시는 길</a>
     </nav>
     <div class="nav-right">
@@ -939,7 +941,7 @@ body.no-scroll{overflow:hidden}
   <a href="#subsidy">지원금진단</a>
   <a href="#ai">AI 상담</a>
   <a href="#cases">주요업무</a>
-  <a href="#blog">블로그</a>
+  <a href="#blog">이슈·칼럼</a>
   <a href="#location">오시는 길</a>
   <div class="mnav-foot">
     <a href="tel:0269529297" class="mnav-tel">02-6952-9297<em>매일 10:00~20:00</em></a>
@@ -966,7 +968,7 @@ body.no-scroll{overflow:hidden}
   <!-- 히어로 하단 블로그 띠 (네이버 블로그 최신 글 4개, /api/blog-posts) -->
   <div class="hero-videos">
     <div class="wrap">
-      <div class="hv-label"><span class="hv-rule"></span>최근 블로그 글<a class="hv-more" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그에서 보기 →</a></div>
+      <div class="hv-label"><span class="hv-rule"></span>최신 이슈·칼럼<a class="hv-more" href="#blog">더 보기 →</a></div>
       <div class="vstrip" id="heroBlog" hidden></div>
     </div>
   </div>
@@ -1259,12 +1261,12 @@ body.no-scroll{overflow:hidden}
 <section class="block" id="blog" data-view="blog">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow center-eyebrow center">BLOG</span>
-      <h2>최근 블로그 글</h2>
-      <p>김경동 노무사가 네이버 블로그에 쓴 글입니다.</p>
+      <span class="eyebrow center-eyebrow center">ISSUE &amp; COLUMN</span>
+      <h2>인사노무 이슈와 칼럼</h2>
+      <p>김경동 공인노무사가 쓴 노동 이슈 해설과 실무 칼럼입니다.</p>
     </div>
     <div class="bl-grid" id="blogGrid" hidden></div>
-    <div class="bl-more"><button type="button" class="btn btn-ghost bl-loadmore" id="blogMore" hidden>더 보기 <span class="n"></span></button><a class="btn btn-ghost" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그 전체 보기 <span class="ar">→</span></a></div>
+    <div class="bl-more"><button type="button" class="btn btn-ghost bl-loadmore" id="blogMore" hidden>더 보기 <span class="n"></span></button></div>
   </div>
 </section>
 
@@ -1323,7 +1325,7 @@ body.no-scroll{overflow:hidden}
       <a href="#subsidy"><span class="tx">지원금진단</span></a>
       <a href="#ai"><span class="tx">AI 상담</span></a>
       <a href="#cases"><span class="tx">주요업무</span></a>
-      <a href="#blog"><span class="tx">블로그</span></a>
+      <a href="#blog"><span class="tx">이슈·칼럼</span></a>
       <a href="#location"><span class="tx">오시는 길</span></a>
       <a href="#top" class="back"><span class="tx">맨 위로 ↑</span></a>
     </div>
@@ -2193,7 +2195,7 @@ window.addEventListener('load',()=>{
   let restoreY = null, prevKey = '';            // 글 → 목록으로 돌아올 때 보던 위치로
   const HASH2VIEW = { '':'home', top:'home', about:'about', practice:'cases', calc:'calc',
                       videos:'home', location:'home',
-                      subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home', blog:'blog', youtube:'blog' };
+                      subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home', blog:'blog', column:'blog', youtube:'blog' };
   // 화면을 켠 뒤 맨 위가 아니라 그 칸으로 내려갈 주소 (2026-11-23 H1: 오시는길 → 지도 칸)
   const SCROLL_TO = { location:'location' };
   const secs = Array.from(document.querySelectorAll('section[data-view]'));
@@ -2373,9 +2375,13 @@ window.addEventListener('load',()=>{
   function tailHtml(t){
     return (t && t.disclaimer) ? `<p class="bp-note">${esc(t.disclaimer)}</p>` : '';
   }
-  const footHtml = (link) => `<div class="bp-foot"><p>이 글은 김경동 노무사의 네이버 블로그 원문입니다.</p><div class="bp-acts">` +
-    `<a class="btn btn-primary" href="${esc(link)}" target="_blank" rel="noopener">블로그에서 보기 (댓글·공감) <span class="ar">→</span></a>` +
-    `<a class="btn btn-ghost" href="#blog" data-bp-back>← 목록으로</a></div></div>`;
+  // 글 끝: 상담 문의 칸(아래 '상담 안내' 칸과 같은 버튼) + 목록으로 + 작은 원문 표시 한 줄 (2026-11-23 대표 결정 "이슈·칼럼")
+  const footHtml = (link) => `<div class="bp-foot"><p>비슷한 일로 고민 중이시면 상담을 예약하세요.</p><div class="bp-acts">` +
+    `<a class="btn btn-primary" href="https://map.naver.com/p/entry/place/2008178814?placePath=%2Fticket" target="_blank" rel="noopener">네이버 예약</a>` +
+    `<a class="btn btn-ghost" href="tel:0269529297">전화 예약 02-6952-9297</a>` +
+    `<a class="btn btn-ghost" href="#consult">AI 음성 상담 시작 <span class="ar">→</span></a></div></div>` +
+    `<div class="bp-end"><a class="bp-back" href="#blog" data-bp-back style="margin:0">← 목록으로</a>` +
+    `<a class="bp-src" href="${esc(link)}" target="_blank" rel="noopener">원문: 네이버 블로그</a></div>`;
   function fail(no, title){
     const p = byNo[no];
     const t = title || (p && p.title) || '';
@@ -2393,11 +2399,11 @@ window.addEventListener('load',()=>{
       .then(({ ok, j }) => {
         if (curNo !== no) return;                 // 그 사이 다른 글로 옮긴 경우
         if (!ok || !j || !j.html) {
-          if (j && j.code === 'not_listed') { box.innerHTML = `<div class="bp-fail"><p>홈페이지에서 볼 수 없는 글입니다.</p><a class="btn btn-ghost" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그 전체 보기 <span class="ar">→</span></a></div>`; return; }
+          if (j && j.code === 'not_listed') { box.innerHTML = `<div class="bp-fail"><p>홈페이지에서 볼 수 없는 글입니다.</p><a class="btn btn-ghost" href="#blog" data-bp-back>← 목록으로</a></div>`; return; }
           return fail(no, j && j.title);
         }
-        box.innerHTML = `<div class="bp-head"><div class="bp-cat">BLOG · ${esc(j.category || '일 이야기')}</div><h1>${esc(j.title)}</h1>` +
-          `<div class="bp-meta">${esc(String(j.date || '').replace(/-/g, '.'))} · 김경동 노무사 · 네이버 블로그</div></div>` +
+        box.innerHTML = `<div class="bp-head"><div class="bp-cat">ISSUE &amp; COLUMN</div><h1>${esc(j.title)}</h1>` +
+          `<div class="bp-meta">${esc(String(j.date || '').replace(/-/g, '.'))} · 김경동 공인노무사</div></div>` +
           `<div class="bp-body">${j.html}</div>` + tailHtml(j.tail) + footHtml(j.link || blogUrl(no));
         clean(box.querySelector('.bp-body'));
         document.title = j.title + ' | 공인노무사 김경동';
