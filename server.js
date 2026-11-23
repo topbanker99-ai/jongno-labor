@@ -945,7 +945,7 @@ async function loadBlogPosts() {
 }
 
 app.get('/api/blog-posts', ipLimit('bp', 300), async (req, res) => {
-  const limit = Math.max(1, Math.min(parseInt(req.query.limit, 10) || 6, 20));
+  const limit = Math.max(1, Math.min(parseInt(req.query.limit, 10) || 6, 50));   // 블로그 화면 '더 보기'용 최대 50 (RSS가 주는 만큼)
   const send = (items, extra = {}) => res.json({ count: Math.min(limit, items.length), items: items.slice(0, limit), ...extra });
   if (blogCache.items.length && Date.now() - blogCache.at < BLOG_CACHE_MS) return send(blogCache.items, { cached: true });
   if (Date.now() - blogFailAt < 5 * 60 * 1000) return send(blogCache.items, { stale: true });
@@ -956,6 +956,243 @@ app.get('/api/blog-posts', ipLimit('bp', 300), async (req, res) => {
     blogFailAt = Date.now();
     console.error('블로그 RSS 조회 실패:', e.message);
     send(blogCache.items, { stale: true });   // 마지막 성공 결과(없으면 빈 목록)
+  }
+});
+
+/* ============================================================
+   5-3) 블로그 글 전문 — 홈페이지 안에서 읽기 (2026-11-23)
+        GET /api/blog-post/:logNo → { logNo, title, date, link, html, tail:{disclaimer}, partial }
+        · blogId는 crydia 고정, logNo는 숫자만. RSS 목록(최근 50건, '사는 이야기' 제외)에 있는 글만 연다
+        · 네이버 모바일 글 화면(m.blog.naver.com)을 읽어, 우리가 정한 태그(문단·소제목·그림·표·인용·링크)로만 새로 만든다
+          (원문 HTML을 그대로 넘기지 않음 → 스크립트·iframe·이벤트 속성·스타일이 들어올 길이 없음)
+        · 원본은 블로그: 응답에 X-Robots-Tag: noindex + Link rel=canonical(블로그 글 주소). robots.txt도 /api/ 수집 금지
+        · 1시간 캐시, 실패한 글은 5분 동안 다시 가져오지 않음. 실패하면 화면이 '블로그에서 보기'로 대신함
+   ============================================================ */
+const BLOG_ID = 'crydia';
+const BLOG_POST_CACHE_MS = 60 * 60 * 1000;
+const blogPostCache = new Map();     // logNo → { at, data } (최대 60개)
+const blogPostLoading = new Map();   // logNo → Promise (같은 글을 동시에 여러 번 가져오지 않음)
+const blogPostFailAt = new Map();    // logNo → 실패 시각
+
+async function blogListForPost() {
+  if (blogCache.items.length && Date.now() - blogCache.at < BLOG_CACHE_MS) return blogCache.items;
+  if (Date.now() - blogFailAt < 5 * 60 * 1000) return blogCache.items;
+  try {
+    if (!blogLoading) blogLoading = loadBlogPosts().finally(() => { blogLoading = null; });
+    return await blogLoading;
+  } catch (e) { blogFailAt = Date.now(); return blogCache.items; }
+}
+
+const bpDecode = (s) => String(s ?? '')
+  .replace(/&#x([0-9a-f]+);/gi, (m, h) => { const c = parseInt(h, 16); return c > 31 && c < 0x110000 ? String.fromCodePoint(c) : ' '; })
+  .replace(/&#(\d+);/g, (m, n) => { const c = Number(n); return c > 31 && c < 0x110000 ? String.fromCodePoint(c) : ' '; })
+  .replace(/&(lt|gt|quot|apos|nbsp|amp);/g, (m, k) => ({ lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', amp: '&' }[k]));
+const bpEsc = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const bpAttr = (tag, name) => { const m = tag.match(new RegExp(`\\s${name}\\s*=\\s*("([^"]*)"|'([^']*)')`, 'i')); return m ? bpDecode(m[2] ?? m[3]) : ''; };
+const bpSafeUrl = (u) => /^https?:\/\/[^\s"'<>]+$/i.test(u) && !/^https?:\/\/(localhost|127\.|10\.|192\.168\.)/i.test(u) ? u : '';
+const bpImgUrl = (u) => /^https:\/\/[A-Za-z0-9.-]+\.pstatic\.net\/[^\s"'<>]+$/.test(u) ? u.replace(/([?&]type=)w\d+_blur\b/, '$1w800') : '';
+
+// 문단 안 글자: 굵게·기울임·밑줄·취소선·줄바꿈·링크만 남기고 나머지 태그는 글자만 남김
+function bpInline(html) {
+  let out = '', open = [];
+  for (const m of String(html).replace(/<!--[\s\S]*?-->/g, '').matchAll(/<(\/?)([a-zA-Z0-9]+)([^>]*)>|([^<]+)/g)) {
+    if (m[4] !== undefined) { out += bpEsc(bpDecode(m[4]).replace(/​/g, '')); continue; }
+    const close = m[1] === '/', tag = m[2].toLowerCase();
+    const map = { b: 'strong', strong: 'strong', i: 'em', em: 'em', u: 'u', s: 's', strike: 's', del: 's' };
+    if (tag === 'br') { out += '<br>'; continue; }
+    if (map[tag]) {
+      const t = map[tag];
+      if (!close) { out += `<${t}>`; open.push(t); }
+      else { const i = open.lastIndexOf(t); if (i >= 0) { out += open.splice(i).reverse().map(x => `</${x}>`).join(''); } }
+      continue;
+    }
+    if (tag === 'a') {
+      if (!close) { const href = bpSafeUrl(bpAttr(m[0], 'href')); if (href) { out += `<a href="${bpEsc(href)}" target="_blank" rel="noopener nofollow">`; open.push('a'); } }
+      else { const i = open.lastIndexOf('a'); if (i >= 0) out += open.splice(i).reverse().map(x => `</${x}>`).join(''); }
+    }
+  }
+  return (out + open.reverse().map(x => `</${x}>`).join('')).replace(/<a [^>]*><\/a>/g, '');   // 글자 없는 빈 링크는 버림
+}
+const bpPlain = (html) => bpDecode(String(html).replace(/<[^>]*>/g, '')).replace(/[​\s]+/g, ' ').trim();
+
+// 문단 묶음: <p> 한 줄씩 → [{ kind:'line'|'list', html, text, center }]
+function bpLines(html) {
+  const out = [];
+  for (const m of html.matchAll(/<(ul|ol)\b[^>]*>([\s\S]*?)<\/\1>|<p\b([^>]*)>([\s\S]*?)<\/p>/g)) {
+    if (m[1]) {
+      const items = [...m[2].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map(li => bpInline(li[1].replace(/<\/p>\s*<p\b[^>]*>/g, '<br>'))).filter(x => bpPlain(x));
+      if (items.length) out.push({ kind: 'list', tag: m[1].toLowerCase(), items, text: items.map(bpPlain).join(' ') });
+    } else {
+      const h = bpInline(m[4]).trim();
+      out.push({ kind: 'line', html: h, text: bpPlain(h), center: /align-center/.test(m[3]) });
+    }
+  }
+  return out;
+}
+
+// 네이버 글 본문(se-main-container) → 블록 목록
+function bpBlocks(page) {
+  const s = page.indexOf('se-main-container');
+  if (s < 0) throw new Error('본문 영역 없음');
+  let e = page.indexOf('_checkVisible', s); if (e < 0) e = page.length;
+  const main = page.slice(s, e).replace(/<script\b[\s\S]*?<\/script>/gi, '').replace(/<style\b[\s\S]*?<\/style>/gi, '');
+  const blocks = [];
+  for (const part of main.split(/(?=<div class="se-component )/).slice(1)) {
+    const type = (part.match(/^<div class="se-component (se-[a-zA-Z]+)/) || [])[1] || '';
+    if (type === 'se-documentTitle' || type === 'se-sticker') continue;
+    if (type === 'se-text') { bpLines(part).forEach(l => blocks.push(l)); continue; }
+    if (type === 'se-horizontalLine') { blocks.push({ kind: 'hr', text: '' }); continue; }
+    if (type === 'se-quotation' || type === 'se-sectionTitle') {
+      const ls = bpLines(part).filter(l => l.text);
+      if (!ls.length) continue;
+      if (type === 'se-sectionTitle') blocks.push({ kind: 'h', text: ls.map(l => l.text).join(' ') });
+      else blocks.push({ kind: 'quote', html: ls.map(l => l.kind === 'line' ? l.html : l.items.join('<br>')).join('<br>'), text: ls.map(l => l.text).join(' ') });
+      continue;
+    }
+    if (type === 'se-image' || type === 'se-imageStrip' || type === 'se-imageGroup') {
+      for (const im of part.matchAll(/<img\b[^>]*>/g)) {
+        const src = bpImgUrl(bpAttr(im[0], 'data-lazy-src') || bpAttr(im[0], 'src'));
+        if (!src) continue;
+        const w = parseInt(bpAttr(im[0], 'data-width'), 10) || 0, h = parseInt(bpAttr(im[0], 'data-height'), 10) || 0;
+        blocks.push({ kind: 'img', src, w, h, text: '' });
+      }
+      const cap = (part.match(/<div class="se-module se-module-text se-caption"[\s\S]*?<\/div>/) || [])[0];
+      if (cap) { const t = bpLines(cap).map(l => l.text).join(' '); if (t) blocks.push({ kind: 'caption', text: t }); }
+      continue;
+    }
+    if (type === 'se-table') {
+      const rows = [...part.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)].map(r => [...r[1].matchAll(/<td\b([^>]*)>([\s\S]*?)<\/td>/g)].map(c => ({
+        attrs: c[1], lines: bpLines(c[2]).filter(l => l.text),
+      })));
+      const cells = rows.flat();
+      if (cells.length === 1) {   // 칸 하나짜리 표: 왼쪽 세로선이면 소제목, 아니면 상자
+        const c = cells[0];
+        if (/border-left:\s*[2-9]px/.test(c.attrs) && c.lines.length <= 2) blocks.push({ kind: 'h', text: c.lines.map(l => l.text).join(' ') });
+        else if (c.lines.length) blocks.push({ kind: 'box', html: c.lines.map(l => l.kind === 'line' ? l.html : l.items.join('<br>')).join('<br>'), text: c.lines.map(l => l.text).join(' ') });
+        continue;
+      }
+      const head = rows.length > 1 && rows[0].every(c => c.lines.length && c.lines.every(l => l.kind === 'line' && /^<strong>[\s\S]*<\/strong>$/.test(l.html)));
+      const span = (a, n) => { const v = parseInt(bpAttr('<x ' + a + '>', n), 10); return v > 1 && v <= 20 ? ` ${n}="${v}"` : ''; };
+      const html = '<table>' + rows.map((r, i) => '<tr>' + r.map(c => {
+        const t = head && i === 0 ? 'th' : 'td';
+        return `<${t}${span(c.attrs, 'colspan')}${span(c.attrs, 'rowspan')}>${c.lines.map(l => l.kind === 'line' ? l.html : l.items.join('<br>')).join('<br>')}</${t}>`;
+      }).join('') + '</tr>').join('') + '</table>';
+      blocks.push({ kind: 'table', html, text: cells.map(c => c.lines.map(l => l.text).join(' ')).join(' ') });
+      continue;
+    }
+    if (type === 'se-oglink') {
+      const href = bpSafeUrl(bpAttr((part.match(/<a\b[^>]*>/) || [''])[0], 'href'));
+      const title = bpPlain((part.match(/<strong class="se-oglink-title">([\s\S]*?)<\/strong>/) || [])[1] || '');
+      const host = bpPlain((part.match(/<p class="se-oglink-url">([\s\S]*?)<\/p>/) || [])[1] || '');
+      if (href && title) blocks.push({ kind: 'oglink', href, title, host, text: title });
+      continue;
+    }
+    if (type === 'se-placesMap' || type === 'se-map') {
+      const d = part.match(/data-linkdata='([^']*)'/);
+      let place = null; try { const j = JSON.parse(bpDecode(d ? d[1] : '{}')); if (j.name) place = { name: String(j.name).slice(0, 80), address: String(j.address || '').slice(0, 120) }; } catch {}
+      blocks.push({ kind: 'map', place, text: '' });
+      continue;
+    }
+    // 동영상·파일·외부 삽입 등: 내용이 있으면 글자만, 없으면 '블로그에서 보기' 안내
+    const ls = bpLines(part).filter(l => l.text);
+    if (ls.length) ls.forEach(l => blocks.push(l));
+    else blocks.push({ kind: 'missing', text: '' });
+  }
+  return blocks;
+}
+
+// 글 끝의 꼬리(면책 문구·연락처·지도·해시태그)를 본문과 나눔. 화면에는 면책 문구만 보낸다(2026-11-23 대표 결정 "정리형")
+const BP_TAIL = {
+  tags: /^(#[^\s#]+\s*)+$/,
+  disclaimer: /^※\s*이 글은 일반적인 정보 제공/,
+  contact: /^(노무법인\s*종로(\s*강남지사)?|공인노무사\s*김경동|상담\s*및\s*문의|0\d{1,2}-\d{3,4}-\d{4}|[\w.+-]+@jnhrm\.co\.kr)$/,
+};
+function bpSplitTail(blocks) {
+  const tail = { disclaimer: '', contact: [], place: null, tags: [] };
+  let i = blocks.length;
+  while (i > 0) {
+    const b = blocks[i - 1];
+    if (b.kind === 'map') { if (b.place) tail.place = b.place; i--; continue; }
+    if (b.kind === 'hr' || (b.kind === 'line' && !b.text)) { i--; continue; }
+    if (b.kind !== 'line') break;
+    if (BP_TAIL.tags.test(b.text)) { tail.tags.unshift(...b.text.match(/#[^\s#]+/g)); i--; continue; }
+    if (BP_TAIL.disclaimer.test(b.text)) { tail.disclaimer = b.text; i--; continue; }
+    if (BP_TAIL.contact.test(b.text)) { tail.contact.unshift(b.text); i--; continue; }
+    break;
+  }
+  return { body: blocks.slice(0, i), tail };
+}
+
+// 블록 → 화면용 HTML (빈 줄로 나뉜 줄들을 한 문단으로 묶음)
+function bpRender(blocks) {
+  let html = '', para = [], center = false;
+  const flush = () => { if (para.length) html += `<p${center ? ' class="c"' : ''}>${para.join('<br>')}</p>`; para = []; center = false; };
+  let partial = false;
+  for (const b of blocks) {
+    if (b.kind === 'line') {
+      if (!b.text) { flush(); continue; }
+      if (para.length && b.center !== center) flush();
+      center = b.center; para.push(b.html); continue;
+    }
+    flush();
+    if (b.kind === 'list') html += `<${b.tag}>${b.items.map(x => `<li>${x}</li>`).join('')}</${b.tag}>`;
+    else if (b.kind === 'h') html += `<h3>${bpEsc(b.text)}</h3>`;
+    else if (b.kind === 'hr') html += '<hr>';
+    else if (b.kind === 'quote') html += `<blockquote>${b.html}</blockquote>`;
+    else if (b.kind === 'box') html += `<div class="bp-box">${b.html}</div>`;
+    else if (b.kind === 'table') html += `<div class="bp-table">${b.html}</div>`;
+    else if (b.kind === 'img') html += `<figure><img src="${bpEsc(b.src)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"${b.w && b.h ? ` width="${b.w}" height="${b.h}"` : ''}></figure>`;
+    else if (b.kind === 'caption') html += `<p class="bp-cap">${bpEsc(b.text)}</p>`;
+    else if (b.kind === 'oglink') html += `<a class="bp-og" href="${bpEsc(b.href)}" target="_blank" rel="noopener nofollow"><b>${bpEsc(b.title)}</b><span>${bpEsc(b.host)}</span></a>`;
+    else if (b.kind === 'map') { /* 본문 중간의 지도는 생략 */ }
+    else if (b.kind === 'missing') { partial = true; html += '<p class="bp-missing">(이 부분은 블로그 원문에서 볼 수 있습니다)</p>'; }
+  }
+  flush();
+  return { html, partial };
+}
+
+async function loadBlogPost(logNo, item) {
+  const url = `https://m.blog.naver.com/PostView.naver?blogId=${BLOG_ID}&logNo=${logNo}`;
+  const r = await fx(url, { headers: { 'user-agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Mobile Safari/537.36 (jongno-labor homepage)' } }, 6000);
+  if (!r.ok) throw new Error(`글 HTTP ${r.status}`);
+  const page = await r.text();
+  if (page.length > 2 * 1024 * 1024) throw new Error('글 크기 초과');
+  const cat = bpPlain((page.match(/class="blog_category"><a[^>]*>([\s\S]*?)<\/a>/) || [])[1] || '');
+  if (cat && BLOG_EXCLUDE_CATEGORIES.includes(cat)) throw Object.assign(new Error('제외 카테고리'), { code: 'excluded' });
+  const { body, tail } = bpSplitTail(bpBlocks(page));
+  const { html, partial } = bpRender(body);
+  if (bpPlain(html).length < 50) throw new Error('본문이 너무 짧음(화면 구조 변경 의심)');
+  const data = { logNo, title: item.title, date: item.date, link: item.link, category: cat, html, tail: { disclaimer: tail.disclaimer }, partial };
+  blogPostCache.set(logNo, { at: Date.now(), data });
+  if (blogPostCache.size > 60) blogPostCache.delete(blogPostCache.keys().next().value);
+  return data;
+}
+
+app.get('/api/blog-post/:logNo', ipLimit('bpf', 120), async (req, res) => {
+  res.set('X-Robots-Tag', 'noindex');   // 원본은 블로그. 이 응답은 검색에 올리지 않음
+  const logNo = String(req.params.logNo || '');
+  if (!/^\d{6,15}$/.test(logNo)) return res.status(400).json({ error: '잘못된 글 번호입니다.', code: 'bad_id' });
+  const link = `https://blog.naver.com/${BLOG_ID}/${logNo}`;
+  res.set('Link', `<${link}>; rel="canonical"`);
+  const items = await blogListForPost();
+  const item = items.find(p => p.link === link);
+  if (!item) return res.status(404).json({ error: '홈페이지에서 볼 수 없는 글입니다.', code: 'not_listed', link: `https://blog.naver.com/${BLOG_ID}` });
+  const c = blogPostCache.get(logNo);
+  if (c && Date.now() - c.at < BLOG_POST_CACHE_MS) return res.json({ ...c.data, cached: true });
+  if (Date.now() - (blogPostFailAt.get(logNo) || 0) < 5 * 60 * 1000) {
+    if (c) return res.json({ ...c.data, stale: true });
+    return res.status(502).json({ error: '글을 불러오지 못했습니다.', code: 'fetch_fail', link, title: item.title, date: item.date });
+  }
+  try {
+    if (!blogPostLoading.has(logNo)) blogPostLoading.set(logNo, loadBlogPost(logNo, item).finally(() => blogPostLoading.delete(logNo)));
+    res.json(await blogPostLoading.get(logNo));
+  } catch (e) {
+    if (e.code === 'excluded') return res.status(404).json({ error: '홈페이지에서 볼 수 없는 글입니다.', code: 'not_listed', link: `https://blog.naver.com/${BLOG_ID}` });
+    blogPostFailAt.set(logNo, Date.now());
+    if (blogPostFailAt.size > 500) blogPostFailAt.clear();
+    console.error('블로그 글 조회 실패:', logNo, e.message);
+    if (c) return res.json({ ...c.data, stale: true });   // 지난번에 성공한 내용이 있으면 그것으로
+    res.status(502).json({ error: '글을 불러오지 못했습니다.', code: 'fetch_fail', link, title: item.title, date: item.date });
   }
 });
 

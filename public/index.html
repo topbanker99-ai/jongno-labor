@@ -259,6 +259,51 @@ a.hv-card{display:block;cursor:pointer;color:inherit}
 .bl-dt{display:block;margin-top:8px;font-size:12.5px;color:var(--ink-faint)}
 .bl-more{text-align:center;margin-top:30px}
 @media(max-width:960px){.bl-grid{grid-template-columns:repeat(2,1fr);gap:12px}.bl-body{padding:10px 11px 12px}.bl-tt{font-size:13.5px;-webkit-line-clamp:3}}
+.bl-more{display:flex;flex-direction:column;align-items:center;gap:14px}
+.bl-more .bl-loadmore{min-width:220px}
+.bl-more .bl-loadmore[hidden]{display:none}
+.bl-more .bl-loadmore .n{font-weight:400;font-size:13px;color:var(--ink-faint)}
+/* 블로그 글 전문 화면 (#blog/글번호) */
+.bp-wrap{max-width:760px;margin:0 auto}
+.bp-back{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;color:var(--gold-2);padding:8px 0;margin-bottom:26px}
+.bp-back:hover{color:var(--gold-3)}
+.bp-head{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:34px}
+.bp-head .bp-cat{font-size:12.5px;letter-spacing:.2em;color:var(--gold-2)}
+.bp-head h1{font-family:var(--serif);font-weight:700;font-size:clamp(25px,3vw,33px);line-height:1.42;color:var(--ink);margin:12px 0 14px;word-break:keep-all}
+.bp-head .bp-meta{font-size:13.5px;color:var(--ink-faint)}
+.bp-body{font-size:17px;line-height:1.95;color:var(--ink-soft);word-break:keep-all;overflow-wrap:anywhere}
+.bp-body p{margin:0 0 1.25em}
+.bp-body p.c{text-align:center}
+.bp-body h3{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--gold-3);line-height:1.5;margin:2.2em 0 .9em;padding-left:14px;border-left:3px solid var(--gold)}
+.bp-body strong{color:var(--ink);font-weight:700}
+.bp-body a{color:var(--gold-2);text-decoration:underline;text-underline-offset:3px}
+.bp-body a:hover{color:var(--gold-3)}
+.bp-body figure{margin:1.6em 0}
+.bp-body figure img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:8px;background:var(--navy-800)}
+.bp-body .bp-cap{font-size:13.5px;color:var(--ink-faint);text-align:center;margin-top:-.8em}
+.bp-body hr{border:none;height:1px;background:var(--line);margin:2.2em 0}
+.bp-body ul,.bp-body ol{margin:0 0 1.25em;padding-left:1.4em}
+.bp-body ul{list-style:disc} .bp-body ol{list-style:decimal}
+.bp-body li{margin:.3em 0}
+.bp-body blockquote,.bp-body .bp-box{margin:1.4em 0;padding:16px 20px;border-left:3px solid var(--gold);background:rgba(220,189,118,.07);border-radius:0 8px 8px 0;color:var(--ink)}
+.bp-body .bp-table{overflow-x:auto;margin:1.4em 0;-webkit-overflow-scrolling:touch}
+.bp-body table{border-collapse:collapse;width:100%;min-width:480px;font-size:15px;line-height:1.6}
+.bp-body th,.bp-body td{border:1px solid var(--line);padding:10px 12px;vertical-align:top;text-align:left}
+.bp-body th{background:rgba(220,189,118,.12);color:var(--gold-3);font-weight:700;text-align:center}
+.bp-body .bp-og{display:block;margin:1.4em 0;padding:14px 18px;border:1px solid var(--line);border-radius:8px;text-decoration:none;background:rgba(255,255,255,.02)}
+.bp-body .bp-og b{display:block;color:var(--ink);font-weight:600}
+.bp-body .bp-og span{display:block;font-size:13px;color:var(--ink-faint);margin-top:4px}
+.bp-body .bp-missing{font-size:14px;color:var(--ink-faint)}
+.bp-note{margin-top:30px;font-size:13.5px;line-height:1.75;color:var(--ink-faint)}
+.bp-foot{margin-top:44px;padding:26px 24px;border:1px solid var(--line);border-radius:12px;background:var(--navy-800);text-align:center}
+.bp-foot p{font-size:14.5px;color:var(--ink-faint);margin-bottom:16px}
+.bp-foot .btn{margin:0 6px}
+.bp-foot .bp-acts{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.bp-loading{padding:60px 0;text-align:center;color:var(--ink-faint)}
+.bp-fail{padding:40px 0 10px;text-align:center}
+.bp-fail h1{font-family:var(--serif);font-size:clamp(22px,2.6vw,28px);color:var(--ink);line-height:1.45;margin-bottom:16px;word-break:keep-all}
+.bp-fail p{color:var(--ink-faint);margin-bottom:26px}
+@media(max-width:620px){.bp-body table{min-width:0;font-size:13.5px}.bp-body th,.bp-body td{padding:8px 7px;min-width:4.6em}.bp-body{font-size:16px;line-height:1.9}.bp-body h3{font-size:19px}.bp-back{margin-bottom:16px}.bp-head{margin-bottom:26px}.bp-foot{padding:22px 16px}}
 
 .calc-shell{max-width:1080px;margin:0 auto;background:var(--glass);border:1px solid var(--card-brd);border-radius:18px;padding:10px;backdrop-filter:blur(10px)}
 /* ===== 정부지원금 간이진단 ===== */
@@ -1219,7 +1264,17 @@ body.no-scroll{overflow:hidden}
       <p>김경동 노무사가 네이버 블로그에 쓴 글입니다.</p>
     </div>
     <div class="bl-grid" id="blogGrid" hidden></div>
-    <div class="bl-more"><a class="btn btn-ghost" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그 전체 보기 <span class="ar">→</span></a></div>
+    <div class="bl-more"><button type="button" class="btn btn-ghost bl-loadmore" id="blogMore" hidden>더 보기 <span class="n"></span></button><a class="btn btn-ghost" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그 전체 보기 <span class="ar">→</span></a></div>
+  </div>
+</section>
+
+<!-- 블로그 글 전문 (#blog/글번호, /api/blog-post/글번호 — 원본은 네이버 블로그) -->
+<section class="block" id="blogPost" data-view="blogpost">
+  <div class="wrap">
+    <article class="bp-wrap">
+      <a class="bp-back" id="bpBack" href="#blog">← 목록으로</a>
+      <div id="bpBox" aria-live="polite"></div>
+    </article>
   </div>
 </section>
 
@@ -2133,7 +2188,9 @@ window.addEventListener('load',()=>{
 /* ===== 탭(SPA) 라우터: 상단 메뉴별 화면 전환 ===== */
 (function(){
   document.body.classList.add('spa');
-  const VIEWS = ['home','about','calc','subsidy','ai','cases','contact','blog'];
+  const VIEWS = ['home','about','calc','subsidy','ai','cases','contact','blog','blogpost'];
+  const BLOG_POST_RE = /^blog\/(\d{6,15})$/;   // 블로그 글 전문 화면 (#blog/글번호)
+  let restoreY = null, prevKey = '';            // 글 → 목록으로 돌아올 때 보던 위치로
   const HASH2VIEW = { '':'home', top:'home', about:'about', practice:'cases', calc:'calc',
                       videos:'home', location:'home',
                       subsidy:'subsidy', ai:'ai', cases:'cases', contact:'contact', results:'home', blog:'blog', youtube:'blog' };
@@ -2147,6 +2204,7 @@ window.addEventListener('load',()=>{
 
   // 화면 위치 맞추기: 맨 위(0) 또는 SCROLL_TO 칸의 윗부분(상단 메뉴 높이만큼 띄움)
   function scrollForKey(key){
+    if (key === 'blog' && restoreY !== null){ window.scrollTo({ top: restoreY, behavior: INSTANT }); return; }
     const id = SCROLL_TO[key];
     const el = id && document.getElementById(id);
     if (!el){ window.scrollTo({ top: 0, behavior: INSTANT }); return; }
@@ -2171,7 +2229,8 @@ window.addEventListener('load',()=>{
     // 메뉴 활성 표시: 상단 메뉴와 모바일 메뉴 모두 (M4). 홈에서는 아무 메뉴도 켜지 않음 (M1)
     document.querySelectorAll('.menu a, .mnav > a').forEach(a => {
       const k = (a.getAttribute('href')||'').slice(1);
-      const on = SCROLL_TO[k] ? k === key : (!SCROLL_TO[key] && view !== 'home' && HASH2VIEW[k] === view);
+      const mv = view === 'blogpost' ? 'blog' : view;   // 글 전문 화면에서는 '블로그' 메뉴를 켬
+      const on = SCROLL_TO[k] ? k === key : (!SCROLL_TO[key] && mv !== 'home' && HASH2VIEW[k] === mv);
       a.classList.toggle('on', on);
     });
   }
@@ -2199,7 +2258,11 @@ window.addEventListener('load',()=>{
     }
     if (coOverlay.classList.contains('on')) closeConsult();
     CO_STATE.lastHash = '#' + (h || 'top');
-    const view = HASH2VIEW[h] || 'home';
+    const bpm = h.match(BLOG_POST_RE);
+    const view = bpm ? 'blogpost' : (HASH2VIEW[h] || 'home');
+    restoreY = (view === 'blog' && BLOG_POST_RE.test(prevKey) && typeof window.__blogListY === 'number') ? window.__blogListY : null;
+    prevKey = h;
+    if (window.__blogPostRoute) window.__blogPostRoute(bpm ? bpm[1] : null);
     if (CO_STATE.keepView){                            // 상담 창 ✕로 한 칸 뒤로 온 경우: 화면·스크롤 그대로 (L1)
       CO_STATE.keepView = false;
       if (view === curView){ markMenu(view, h); return; }
@@ -2219,7 +2282,7 @@ window.addEventListener('load',()=>{
     const same = k === cur || ((k === 'top' || k === '') && (cur === '' || cur === 'top'));
     if (!same || (HASH2VIEW[k] || 'home') !== curView) return;   // 화면이 바뀌는 경우는 hashchange가 처리
     e.preventDefault();
-    userMoved = false; settleId++; scrollForKey(k);
+    userMoved = false; settleId++; restoreY = null; scrollForKey(k);
   });
   // 로고 클릭 → 홈
   const brand = document.querySelector('.brand, header a[href="#top"]');
@@ -2248,9 +2311,16 @@ window.addEventListener('load',()=>{
     img.src = src;
     box.appendChild(img);
   }
+  const logNoOf = (u) => { const m = String(u || '').match(/^https:\/\/blog\.naver\.com\/crydia\/(\d{6,15})$/); return m ? m[1] : ''; };
+  const byNo = {};   // 글번호 → 목록 정보 (전문을 못 불러올 때 제목·원문 주소로 씀)
   function card(p, kind){
     const a = el('a', kind === 'hero' ? 'hv-card' : 'bl-card');
-    a.href = p.link; a.target = '_blank'; a.rel = 'noopener';
+    const no = logNoOf(p.link);
+    if (no) {   // 홈페이지 안에서 전문 보기 (#blog/글번호)
+      byNo[no] = p;
+      a.href = '#blog/' + no;
+      a.addEventListener('click', () => { window.__blogListY = kind === 'hero' ? null : window.scrollY; cameFromList = true; });
+    } else { a.href = p.link; a.target = '_blank'; a.rel = 'noopener'; }
     const th = el('span', kind === 'hero' ? 'vthumb' : 'bl-th');
     if (kind === 'hero') th.style.display = 'block';
     thumb(th, p.thumb, p.title);
@@ -2262,15 +2332,92 @@ window.addEventListener('load',()=>{
     body.appendChild(t); body.appendChild(d); a.appendChild(body);
     return a;
   }
-  fetch('/api/blog-posts?limit=16', { cache: 'no-store' })
+  // ---- 목록: 처음 16개, '더 보기'로 16개씩 (RSS가 주는 만큼, 최대 50)
+  const PAGE = 16;
+  const moreBtn = document.getElementById('blogMore');
+  let all = [], shown = 0, cameFromList = false;
+  function showMore(){
+    all.slice(shown, shown + PAGE).forEach(p => gridBox.appendChild(card(p, 'grid')));
+    shown = Math.min(all.length, shown + PAGE);
+    if (moreBtn) { moreBtn.hidden = shown >= all.length; moreBtn.querySelector('.n').textContent = `(${shown} / ${all.length})`; }
+  }
+  if (moreBtn) moreBtn.addEventListener('click', showMore);
+  fetch('/api/blog-posts?limit=50', { cache: 'no-store' })
     .then(r => r.ok ? r.json() : null)
     .then(j => {
       const items = (j && Array.isArray(j.items) ? j.items : []).filter(p => p && p.title && okLink(p.link));
       if (!items.length) return;
       if (heroBox) { items.slice(0, 4).forEach(p => heroBox.appendChild(card(p, 'hero'))); heroBox.hidden = false; }
-      if (gridBox) { items.slice(0, 16).forEach(p => gridBox.appendChild(card(p, 'grid'))); gridBox.hidden = false; }
+      if (gridBox) { all = items; showMore(); gridBox.hidden = false; }
     })
     .catch(() => {});
+
+  // ---- 글 전문 화면
+  const box = document.getElementById('bpBox');
+  const back = document.getElementById('bpBack');
+  const baseTitle = document.title;
+  let curNo = null;
+  const blogUrl = (no) => 'https://blog.naver.com/crydia/' + no;
+  // 서버가 정리한 HTML이지만, 한 번 더: 허용하지 않은 태그·이벤트 속성·자바스크립트 주소를 지움
+  const ALLOW = /^(P|BR|STRONG|EM|U|S|A|H3|HR|UL|OL|LI|BLOCKQUOTE|DIV|TABLE|TBODY|TR|TH|TD|FIGURE|IMG|B|SPAN)$/;
+  function clean(root){
+    root.querySelectorAll('*').forEach(n => {
+      if (!ALLOW.test(n.tagName)) { n.remove(); return; }
+      [...n.attributes].forEach(at => { if (/^on/i.test(at.name) || /^\s*javascript:/i.test(at.value) || at.name === 'style') n.removeAttribute(at.name); });
+      if (n.tagName === 'IMG') { if (!/^https:\/\/[a-z0-9.-]+\.pstatic\.net\//i.test(n.getAttribute('src') || '')) n.remove(); else n.setAttribute('referrerpolicy', 'no-referrer'); }
+      if (n.tagName === 'A') { n.target = '_blank'; n.rel = 'noopener nofollow'; }
+    });
+  }
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // 글 끝 꼬리: 면책 문구만 작게 남긴다(연락처·오시는 길은 홈페이지 아래쪽에 있고, 해시태그는 홈페이지에서 쓸모가 없음. 2026-11-23 대표 결정 "정리형")
+  function tailHtml(t){
+    return (t && t.disclaimer) ? `<p class="bp-note">${esc(t.disclaimer)}</p>` : '';
+  }
+  const footHtml = (link) => `<div class="bp-foot"><p>이 글은 김경동 노무사의 네이버 블로그 원문입니다.</p><div class="bp-acts">` +
+    `<a class="btn btn-primary" href="${esc(link)}" target="_blank" rel="noopener">블로그에서 보기 (댓글·공감) <span class="ar">→</span></a>` +
+    `<a class="btn btn-ghost" href="#blog" data-bp-back>← 목록으로</a></div></div>`;
+  function fail(no, title){
+    const p = byNo[no];
+    const t = title || (p && p.title) || '';
+    const link = (p && p.link) || blogUrl(no);
+    box.innerHTML = `<div class="bp-fail">${t ? `<h1>${esc(t)}</h1>` : ''}<p>지금은 홈페이지에서 글을 불러오지 못했습니다.<br>네이버 블로그에서 바로 보실 수 있습니다.</p>` +
+      `<a class="btn btn-primary" href="${esc(link)}" target="_blank" rel="noopener">블로그에서 보기 <span class="ar">→</span></a></div>`;
+    if (t) document.title = t + ' | 공인노무사 김경동';
+  }
+  function openPost(no){
+    curNo = no;
+    const p = byNo[no];
+    box.innerHTML = `<div class="bp-loading">${p ? `<b style="color:var(--ink)">${esc(p.title)}</b><br>` : ''}글을 불러오는 중입니다…</div>`;
+    fetch('/api/blog-post/' + no, { cache: 'no-store' })
+      .then(r => r.json().catch(() => ({})).then(j => ({ ok: r.ok, j })))
+      .then(({ ok, j }) => {
+        if (curNo !== no) return;                 // 그 사이 다른 글로 옮긴 경우
+        if (!ok || !j || !j.html) {
+          if (j && j.code === 'not_listed') { box.innerHTML = `<div class="bp-fail"><p>홈페이지에서 볼 수 없는 글입니다.</p><a class="btn btn-ghost" href="https://blog.naver.com/crydia" target="_blank" rel="noopener">블로그 전체 보기 <span class="ar">→</span></a></div>`; return; }
+          return fail(no, j && j.title);
+        }
+        box.innerHTML = `<div class="bp-head"><div class="bp-cat">BLOG · ${esc(j.category || '일 이야기')}</div><h1>${esc(j.title)}</h1>` +
+          `<div class="bp-meta">${esc(String(j.date || '').replace(/-/g, '.'))} · 김경동 노무사 · 네이버 블로그</div></div>` +
+          `<div class="bp-body">${j.html}</div>` + tailHtml(j.tail) + footHtml(j.link || blogUrl(no));
+        clean(box.querySelector('.bp-body'));
+        document.title = j.title + ' | 공인노무사 김경동';
+      })
+      .catch(() => { if (curNo === no) fail(no); });
+  }
+  // 라우터가 주소가 바뀔 때마다 부름 (글 화면이 아니면 null)
+  window.__blogPostRoute = (no) => {
+    if (no) { if (no !== curNo || !box.firstChild) openPost(no); }
+    else if (curNo) { curNo = null; document.title = baseTitle; }
+  };
+  // '← 목록으로': 목록에서 들어왔으면 브라우저 뒤로가기와 같게(기록이 쌓이지 않게), 주소로 바로 들어왔으면 목록으로
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('#bpBack, [data-bp-back]');
+    if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    if (cameFromList && history.length > 1) { e.preventDefault(); cameFromList = false; history.back(); }
+  });
+  // 주소로 바로 들어온 경우 (#blog/글번호) — 라우터가 이 코드보다 먼저 돌았으므로 여기서 엶
+  const first = location.hash.replace('#', '').match(/^blog\/(\d{6,15})$/);
+  if (first) openPost(first[1]);
 })();
 </script>
 <script>(function(){var v=document.querySelector('.hero-motion');if(!v)return;var on=function(){v.classList.add('on')};if(v.readyState>=2){on()}else{v.addEventListener('loadeddata',on,{once:true});setTimeout(on,4000);}})();</script>
