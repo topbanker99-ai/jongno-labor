@@ -41,7 +41,7 @@ package.json
 | `/api/consult/finish` | 메일 제목·본문에 관점 표기 |
 
 ### RAG
-- Upstash Vector 인덱스, 네임스페이스 **`nomusa`** (노무 상담 19,718건 / 노동자 14,913 · 사업주 4,805)
+- Upstash Vector 인덱스, 네임스페이스 **`nomusa`** (노무 상담사례 15,427건 + 김경동 노무사 블로그 문답 110개)
 - 임베딩: `text-embedding-3-small`, 512차원, COSINE
 - 원문 재현 금지 — AI가 반드시 자기 문장으로 재구성하도록 지침화
 
