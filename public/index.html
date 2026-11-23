@@ -898,6 +898,8 @@ body.no-scroll{overflow:hidden}
 @media(max-width:400px){
   .co-brand img{display:none}
 }
+/* 한국어 낱말 단위 줄바꿈 — 제목·카드 제목·버튼·짧은 안내 글 공통 (2026-11-23, 아주 긴 영문·숫자는 overflow-wrap으로 끊음) */
+h1,h2,h3,h4,h5,h6,.sec-head p,.btn,button,label,.hv-label,.lc-title,.about-name,.ck-title,.ctitle,.csum,.pcard .pt,.pcard .psub,.scard .snm,.scard .srsn,.scard .samt,.bl-tt,.yt-tt,.cta p,.lcard p.desc,.info-row .irt .k,.co-choice b,.co-choice small,.co-gate-head p,.map-note,.sc-contact .scc-t{word-break:keep-all;overflow-wrap:break-word}
 </style>
 </head>
 <body>
