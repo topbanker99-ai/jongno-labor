@@ -43,11 +43,11 @@ jobs:
                 - name: LAWYER_EMAIL
                   value: kkd@jnhrm.co.kr
                 - name: RAG_NAMESPACE
-                  value: nomusa
+                  value: nomusa-v2
                 - name: UPSTASH_VECTOR_URL
-                  value: ${{ secrets.UPSTASH_VECTOR_URL }}
+                  value: ${{ secrets.KL_UPSTASH_URL }}
                 - name: UPSTASH_VECTOR_TOKEN
-                  value: ${{ secrets.UPSTASH_VECTOR_TOKEN }}
+                  value: ${{ secrets.KL_UPSTASH_READ_TOKEN }}
                 - name: REALTIME_PW
                   value: ${{ secrets.REALTIME_PW }}
               buildenv: []
