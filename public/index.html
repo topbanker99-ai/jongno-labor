@@ -909,7 +909,7 @@ h1,h2,h3,h4,h5,h6,.sec-head p,.btn,button,label,.hv-label,.lc-title,.about-name,
 <!-- 헤더 -->
 <header>
   <div class="wrap nav">
-    <a class="brand" href="#top">
+    <a class="brand" href="/">
       <span class="emblem">
         <img src="/img/cpla-mark-gold.png" alt="공인노무사 마크">
       </span>
@@ -1843,12 +1843,12 @@ function openConsult(){ coOverlay.classList.add('on'); coOverlay.setAttribute('a
    CO_STATE.pushed: 사이트 안에서 눌러 #consult가 기록에 쌓였으면 true → 닫을 때 한 칸 뒤로(기록 중복 없음)
    CO_STATE.keepView: 그 뒤로 가기에서는 화면을 다시 그리지 않음(스크롤·결과 유지)
    CO_STATE.lastHash: 직접 들어온 경우(#consult로 처음 열림) 닫을 때 바꿔 넣을 주소 */
-const CO_STATE={ pushed:false, keepView:false, lastHash:'#top' };
+const CO_STATE={ pushed:false, keepView:false, lastHash:'' };   // 홈은 해시 없는 주소('') (2026-11-23 #top 없앰)
 function closeConsult(){ coOverlay.classList.remove('on'); coOverlay.setAttribute('aria-hidden','true');
   document.body.classList.remove('no-scroll');
   if(location.hash==='#consult'){
     if(CO_STATE.pushed){ CO_STATE.pushed=false; CO_STATE.keepView=true; history.back(); }
-    else history.replaceState(null,'',location.pathname+CO_STATE.lastHash);
+    else history.replaceState(null,'',location.pathname+location.search+CO_STATE.lastHash);
   }
   CO_STATE.pushed=false; }
 document.querySelectorAll('.co-choice').forEach(b=>{
@@ -2251,17 +2251,20 @@ window.addEventListener('load',()=>{
     settle(key);
   }
   let first = true;
+  // 홈 주소는 해시 없이 "/"(쿼리는 유지). 옛 #top 주소로 들어오면 기록을 늘리지 않고 주소만 정리 (2026-11-23 대표 결정)
+  const homeUrl = () => location.pathname + location.search;
   function route(){
+    if (location.hash === '#top' || location.hash === '#') history.replaceState(history.state, '', homeUrl());
     const h = location.hash.replace('#','');
     const wasFirst = first; first = false;
     if (h === 'consult'){                              // 직링크(#consult) → 전체화면 상담
       if (wasFirst || !curView) show('home', 'top');   // 바로 들어온 경우 뒤에 홈 화면을 켜 둠 (H2)
       CO_STATE.pushed = !wasFirst;
-      if (wasFirst) CO_STATE.lastHash = '#top';
+      if (wasFirst) CO_STATE.lastHash = '';
       openConsult(); return;
     }
     if (coOverlay.classList.contains('on')) closeConsult();
-    CO_STATE.lastHash = '#' + (h || 'top');
+    CO_STATE.lastHash = h ? '#' + h : '';
     const bpm = h.match(BLOG_POST_RE);
     const view = bpm ? 'blogpost' : (HASH2VIEW[h] || 'home');
     restoreY = (view === 'blog' && BLOG_POST_RE.test(prevKey) && typeof window.__blogListY === 'number') ? window.__blogListY : null;
@@ -2273,7 +2276,14 @@ window.addEventListener('load',()=>{
     }
     show(view, h);
   }
-  window.addEventListener('hashchange', route);
+  // 해시 없는 홈 주소("/")로 뒤로·앞으로 오면 hashchange가 안 불릴 수 있어 popstate에서도 화면을 바꿈.
+  // 같은 이동에 둘 다 불리면 hashchange 쪽은 건너뜀(상담 창 ✕ 뒤 화면·스크롤 유지 L1이 깨지지 않게)
+  let popAt = -1e9, popHref = '';
+  window.addEventListener('popstate', () => { route(); popAt = performance.now(); popHref = location.href; });
+  window.addEventListener('hashchange', () => {
+    if (location.href === popHref && performance.now() - popAt < 1000) return;
+    route();
+  });
   // 이미 보고 있는 주소의 메뉴·로고·'맨 위로'를 다시 누르면 주소 변화가 없어 hashchange가 안 생김 → 직접 위치를 맞춤 (L5)
   document.addEventListener('click', e => {
     const a = e.target.closest && e.target.closest('a[href^="#"]');
@@ -2288,9 +2298,14 @@ window.addEventListener('load',()=>{
     e.preventDefault();
     userMoved = false; settleId++; restoreY = null; scrollForKey(k);
   });
-  // 로고 클릭 → 홈
+  // 로고 클릭 → 홈("/", 해시 없음). 다른 화면이면 기록을 한 칸 쌓고(뒤로가기로 돌아갈 수 있게), 이미 홈이면 맨 위로만
   const brand = document.querySelector('.brand, header a[href="#top"]');
-  if (brand) brand.addEventListener('click', () => { location.hash = 'top'; });
+  if (brand) brand.addEventListener('click', e => {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    if (location.hash && location.hash !== '#'){ history.pushState(null, '', homeUrl()); route(); }
+    else { userMoved = false; settleId++; restoreY = null; scrollForKey(''); }
+  });
   route();
 })();
 
