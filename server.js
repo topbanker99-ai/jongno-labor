@@ -226,6 +226,38 @@ function requireSession(kind) {
 }
 
 app.use(express.json({ limit: '300kb' }));   // 요청 크기 제한 (대화 기록 전송 포함 충분)
+
+/* [검색·AI 노출] robots.txt / sitemap.xml
+   - kimlabor.kr(Cloudflare 중계 비밀값이 맞는 요청)으로 들어오면: 검색엔진·AI 수집 전체 허용
+   - 클라우드타입 기본 주소로 직접 들어오면: 수집 금지 (같은 내용이 두 주소에 색인되는 중복 방지)
+   ※ 클라우드타입이 /robots.txt를 앞단에서 대신 응답하면 이 코드까지 오지 않음 → 그때는 Cloudflare Worker에서 처리 */
+const SITE_URL = 'https://kimlabor.kr';
+const ROBOTS_OPEN = [
+  '# kimlabor.kr — 공인노무사 김경동 (노무법인 종로 강남지사)',
+  '# 검색엔진·AI 검색(구글, 네이버, 빙, 다음, ChatGPT, Perplexity, Claude 등) 수집 허용',
+  'User-agent: *',
+  'Allow: /',
+  'Allow: /api/blog-posts',
+  'Disallow: /api/',
+  '',
+  `Sitemap: ${SITE_URL}/sitemap.xml`,
+  '',
+].join('\n');
+const ROBOTS_CLOSED = 'User-agent: *\nDisallow: /\n';
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain; charset=utf-8').set('Cache-Control', 'public, max-age=3600');
+  res.send(fromProxy(req) ? ROBOTS_OPEN : ROBOTS_CLOSED);
+});
+const SITEMAP_LASTMOD = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);   // 서버 배포일(한국 시간)
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml; charset=utf-8').set('Cache-Control', 'public, max-age=3600');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>${SITE_URL}/</loc><lastmod>${SITEMAP_LASTMOD}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+</urlset>
+`);
+});
+
 app.use(express.static('public', { dotfiles: 'ignore' }));   // 프론트(public/index.html) 서빙
 
 const OPENAI_KEY = String(process.env.OPENAI_API_KEY || '').trim().replace(/^["']|["']$/g, '');
