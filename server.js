@@ -8,7 +8,7 @@
  *  환경변수 (Cloudtype → 서비스 설정 → 환경변수)
  *    OPENAI_API_KEY=sk-...            // [필수] AI 음성상담·요약. 없으면 AI 기능 전부 꺼짐
  *    LAW_OC=your_open_law_key         // open.law.go.kr 판례 인증키
- *    UPSTASH_VECTOR_URL / UPSTASH_VECTOR_TOKEN   // 상담사례 15,427건 + 블로그 문답 110개 검색(RAG). 읽기전용 토큰 권장
+ *    UPSTASH_VECTOR_URL / UPSTASH_VECTOR_TOKEN   // 상담사례 15,427건 + 블로그 문답 110개 + 행정해석·법제처 해석례 41건 검색(RAG). 읽기전용 토큰 권장
  *    SMTP_HOST=smtp.gmail.com  SMTP_USER=...  SMTP_PASS=앱비밀번호  (SMTP_PORT=465 기본)
  *    LAWYER_EMAIL=kkd@jnhrm.co.kr     // 상담요약 수신 노무사 메일
  *    TURNSTILE_SECRET=...             // (선택) 봇 차단. 설정 시 index.html의 TURNSTILE_SITEKEY도 함께 입력
@@ -460,7 +460,7 @@ function realtimeSession(persp, variant, maxMin = RT_MAX_MIN, voice = RT_VOICE) 
     tools: [{
       type: 'function',
       name: 'search_cases',
-      description: '실제 노무 상담사례 데이터베이스(상담사례 15,427건: 노동자 11,852 / 사업주 3,575, 그리고 김경동 노무사 블로그 문답 110개)에서 의뢰인 상황과 유사한 사례를 검색한다. 부당해고, 징계, 임금체불, 퇴직금, 수당, 직장 내 괴롭힘, 산재, 실업급여 등 모든 노무 질문에 사용.',
+      description: '실제 노무 상담사례 데이터베이스(상담사례 15,427건: 노동자 11,852 / 사업주 3,575, 김경동 노무사 블로그 문답 110개, 그리고 2026년 고용노동부 행정해석·법제처 해석례 41건)에서 의뢰인 상황과 유사한 사례를 검색한다. 부당해고, 징계, 임금체불, 퇴직금, 수당, 직장 내 괴롭힘, 산재, 실업급여 등 모든 노무 질문에 사용.',
       parameters: {
         type: 'object',
         properties: {
@@ -1246,7 +1246,7 @@ app.post('/api/rag-search', ipLimit('rs', 120), requireSession('search'), dailyC
     if (!q) return res.json({ result: '검색어가 없습니다.' });
     const ns = RAG_NAMESPACE;   // 이 사이트는 배포 설정의 묶음 하나로 고정 (2026-11-23부터 nomusa-v2)
     const persp = ['노동자', '사업주'].includes(req.body?.perspective) ? req.body.perspective : '';
-    // 넉넉히 10건 받아 같은 답은 한 번만 남긴 뒤 상위 3건 (블로그 문답의 질문 표현 펼침 "-a1~-a3"은 기본 번호로, 그 밖은 답변 글이 같으면 같은 답)
+    // 넉넉히 10건 받아 같은 답은 한 번만 남긴 뒤 상위 3건 (블로그 문답·행정해석 문답의 질문 표현 펼침 "-a1~-a3"은 기본 번호로, 그 밖은 답변 글이 같으면 같은 답)
     const seen = new Set();
     const found = (await ragSearch(q, 10, ns, persp)).filter(c => c.score >= 0.35).filter(c => {
       const keys = [c._id ? 'id:' + String(c._id).replace(/-a\d+$/, '') : '', c.answer ? 'ans:' + String(c.answer).trim() : ''].filter(Boolean);
@@ -1288,7 +1288,7 @@ app.get('/api/health', ipLimit('hz', 120), (req, res) => {
     via: fromProxy(req) ? 'kimlabor' : 'direct',   // 중계 비밀값이 맞았는지 (설치 확인용, 값 자체는 노출 안 함)
     features: {
       ai: !!OPENAI_KEY,                                   // 리얼타임·절약형 음성상담
-      cases: !!(OPENAI_KEY && UPSTASH_URL && UPSTASH_TOKEN) && ragStatus !== 'missing', // 상담사례 15,427건 + 블로그 문답 110개 검색
+      cases: !!(OPENAI_KEY && UPSTASH_URL && UPSTASH_TOKEN) && ragStatus !== 'missing', // 상담사례 15,427건 + 블로그 문답 110개 + 행정해석·법제처 해석례 41건 검색
       precedents: !!LAW_OC,                              // 판례 검색
       mail: mailReady(),                                 // 상담요약 메일
       botCheck: !!process.env.TURNSTILE_SECRET,          // 봇 차단
